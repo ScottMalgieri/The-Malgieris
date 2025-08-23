@@ -9,44 +9,66 @@
       margin: 0;
       height: 100vh;
       display: flex;
-      justify-content: center;   /* centers horizontally */
-      align-items: center;       /* centers vertically */
+      flex-direction: column;
+      justify-content: center;   /* centers vertically */
+      align-items: center;       /* centers horizontally */
       background-color: black;
       color: white;
       font-family: "Times New Roman", Times, serif;
-      flex-direction: column;
+      overflow: hidden;
     }
     h1 {
       font-size: 5rem;
       text-align: center;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeSlide 2s ease forwards;
+    }
+    @keyframes fadeSlide {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
     button {
-      margin-top: 20px;
+      margin-top: 40px;
       padding: 15px 30px;
-      font-size: 1.5rem;
+      font-size: 1.2rem;
+      font-family: inherit;
       border: none;
-      border-radius: 8px;
-      cursor: pointer;
+      border-radius: 10px;
       background: white;
       color: black;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #444;
+      color: white;
     }
   </style>
 </head>
 <body>
   <h1>COMING SOON</h1>
 
-  <button onclick="playMusic()">Hint?</button>
+  <!-- Play button -->
+  <button id="play-btn">Play Music</button>
 
+  <!-- Background music -->
   <audio id="bg-music" loop>
     <source src="changes.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
   </audio>
 
   <script>
-    function playMusic() {
-      const audio = document.getElementById('bg-music');
-      audio.play();
-    }
+    const btn = document.getElementById("play-btn");
+    const music = document.getElementById("bg-music");
+
+    btn.addEventListener("click", () => {
+      music.play();
+      btn.textContent = "Playing..."; // optional change after click
+      btn.disabled = true;            // disable after starting
+    });
   </script>
 </body>
 </html>
