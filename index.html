@@ -1,85 +1,178 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>The Malgieri's</title>
 
   <!-- Favicon and iOS icon -->
-  <link rel="icon" href="/favicon.ico" type="image/x-icon">
-  <link rel="apple-touch-icon" href="/favicon.png">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+  <link rel="apple-touch-icon" href="/favicon.png" />
 
   <!-- Open Graph / Social Preview -->
-  <meta property="og:title" content="The Malgieri's">
-  <meta property="og:description" content="Welcome to The Malgieri's family site!">
-  <meta property="og:image" content="https://themalgieris.com/preview.png">
-  <meta property="og:url" content="https://themalgieris.com">
-  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:title" content="The Malgieri's" />
+  <meta property="og:description" content="Welcome to The Malgieri's family site!" />
+  <meta property="og:image" content="https://themalgieris.com/preview.png" />
+  <meta property="og:url" content="https://themalgieris.com" />
+  <meta name="twitter:card" content="summary_large_image" />
 
   <style>
+    :root {
+      --door-speed: 1400ms; /* How fast the doors open */
+      --door-ease: cubic-bezier(0.19, 1, 0.22, 1); /* snappy ease */
+      --btn-speed: 400ms;
+    }
+
+    /* Reset + layout */
+    html, body {
+      height: 100%;
+    }
     body {
       margin: 0;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;   /* centers vertically */
-      align-items: center;       /* centers horizontally */
-      background-color: black;
-      color: white;
-      font-family: "Times New Roman", Times, serif;
+      background: #000;
       overflow: hidden;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      color: #fff;
     }
-    h1 {
-      font-size: 5rem;
-      text-align: center;
-      opacity: 0;
-      transform: translateY(30px);
-      animation: fadeSlide 2s ease forwards;
+
+    /* The image revealed behind the doors */
+    .reveal-image {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0; /* behind doors */
+      filter: saturate(1.05);
+      transform: scale(1.03);
     }
-    @keyframes fadeSlide {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+
+    /* Door container */
+    .stage {
+      position: fixed;
+      inset: 0;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1fr 1fr; /* left/right door */
+      pointer-events: auto;
     }
-    button {
-      margin-top: 40px;
-      padding: 15px 30px;
-      font-size: 1.2rem;
-      font-family: inherit;
-      border: none;
-      border-radius: 10px;
-      background: white;
-      color: black;
+
+    .door {
+      position: relative;
+      background: #0e0e10; /* door base color */
+      box-shadow: inset 0 0 60px rgba(0,0,0,0.65);
+      overflow: hidden;
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+
+    /* Add subtle wood-ish stripes */
+    .door::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        90deg,
+        rgba(255,255,255,0.06) 0 2px,
+        transparent 2px 12px
+      );
+      mix-blend-mode: overlay;
+      opacity: 0.15;
+      pointer-events: none;
+    }
+
+    /* Door edges (simulates seam) */
+    .left { border-right: 2px solid rgba(255,255,255,0.08); }
+    .right { border-left: 2px solid rgba(255,255,255,0.08); }
+
+    /* Center button overlay */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      z-index: 3; /* above doors */
+      pointer-events: none; /* button re-enables */
+    }
+
+    .cta {
+      pointer-events: auto;
+      appearance: none;
+      border: 0;
+      border-radius: 999px;
+      padding: 16px 26px;
+      font-size: clamp(16px, 2.2vw, 24px);
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      color: #0b0b0c;
+      background: linear-gradient(180deg, #ffffff, #dcdcdc);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.45), inset 0 0 0 1px rgba(0,0,0,0.12);
       cursor: pointer;
-      transition: 0.3s;
+      transition: transform var(--btn-speed) ease, box-shadow var(--btn-speed) ease;
     }
-    button:hover {
-      background: #444;
-      color: white;
+    .cta:hover { transform: translateY(-1px); box-shadow: 0 12px 38px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(0,0,0,0.12);} 
+    .cta:active { transform: translateY(0); }
+
+    /* Opening animation */
+    .open .left {
+      transform: translateX(-100%) rotateY(8deg);
+      transition: transform var(--door-speed) var(--door-ease);
+    }
+    .open .right {
+      transform: translateX(100%) rotateY(-8deg);
+      transition: transform var(--door-speed) var(--door-ease);
+    }
+
+    /* Fade the button once clicked */
+    .open .overlay { animation: overlayFade var(--door-speed) ease forwards; }
+    @keyframes overlayFade { to { opacity: 0; visibility: hidden; } }
+
+    /* Accessibility: respect reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      .open .left, .open .right { transition-duration: 0ms; transform: translateX(-100%); }
+      .open .right { transform: translateX(100%); }
+      .open .overlay { animation-duration: 0ms; }
+    }
+
+    /* Optional: subtle vignette so doors blend nicely */
+    .vignette {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 1; /* above image, under doors */
+      background: radial-gradient(ellipse at center, rgba(0,0,0,0) 40%, rgba(0,0,0,0.6) 100%);
     }
   </style>
 </head>
 <body>
-  <h1>COMING SOON</h1>
+  <!-- Replace the src with your final image path -->
+  <img class="reveal-image" src="behind.jpg" alt="The Malgieri's Adventures" />
+  <div class="vignette" aria-hidden="true"></div>
 
-  <!-- Play button -->
-  <button id="play-btn">PLAY</button>
+  <!-- Doors on top -->
+  <div class="stage" aria-hidden="true">
+    <div class="door left"></div>
+    <div class="door right"></div>
+  </div>
 
-  <!-- Background music -->
-  <audio id="bg-music" loop>
-    <source src="Day.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
-  </audio>
+  <!-- Call-to-action button -->
+  <div class="overlay">
+    <button class="cta" id="begin" aria-label="Let the adventures begin">Let The Adventures Begin</button>
+  </div>
 
   <script>
-    const btn = document.getElementById("play-btn");
-    const music = document.getElementById("bg-music");
+    const root = document.documentElement;
+    const body = document.body;
+    const begin = document.getElementById('begin');
 
-    btn.addEventListener("click", () => {
-      music.play();
-      btn.textContent = "PLAYING..."; // optional change after click
-      btn.disabled = true;            // disable after starting
+    begin.addEventListener('click', () => {
+      // Add class that triggers the door animation
+      body.classList.add('open');
+
+      // After the doors open, disable pointer events on doors
+      setTimeout(() => {
+        document.querySelector('.stage').style.pointerEvents = 'none';
+      }, parseFloat(getComputedStyle(root).getPropertyValue('--door-speed')));
     });
   </script>
 </body>
