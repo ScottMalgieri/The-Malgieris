@@ -18,15 +18,14 @@
 
   <style>
     :root {
-      --door-speed: 1400ms; /* How fast the doors open */
-      --door-ease: cubic-bezier(0.19, 1, 0.22, 1); /* snappy ease */
+      --door-speed: 4000ms;                  /* slower door open duration */
+      --door-ease: cubic-bezier(.2,.8,.2,1); /* gentle ease */
       --btn-speed: 400ms;
+      --image-fade: 3200ms;                  /* image/headline fade duration */
+      --image-fade-delay: 400ms;             /* starts just after doors begin */
     }
 
-    /* Reset + layout */
-    html, body {
-      height: 100%;
-    }
+    html, body { height: 100%; }
     body {
       margin: 0;
       background: #000;
@@ -35,38 +34,72 @@
       color: #fff;
     }
 
-    /* The image revealed behind the doors */
+    /* Background image (starts dim + transparent) */
     .reveal-image {
       position: fixed;
       inset: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
-      z-index: 0; /* behind doors */
-      filter: saturate(1.05);
+      z-index: 0;
+      opacity: 0;
+      filter: brightness(0.8) saturate(1.05);
       transform: scale(1.03);
+      transition:
+        opacity var(--image-fade) ease var(--image-fade-delay),
+        filter var(--image-fade) ease var(--image-fade-delay);
+    }
+    .open .reveal-image {
+      opacity: 1;
+      filter: brightness(1) saturate(1.05);
     }
 
-    /* Door container */
+    /* Headline overlay */
+    .headline {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      z-index: 1; /* over image, under doors initially */
+      text-align: center;
+      padding: 2rem;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(8px);
+      transition:
+        opacity var(--image-fade) ease calc(var(--image-fade-delay) + 200ms),
+        transform var(--image-fade) ease calc(var(--image-fade-delay) + 200ms);
+    }
+    .headline h1 {
+      margin: 0;
+      font-weight: 900; /* bold */
+      font-size: clamp(28px, 6vw, 72px);
+      line-height: 1.1;
+      letter-spacing: 0.5px;
+      text-shadow: 0 6px 24px rgba(0,0,0,0.6), 0 1px 2px rgba(0,0,0,0.8);
+    }
+    .open .headline {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Doors */
     .stage {
       position: fixed;
       inset: 0;
       z-index: 2;
       display: grid;
-      grid-template-columns: 1fr 1fr; /* left/right door */
+      grid-template-columns: 1fr 1fr;
       pointer-events: auto;
     }
-
     .door {
       position: relative;
-      background: #0e0e10; /* door base color */
+      background: #0e0e10;
       box-shadow: inset 0 0 60px rgba(0,0,0,0.65);
       overflow: hidden;
       transform-style: preserve-3d;
       will-change: transform;
     }
-
-    /* Add subtle wood-ish stripes */
     .door::before {
       content: "";
       position: absolute;
@@ -80,21 +113,28 @@
       opacity: 0.15;
       pointer-events: none;
     }
+    .left  { border-right: 2px solid rgba(255,255,255,0.08); }
+    .right { border-left:  2px solid rgba(255,255,255,0.08); }
 
-    /* Door edges (simulates seam) */
-    .left { border-right: 2px solid rgba(255,255,255,0.08); }
-    .right { border-left: 2px solid rgba(255,255,255,0.08); }
+    /* Opening animation (slow + smooth) */
+    .open .left {
+      transform: translateX(-100%) rotateY(8deg);
+      transition: transform var(--door-speed) var(--door-ease);
+    }
+    .open .right {
+      transform: translateX(100%) rotateY(-8deg);
+      transition: transform var(--door-speed) var(--door-ease);
+    }
 
-    /* Center button overlay */
+    /* CTA overlay */
     .overlay {
       position: fixed;
       inset: 0;
       display: grid;
       place-items: center;
-      z-index: 3; /* above doors */
-      pointer-events: none; /* button re-enables */
+      z-index: 3;
+      pointer-events: none;
     }
-
     .cta {
       pointer-events: auto;
       appearance: none;
@@ -108,45 +148,45 @@
       background: linear-gradient(180deg, #ffffff, #dcdcdc);
       box-shadow: 0 8px 30px rgba(0,0,0,0.45), inset 0 0 0 1px rgba(0,0,0,0.12);
       cursor: pointer;
-      transition: transform var(--btn-speed) ease, box-shadow var(--btn-speed) ease;
+      transition: transform var(--btn-speed) ease, box-shadow var(--btn-speed) ease, opacity 300ms ease;
     }
-    .cta:hover { transform: translateY(-1px); box-shadow: 0 12px 38px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(0,0,0,0.12);} 
+    .cta:hover { transform: translateY(-1px); box-shadow: 0 12px 38px rgba(0,0,0,0.5), inset 0 0 0 1px rgba(0,0,0,0.12); }
     .cta:active { transform: translateY(0); }
 
-    /* Opening animation */
-    .open .left {
-      transform: translateX(-100%) rotateY(8deg);
-      transition: transform var(--door-speed) var(--door-ease);
-    }
-    .open .right {
-      transform: translateX(100%) rotateY(-8deg);
-      transition: transform var(--door-speed) var(--door-ease);
-    }
-
-    /* Fade the button once clicked */
+    /* Fade the button away on click */
     .open .overlay { animation: overlayFade var(--door-speed) ease forwards; }
     @keyframes overlayFade { to { opacity: 0; visibility: hidden; } }
 
-    /* Accessibility: respect reduced motion */
-    @media (prefers-reduced-motion: reduce) {
-      .open .left, .open .right { transition-duration: 0ms; transform: translateX(-100%); }
-      .open .right { transform: translateX(100%); }
-      .open .overlay { animation-duration: 0ms; }
-    }
-
-    /* Optional: subtle vignette so doors blend nicely */
+    /* Subtle vignette */
     .vignette {
       position: fixed;
       inset: 0;
       pointer-events: none;
       z-index: 1; /* above image, under doors */
       background: radial-gradient(ellipse at center, rgba(0,0,0,0) 40%, rgba(0,0,0,0.6) 100%);
+      opacity: .9;
+      transition: opacity var(--image-fade) ease var(--image-fade-delay);
+    }
+    .open .vignette { opacity: .6; }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      .open .left, .open .right { transition-duration: 0ms; transform: translateX(-100%); }
+      .open .right { transform: translateX(100%); }
+      .open .overlay, .headline, .reveal-image, .vignette { transition-duration: 0ms; }
+      .reveal-image, .headline { opacity: 1; transform: none; }
     }
   </style>
 </head>
 <body>
-  <!-- Replace the src with your final image path -->
-  <img class="reveal-image" src="behind.jpg" alt="BABY MALGIERI COMING 2026" />
+  <!-- Background image -->
+  <img class="reveal-image" src="behind.jpg" alt="Family reveal background" />
+
+  <!-- Centered bold headline -->
+  <div class="headline" aria-hidden="false">
+    <h1>BABY MALGIERI COMING 2026</h1>
+  </div>
+
   <div class="vignette" aria-hidden="true"></div>
 
   <!-- Doors on top -->
@@ -166,15 +206,14 @@
     const begin = document.getElementById('begin');
 
     begin.addEventListener('click', () => {
-      // Add class that triggers the door animation
       body.classList.add('open');
 
-      // After the doors open, disable pointer events on doors
+      // Disable door interactions after the animation
+      const doorMs = parseFloat(getComputedStyle(root).getPropertyValue('--door-speed'));
       setTimeout(() => {
         document.querySelector('.stage').style.pointerEvents = 'none';
-      }, parseFloat(getComputedStyle(root).getPropertyValue('--door-speed')));
+      }, doorMs);
     });
   </script>
 </body>
 </html>
-
