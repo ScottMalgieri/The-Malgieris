@@ -5,24 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>The Malgieri's</title>
 
-  <!-- Favicon and iOS icon -->
-  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-  <link rel="apple-touch-icon" href="/favicon.png" />
-
-  <!-- Open Graph / Social Preview -->
-  <meta property="og:title" content="The Malgieri's" />
-  <meta property="og:description" content="Welcome to The Malgieri's family site!" />
-  <meta property="og:image" content="https://themalgieris.com/preview.png" />
-  <meta property="og:url" content="https://themalgieris.com" />
-  <meta name="twitter:card" content="summary_large_image" />
-
   <style>
     :root{
-      --door-speed: 8000ms;                 /* SUPER slow door open duration */
+      --door-speed: 8000ms;
       --door-ease: cubic-bezier(.2,.8,.2,1);
       --btn-speed: 400ms;
-      --image-fade: 6000ms;                 /* slower image/text fade */
-      --image-fade-delay: 800ms;            /* begins just after doors start */
+      --image-fade: 6000ms;
+      --image-fade-delay: 800ms;
     }
 
     html, body { height: 100%; }
@@ -32,15 +21,28 @@
       overflow: hidden;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans";
       color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Image wrapper */
+    .image-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      max-height: 100vh;
+      z-index: 0;
     }
 
     /* Fullscreen image (fits fully, no cropping) */
     .reveal-image{
-      position: fixed; inset: 0;
-      width: 100%; height: 100%;
+      width: 100%;
+      max-height: 85vh; /* keep some room for text */
       object-fit: contain;
       background-color: black;
-      z-index: 0;
       opacity: 0;
       filter: brightness(0.8) saturate(1.05);
       transition:
@@ -49,14 +51,10 @@
     }
     .open .reveal-image{ opacity: 1; filter: brightness(1) saturate(1.05); }
 
-    /* Bottom-centered headline OVER the image */
+    /* Headline now sits under the image */
     .headline{
-      position: fixed;
-      left: 0; right: 0; bottom: 5vh;
-      z-index: 1;
+      margin-top: 1rem;
       text-align: center;
-      padding: 0 2rem;
-      pointer-events: none;
       opacity: 0;
       transform: translateY(8px);
       transition:
@@ -67,7 +65,6 @@
       margin: 0;
       font-weight: 900;
       font-size: clamp(24px, 5vw, 56px);
-      line-height: 1.15;
       letter-spacing: .5px;
       text-shadow: 0 6px 24px rgba(0,0,0,.6), 0 1px 2px rgba(0,0,0,.8);
     }
@@ -81,19 +78,9 @@
       pointer-events: auto;
     }
     .door{
-      position: relative;
       background: #0e0e10;
       box-shadow: inset 0 0 60px rgba(0,0,0,.65);
-      overflow: hidden; transform-style: preserve-3d; will-change: transform;
     }
-    .door::before{
-      content: ""; position: absolute; inset: 0;
-      background: repeating-linear-gradient(90deg, rgba(255,255,255,.06) 0 2px, transparent 2px 12px);
-      mix-blend-mode: overlay; opacity: .15; pointer-events: none;
-    }
-    .left{  border-right: 2px solid rgba(255,255,255,.08); }
-    .right{ border-left:  2px solid rgba(255,255,255,.08); }
-
     .open .left{
       transform: translateX(-100%) rotateY(8deg);
       transition: transform var(--door-speed) var(--door-ease);
@@ -103,49 +90,31 @@
       transition: transform var(--door-speed) var(--door-ease);
     }
 
-    /* CTA overlay */
+    /* Overlay + CTA button */
     .overlay{
       position: fixed; inset: 0;
       display: grid; place-items: center;
       z-index: 3; pointer-events: none;
     }
-
-    /* Fancy glowing button */
     .cta {
       pointer-events: auto;
-      appearance: none;
       border: none;
       border-radius: 50px;
       padding: 18px 36px;
       font-size: clamp(18px, 2.5vw, 26px);
       font-weight: 700;
-      letter-spacing: 1px;
       color: #fff;
       background: linear-gradient(135deg, #ff416c, #ff4b2b);
       box-shadow: 0 8px 20px rgba(0,0,0,0.4), 0 0 15px rgba(255,75,43,0.5);
       cursor: pointer;
       position: relative;
-      overflow: hidden;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .cta::before {
-      content: "";
-      position: absolute;
-      top: -50%; left: -50%;
-      width: 200%; height: 200%;
-      background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
-      transform: rotate(25deg);
-      opacity: 0;
-      transition: opacity 0.4s ease;
     }
     .cta:hover {
       transform: translateY(-3px) scale(1.05);
       box-shadow: 0 12px 28px rgba(0,0,0,0.5), 0 0 25px rgba(255,75,43,0.7);
     }
-    .cta:hover::before { opacity: 1; }
     .cta:active { transform: scale(0.98); }
-
-    /* Fade the button on click */
     .open .overlay{ animation: overlayFade var(--door-speed) ease forwards; }
     @keyframes overlayFade{ to{ opacity: 0; visibility: hidden; } }
 
@@ -158,23 +127,12 @@
       transition: opacity var(--image-fade) ease var(--image-fade-delay);
     }
     .open .vignette{ opacity: .6; }
-
-    /* Reduced motion */
-    @media (prefers-reduced-motion: reduce){
-      .open .left, .open .right{ transition-duration: 0ms; transform: translateX(-100%); }
-      .open .right{ transform: translateX(100%); }
-      .open .overlay, .headline, .reveal-image, .vignette{ transition-duration: 0ms; }
-      .reveal-image, .headline{ opacity: 1; transform: none; }
-    }
   </style>
 </head>
 <body>
-  <!-- Fullscreen background image -->
-  <img class="reveal-image" src="behind.png" alt="Family reveal background" />
-
-  <!-- Bottom-centered bold headline -->
-  <div class="headline" aria-hidden="false">
-    <h1>BABY MALGIERI COMING 2026!</h1>
+  <div class="image-wrapper">
+    <img class="reveal-image" src="behind.png" alt="Family reveal background" />
+    <div class="headline"><h1>BABY MALGIERI COMING 2026!</h1></div>
   </div>
 
   <div class="vignette" aria-hidden="true"></div>
@@ -187,13 +145,12 @@
 
   <!-- CTA -->
   <div class="overlay">
-    <button class="cta" id="begin" aria-label="Let the adventures begin">Let The Adventures Begin...</button>
+    <button class="cta" id="begin">Let The Adventures Begin...</button>
   </div>
 
-  <!-- Background music (plays on click) -->
+  <!-- Background music -->
   <audio id="bg-music" preload="auto" loop>
     <source src="Sun.mp3" type="audio/mpeg" />
-    Your browser does not support the audio element.
   </audio>
 
   <script>
@@ -213,25 +170,15 @@
           audio.volume = Math.min(target, (i/steps)*target);
           if(i >= steps) clearInterval(ramp);
         }, stepTime);
-      }catch(e){ /* volume not supported on some mobile browsers */ }
+      }catch(e){}
     }
 
     begin.addEventListener('click', async () => {
       body.classList.add('open');
-
-      // Try to play music on user gesture
       try{
         await music.play();
         fadeInAudio(music, 0.6, 2000);
-      }catch(err){
-        console.warn('Audio playback was blocked:', err);
-      }
-
-      // Disable door interactions after animation
-      const doorMs = parseFloat(getComputedStyle(root).getPropertyValue('--door-speed'));
-      setTimeout(() => {
-        document.querySelector('.stage').style.pointerEvents = 'none';
-      }, doorMs);
+      }catch(err){ console.warn('Audio playback blocked:', err); }
     });
   </script>
 </body>
