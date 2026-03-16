@@ -1,1 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
 
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#020617">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<title>Malgieri OS</title>
+
+<style>
+
+:root{
+--bg1:#020617;
+--bg2:#0f172a;
+--bg3:#000000;
+--white:#ffffff;
+--white90:rgba(255,255,255,0.9);
+--white60:rgba(255,255,255,0.6);
+--white40:rgba(255,255,255,0.4);
+}
+
+*{
+box-sizing:border-box;
+-webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+margin:0;
+min-height:100%;
+font-family:Arial,Helvetica,sans-serif;
+
+background:
+radial-gradient(circle at top right, rgba(59,130,246,0.18), transparent 30%),
+radial-gradient(circle at bottom left, rgba(168,85,247,0.14), transparent 30%),
+linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));
+
+color:white;
+overflow-x:hidden;
+}
+
+.topbar{
+
+height:50px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+
+padding:0 20px;
+
+border-bottom:1px solid rgba(255,255,255,0.1);
+
+background:rgba(0,0,0,0.35);
+backdrop-filter:blur(10px);
+
+}
+
+.top-left{
+display:flex;
+gap:10px;
+align-items:center;
+}
+
+.dot{
+width:10px;
+height:10px;
+border-radius:50%;
+background:#4ade80;
+box-shadow:0 0 10px #4ade80;
+}
+
+.clock{
+color:var(--white60);
+}
+
+.desktop{
+
+padding:40px;
+
+display:flex;
+justify-content:center;
+
+}
+
+.grid{
+
+max-width:800px;
+
+display:grid;
+grid-template-columns:repeat(auto-fit,130px);
+
+gap:30px;
+
+justify-content:center;
+
+}
+
+.icon{
+
+background:rgba(255,255,255,0.05);
+border:1px solid rgba(255,255,255,0.1);
+
+border-radius:25px;
+
+padding:15px;
+
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:10px;
+
+cursor:pointer;
+
+transition:.2s;
+
+}
+
+.icon:hover{
+background:rgba(255,255,255,0.1);
+transform:translateY(-4px);
+}
+
+.badge{
+
+width:80px;
+height:80px;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+border-radius:20px;
+
+background:rgba(255,255,255,0.1);
+
+font-size:38px;
+
+}
+
+.label{
+
+font-size:14px;
+color:var(--white90);
+text-align:center;
+
+}
+
+.dock{
+
+position:fixed;
+
+bottom:20px;
+left:50%;
+
+transform:translateX(-50%);
+
+padding:14px 22px;
+
+border-radius:999px;
+
+background:rgba(0,0,0,0.4);
+
+border:1px solid rgba(255,255,255,0.1);
+
+backdrop-filter:blur(12px);
+
+display:flex;
+gap:18px;
+
+color:rgba(255,255,255,0.75);
+
+}
+
+/* APP OPEN ANIMATION */
+
+.transition{
+
+position:fixed;
+inset:0;
+
+background:
+radial-gradient(circle at center, rgba(103,232,249,0.2), transparent 25%),
+linear-gradient(135deg,#020617,#0f172a,#000);
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+opacity:0;
+pointer-events:none;
+
+transition:.6s;
+
+}
+
+.transition.active{
+
+opacity:1;
+
+}
+
+.transition span{
+
+font-size:24px;
+font-weight:bold;
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+
+<div class="top-left">
+
+<div class="dot"></div>
+
+<strong>Malgieri OS</strong>
+
+</div>
+
+<div class="clock" id="clock"></div>
+
+</div>
+
+
+<div class="desktop">
+
+<div class="grid">
+
+<div class="icon" id="scott">
+
+<div class="badge">💻</div>
+
+<div class="label">Scott's Space</div>
+
+</div>
+
+<div class="icon">
+
+<div class="badge">💖</div>
+
+<div class="label">Courtney's Corner</div>
+
+</div>
+
+<div class="icon">
+
+<div class="badge">🐶</div>
+
+<div class="label">Obi's Observatory</div>
+
+</div>
+
+<div class="icon">
+
+<div class="badge">🍼</div>
+
+<div class="label">Jaxson's Journey</div>
+
+</div>
+
+<div class="icon">
+
+<div class="badge">🦴</div>
+
+<div class="label">Obi Treat</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="dock">
+
+<span>Apps</span>
+<span>Browser</span>
+<span>Photos</span>
+<span>Music</span>
+<span>Settings</span>
+
+</div>
+
+<div class="transition" id="transition">
+
+<span>Launching Scott's Space</span>
+
+</div>
+
+<script>
+
+/* CLOCK */
+
+function updateClock(){
+
+const now=new Date()
+
+document.getElementById("clock").innerText=
+
+now.toLocaleTimeString([],{
+
+hour:"2-digit",
+
+minute:"2-digit"
+
+})
+
+}
+
+updateClock()
+
+setInterval(updateClock,1000)
+
+/* APP LAUNCH */
+
+const scott=document.getElementById("scott")
+
+const transition=document.getElementById("transition")
+
+scott.onclick=()=>{
+
+transition.classList.add("active")
+
+setTimeout(()=>{
+
+window.location.href="Scott.html"
+
+},700)
+
+}
+
+</script>
+
+</body>
+</html>
