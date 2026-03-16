@@ -1,975 +1,236 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-  />
-  <meta name="theme-color" content="#020617" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="mobile-web-app-capable" content="yes" />
-  <title>Malgieri OS</title>
-
-  <style>
-    :root {
-      --bg-1: #020617;
-      --bg-2: #0f172a;
-      --bg-3: #000000;
-      --white: #ffffff;
-      --white-90: rgba(255, 255, 255, 0.9);
-      --white-75: rgba(255, 255, 255, 0.75);
-      --white-70: rgba(255, 255, 255, 0.7);
-      --white-65: rgba(255, 255, 255, 0.65);
-      --white-60: rgba(255, 255, 255, 0.6);
-      --white-55: rgba(255, 255, 255, 0.55);
-      --white-50: rgba(255, 255, 255, 0.5);
-      --white-15: rgba(255, 255, 255, 0.15);
-      --white-10: rgba(255, 255, 255, 0.1);
-      --white-05: rgba(255, 255, 255, 0.05);
-      --cyan: #67e8f9;
-      --cyan-soft: rgba(34, 211, 238, 0.14);
-      --green: #4ade80;
-      --red: #f87171;
-      --yellow: #facc15;
-      --shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
-      --blur: blur(18px);
-      --safe-top: env(safe-area-inset-top, 0px);
-      --safe-right: env(safe-area-inset-right, 0px);
-      --safe-bottom: env(safe-area-inset-bottom, 0px);
-      --safe-left: env(safe-area-inset-left, 0px);
-    }
-
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    html,
-    body {
-      margin: 0;
-      min-height: 100%;
-      font-family: Arial, Helvetica, sans-serif;
-      background:
-        radial-gradient(circle at top right, rgba(59,130,246,0.18), transparent 28%),
-        radial-gradient(circle at bottom left, rgba(168,85,247,0.14), transparent 26%),
-        linear-gradient(135deg, var(--bg-1) 0%, var(--bg-2) 45%, var(--bg-3) 100%);
-      color: var(--white);
-      overflow-x: hidden;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    body {
-      position: relative;
-      padding-left: var(--safe-left);
-      padding-right: var(--safe-right);
-      min-height: 100dvh;
-    }
-
-    button {
-      font: inherit;
-    }
-
-    .screen {
-      display: none;
-      min-height: 100dvh;
-      width: 100%;
-      position: relative;
-    }
-
-    .screen.active {
-      display: flex;
-    }
-
-    .power-screen,
-    .loading-screen {
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 24px;
-      padding-top: calc(24px + var(--safe-top));
-      padding-bottom: calc(24px + var(--safe-bottom));
-      overflow: hidden;
-    }
-
-    .power-wrap,
-    .loading-wrap {
-      position: relative;
-      z-index: 2;
-      width: min(92vw, 640px);
-    }
-
-    .power-ring {
-      width: 144px;
-      height: 144px;
-      margin: 0 auto 28px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 999px;
-      border: 1px solid var(--white-15);
-      background: var(--white-05);
-      backdrop-filter: var(--blur);
-      box-shadow: 0 0 60px rgba(59,130,246,0.18);
-    }
-
-    .power-button {
-      width: 96px;
-      height: 96px;
-      border-radius: 999px;
-      border: 1px solid rgba(34, 211, 238, 0.4);
-      background: var(--cyan-soft);
-      color: var(--cyan);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
-      box-shadow: 0 0 0 rgba(103,232,249,0);
-    }
-
-    .power-button:hover {
-      transform: scale(1.05);
-      background: rgba(34, 211, 238, 0.2);
-      box-shadow: 0 0 24px rgba(103,232,249,0.18);
-    }
-
-    .power-icon {
-      width: 40px;
-      height: 40px;
-      border: 4px solid currentColor;
-      border-top-color: transparent;
-      border-radius: 50%;
-      position: relative;
-    }
-
-    .power-icon::before {
-      content: "";
-      position: absolute;
-      left: 50%;
-      top: -8px;
-      transform: translateX(-50%);
-      width: 4px;
-      height: 18px;
-      border-radius: 999px;
-      background: currentColor;
-    }
-
-    .title {
-      font-size: clamp(34px, 5vw, 48px);
-      font-weight: 700;
-      letter-spacing: 0.04em;
-    }
-
-    .subtitle {
-      margin-top: 12px;
-      color: var(--white-65);
-      font-size: 18px;
-    }
-
-    .loader-shell {
-      width: 96px;
-      height: 96px;
-      margin: 0 auto 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 999px;
-      border: 1px solid var(--white-10);
-      background: var(--white-05);
-      backdrop-filter: var(--blur);
-    }
-
-    .spinner {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      border: 4px solid rgba(125, 211, 252, 0.18);
-      border-top-color: var(--cyan);
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .loading-title {
-      font-size: clamp(28px, 4vw, 40px);
-      font-weight: 600;
-    }
-
-    .loading-text {
-      margin-top: 12px;
-      color: var(--white-60);
-      font-size: 18px;
-    }
-
-    .loading-status {
-      margin-top: 18px;
-      min-height: 22px;
-      color: var(--white-50);
-      font-size: 14px;
-      letter-spacing: 0.02em;
-    }
-
-    .progress-shell {
-      margin-top: 28px;
-      height: 14px;
-      border-radius: 999px;
-      overflow: hidden;
-      border: 1px solid var(--white-10);
-      background: var(--white-05);
-    }
-
-    .progress-bar {
-      width: 0%;
-      height: 100%;
-      border-radius: 999px;
-      background: linear-gradient(90deg, #22d3ee, #3b82f6, #8b5cf6);
-      box-shadow: 0 0 26px rgba(59,130,246,0.35);
-      transition: width 0.18s linear;
-    }
-
-    .desktop-screen {
-      flex-direction: column;
-      min-height: 100dvh;
-      transition: transform 0.45s ease, filter 0.45s ease, opacity 0.45s ease;
-    }
-
-    .topbar {
-      height: calc(48px + var(--safe-top));
-      padding-top: var(--safe-top);
-      border-bottom: 1px solid var(--white-10);
-      background: rgba(0,0,0,0.35);
-      backdrop-filter: blur(14px);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-left: 16px;
-      padding-right: 16px;
-      font-size: 14px;
-      position: sticky;
-      top: 0;
-      z-index: 12;
-      transition: transform 0.45s ease, filter 0.45s ease, opacity 0.45s ease;
-    }
-
-    .topbar-left,
-    .topbar-right {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .status-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: var(--green);
-      box-shadow: 0 0 14px rgba(74, 222, 128, 0.8);
-      animation: pulse 1.6s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.45; }
-    }
-
-    .muted {
-      color: var(--white-50);
-    }
-
-    .desktop-main {
-      flex: 1;
-      padding: 28px 28px 0;
-      position: relative;
-      z-index: 2;
-      overflow-x: hidden;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      transition: transform 0.45s ease, filter 0.45s ease, opacity 0.45s ease;
-    }
-
-    .app-grid {
-      width: 100%;
-      max-width: 820px;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(130px, 130px));
-      justify-content: center;
-      gap: 28px;
-      padding: 8px 0 28px;
-    }
-
-    .desktop-icon {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid var(--white-10);
-      color: var(--white);
-      padding: 14px 12px;
-      border-radius: 24px;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      min-height: 156px;
-      transition: background 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(14px);
-    }
-
-    .desktop-icon:hover {
-      background: rgba(255,255,255,0.08);
-      transform: translateY(-4px);
-      border-color: rgba(255,255,255,0.18);
-    }
-
-    .desktop-icon-badge {
-      width: 84px;
-      height: 84px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 28px;
-      background: rgba(255,255,255,0.10);
-      border: 1px solid var(--white-10);
-      font-size: 40px;
-      transition: transform 0.2s ease;
-    }
-
-    .desktop-icon:hover .desktop-icon-badge {
-      transform: scale(1.05);
-    }
-
-    .desktop-icon-label {
-      font-size: 15px;
-      text-align: center;
-      color: var(--white-90);
-      line-height: 1.3;
-      font-weight: 600;
-    }
-
-    .dock-wrap {
-      padding: 14px 18px calc(18px + var(--safe-bottom));
-      position: sticky;
-      bottom: 0;
-      z-index: 11;
-      background: linear-gradient(to top, rgba(2,6,23,0.95), rgba(2,6,23,0));
-      transition: transform 0.45s ease, filter 0.45s ease, opacity 0.45s ease;
-    }
-
-    .dock {
-      width: fit-content;
-      max-width: calc(100vw - 32px);
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 14px;
-      border-radius: 999px;
-      border: 1px solid var(--white-10);
-      background: rgba(0,0,0,0.40);
-      backdrop-filter: blur(12px);
-      padding: 14px 22px;
-      color: var(--white-75);
-      box-shadow: var(--shadow);
-      flex-wrap: wrap;
-      font-size: 14px;
-    }
-
-    .window-layer {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 20;
-      transition: opacity 0.35s ease;
-    }
-
-    .window {
-      position: absolute;
-      width: min(700px, calc(100vw - 32px));
-      border-radius: 26px;
-      overflow: hidden;
-      border: 1px solid var(--white-10);
-      background: rgba(3, 7, 18, 0.86);
-      backdrop-filter: blur(18px);
-      box-shadow: 0 26px 90px rgba(0,0,0,0.55);
-      pointer-events: auto;
-      max-height: calc(100vh - 88px - var(--safe-top) - var(--safe-bottom));
-    }
-
-    .window.hidden {
-      display: none;
-    }
-
-    .window-head {
-      padding: 14px 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid var(--white-10);
-      cursor: move;
-      user-select: none;
-    }
-
-    .window-left {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .window-title {
-      margin-left: 8px;
-      font-size: 14px;
-      color: var(--white-70);
-    }
-
-    .dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-    }
-
-    .dot.red { background: var(--red); }
-    .dot.yellow { background: var(--yellow); }
-    .dot.green { background: var(--green); }
-
-    .window-close {
-      border: none;
-      background: rgba(255,255,255,0.08);
-      color: var(--white-75);
-      width: 34px;
-      height: 34px;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: background 0.2s ease;
-    }
-
-    .window-close:hover {
-      background: rgba(255,255,255,0.16);
-    }
-
-    .window-body {
-      padding: 22px;
-      color: var(--white-90);
-      overflow-y: auto;
-      max-height: calc(100vh - 150px - var(--safe-top) - var(--safe-bottom));
-      -webkit-overflow-scrolling: touch;
-    }
-
-    .window-body h3 {
-      margin: 0 0 10px;
-      font-size: 28px;
-    }
-
-    .window-body p {
-      margin: 0;
-      color: var(--white-70);
-      line-height: 1.6;
-      font-size: 16px;
-    }
-
-    .window-section {
-      margin-top: 18px;
-      display: grid;
-      gap: 12px;
-    }
-
-    .mini-card {
-      border-radius: 18px;
-      border: 1px solid var(--white-10);
-      background: rgba(255,255,255,0.04);
-      padding: 14px;
-    }
-
-    .mini-card-title {
-      color: var(--white-55);
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      margin-bottom: 6px;
-    }
-
-    .mini-card-value {
-      font-size: 17px;
-      font-weight: 600;
-    }
-
-    .page-transition {
-      position: fixed;
-      inset: 0;
-      z-index: 9999;
-      pointer-events: none;
-      opacity: 0;
-      transform: scale(1.04);
-      background:
-        radial-gradient(circle at center, rgba(103, 232, 249, 0.22), transparent 20%),
-        radial-gradient(circle at center, rgba(59, 130, 246, 0.18), transparent 38%),
-        linear-gradient(135deg, #020617 0%, #0f172a 45%, #000000 100%);
-      transition: opacity 0.55s ease, transform 0.7s ease;
-    }
-
-    .page-transition.active {
-      opacity: 1;
-      transform: scale(1);
-    }
-
-    .page-transition::after {
-      content: "Launching Scott's Space...";
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      color: rgba(255,255,255,0.92);
-      font-size: clamp(18px, 3vw, 28px);
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      opacity: 0;
-      transition: opacity 0.25s ease 0.15s;
-      text-shadow: 0 0 24px rgba(103, 232, 249, 0.18);
-    }
-
-    .page-transition.active::after {
-      opacity: 1;
-    }
-
-    body.launching .desktop-screen,
-    body.launching .topbar,
-    body.launching .desktop-main,
-    body.launching .dock-wrap,
-    body.launching .window-layer {
-      filter: blur(10px);
-      transform: scale(0.985);
-      opacity: 0.7;
-    }
-
-    @media (max-width: 640px) {
-      html,
-      body,
-      .screen,
-      .desktop-screen {
-        min-height: 100dvh;
-      }
-
-      .topbar {
-        padding-left: 12px;
-        padding-right: 12px;
-      }
-
-      .topbar-left .muted {
-        display: none;
-      }
-
-      .desktop-main {
-        padding: 18px 14px 0;
-      }
-
-      .app-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 14px;
-        max-width: none;
-      }
-
-      .desktop-icon {
-        min-height: 138px;
-        padding: 10px;
-        border-radius: 20px;
-      }
-
-      .desktop-icon-badge {
-        width: 68px;
-        height: 68px;
-        border-radius: 22px;
-        font-size: 32px;
-      }
-
-      .desktop-icon-label {
-        font-size: 13px;
-      }
-
-      .dock-wrap {
-        padding: 10px 12px calc(14px + var(--safe-bottom));
-      }
-
-      .dock {
-        gap: 10px;
-        padding: 12px 16px;
-        border-radius: 22px;
-        justify-content: flex-start;
-        overflow-x: auto;
-        flex-wrap: nowrap;
-        width: 100%;
-        max-width: 100%;
-      }
-
-      .window {
-        width: calc(100vw - 20px - var(--safe-left) - var(--safe-right));
-        left: 10px !important;
-        top: calc(68px + var(--safe-top)) !important;
-        max-height: calc(100dvh - 86px - var(--safe-top) - var(--safe-bottom));
-        border-radius: 22px;
-      }
-
-      .window-head {
-        cursor: default;
-      }
-
-      .window-body {
-        padding: 18px;
-        max-height: calc(100dvh - 150px - var(--safe-top) - var(--safe-bottom));
-      }
-
-      .page-transition::after {
-        font-size: 18px;
-      }
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="theme-color" content="#020617"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<title>Malgieri OS</title>
+
+<style>
+
+:root{
+--bg1:#020617;
+--bg2:#0f172a;
+--bg3:#000000;
+--white:#ffffff;
+--white60:rgba(255,255,255,0.6);
+--white40:rgba(255,255,255,0.4);
+--cyan:#67e8f9;
+}
+
+*{
+box-sizing:border-box;
+-webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+margin:0;
+height:100%;
+font-family:Arial,Helvetica,sans-serif;
+background:
+radial-gradient(circle at top right, rgba(59,130,246,0.18), transparent 30%),
+radial-gradient(circle at bottom left, rgba(168,85,247,0.14), transparent 30%),
+linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));
+color:white;
+overflow:hidden;
+}
+
+.screen{
+position:absolute;
+inset:0;
+display:flex;
+align-items:center;
+justify-content:center;
+flex-direction:column;
+text-align:center;
+padding:30px;
+}
+
+.hidden{
+display:none;
+}
+
+.power-ring{
+width:150px;
+height:150px;
+border-radius:50%;
+border:1px solid rgba(255,255,255,0.15);
+display:flex;
+align-items:center;
+justify-content:center;
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(10px);
+margin-bottom:30px;
+}
+
+.power-button{
+width:95px;
+height:95px;
+border-radius:50%;
+border:1px solid rgba(34,211,238,0.4);
+background:rgba(34,211,238,0.15);
+display:flex;
+align-items:center;
+justify-content:center;
+cursor:pointer;
+transition:0.25s;
+}
+
+.power-button:hover{
+transform:scale(1.08);
+background:rgba(34,211,238,0.25);
+}
+
+.power-icon{
+width:40px;
+height:40px;
+border:4px solid var(--cyan);
+border-top-color:transparent;
+border-radius:50%;
+position:relative;
+}
+
+.power-icon:before{
+content:"";
+position:absolute;
+top:-9px;
+left:50%;
+transform:translateX(-50%);
+width:4px;
+height:18px;
+background:var(--cyan);
+border-radius:2px;
+}
+
+.title{
+font-size:40px;
+font-weight:700;
+letter-spacing:0.04em;
+}
+
+.subtitle{
+margin-top:10px;
+color:var(--white60);
+}
+
+.loader{
+width:44px;
+height:44px;
+border-radius:50%;
+border:4px solid rgba(125,211,252,0.2);
+border-top-color:var(--cyan);
+animation:spin 1s linear infinite;
+margin-bottom:20px;
+}
+
+@keyframes spin{
+to{transform:rotate(360deg);}
+}
+
+.progress{
+width:260px;
+height:12px;
+border-radius:999px;
+border:1px solid rgba(255,255,255,0.15);
+overflow:hidden;
+margin-top:25px;
+}
+
+.bar{
+height:100%;
+width:0%;
+background:linear-gradient(90deg,#22d3ee,#3b82f6,#8b5cf6);
+transition:width .2s linear;
+}
+
+.status{
+margin-top:15px;
+font-size:14px;
+color:var(--white40);
+}
+
+</style>
 </head>
+
 <body>
-  <section id="power-screen" class="screen power-screen active">
-    <div class="power-wrap">
-      <div class="power-ring">
-        <button id="power-button" class="power-button" aria-label="Power on Malgieri OS">
-          <span class="power-icon" aria-hidden="true"></span>
-        </button>
-      </div>
-      <div class="title">Malgieri OS</div>
-      <div class="subtitle">Press power to boot the system.</div>
-    </div>
-  </section>
 
-  <section id="loading-screen" class="screen loading-screen">
-    <div class="loading-wrap">
-      <div class="loader-shell"><div class="spinner"></div></div>
-      <div class="loading-title">Booting Malgieri OS</div>
-      <div class="loading-text">Loading apps and desktop environment...</div>
-      <div id="loading-status" class="loading-status">Initializing system...</div>
-      <div class="progress-shell">
-        <div id="progress-bar" class="progress-bar"></div>
-      </div>
-    </div>
-  </section>
+<!-- POWER SCREEN -->
+<div id="powerScreen" class="screen">
+<div class="power-ring">
+<div class="power-button" id="powerButton">
+<div class="power-icon"></div>
+</div>
+</div>
 
-  <section id="desktop-screen" class="screen desktop-screen">
-    <header class="topbar">
-      <div class="topbar-left">
-        <span class="status-dot"></span>
-        <strong>Malgieri OS</strong>
-        <span class="muted">App Launcher</span>
-      </div>
-      <div class="topbar-right">
-        <span class="muted">Wi-Fi</span>
-        <span class="muted">•</span>
-        <span id="clock">--:--</span>
-      </div>
-    </header>
+<div class="title">Malgieri OS</div>
+<div class="subtitle">Press power to boot the system</div>
+</div>
 
-    <main class="desktop-main">
-      <div class="app-grid">
-        <button class="desktop-icon" id="launch-scott">
-          <div class="desktop-icon-badge">💻</div>
-          <div class="desktop-icon-label">Scott's Space</div>
-        </button>
+<!-- LOADING SCREEN -->
+<div id="loadingScreen" class="screen hidden">
 
-        <button class="desktop-icon" data-window="courtneys-corner">
-          <div class="desktop-icon-badge">💖</div>
-          <div class="desktop-icon-label">Courtney's Corner</div>
-        </button>
+<div class="loader"></div>
 
-        <button class="desktop-icon" data-window="obis-observatory">
-          <div class="desktop-icon-badge">🐶</div>
-          <div class="desktop-icon-label">Obi's Observatory</div>
-        </button>
+<div class="title" style="font-size:28px;">Booting Malgieri OS</div>
 
-        <button class="desktop-icon" data-window="jaxsons-journey">
-          <div class="desktop-icon-badge">🍼</div>
-          <div class="desktop-icon-label">Jaxson's Journey</div>
-        </button>
+<div class="progress">
+<div class="bar" id="bar"></div>
+</div>
 
-        <button class="desktop-icon" data-window="obi-treat">
-          <div class="desktop-icon-badge">🦴</div>
-          <div class="desktop-icon-label">Obi Treat</div>
-        </button>
-      </div>
-    </main>
+<div class="status" id="status">Initializing system...</div>
 
-    <footer class="dock-wrap">
-      <div class="dock">
-        <span>Apps</span>
-        <span>Browser</span>
-        <span>Photos</span>
-        <span>Music</span>
-        <span>Settings</span>
-      </div>
-    </footer>
-  </section>
+</div>
 
-  <div class="window-layer">
-    <section id="window-courtneys-corner" class="window hidden" style="top: 150px; left: 210px;">
-      <div class="window-head">
-        <div class="window-left">
-          <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
-          <span class="window-title">Courtney's Corner</span>
-        </div>
-        <button class="window-close" data-close="window-courtneys-corner">✕</button>
-      </div>
-      <div class="window-body">
-        <h3>Courtney's Corner</h3>
-        <p>A dedicated space for Courtney with room for memories, favorites, notes, links, and anything personalized just for her.</p>
-        <div class="window-section">
-          <div class="mini-card"><div class="mini-card-title">Emoji</div><div class="mini-card-value">💖</div></div>
-          <div class="mini-card"><div class="mini-card-title">Next Step</div><div class="mini-card-value">Build a full app page</div></div>
-        </div>
-      </div>
-    </section>
+<script>
 
-    <section id="window-obis-observatory" class="window hidden" style="top: 180px; left: 300px;">
-      <div class="window-head">
-        <div class="window-left">
-          <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
-          <span class="window-title">Obi's Observatory</span>
-        </div>
-        <button class="window-close" data-close="window-obis-observatory">✕</button>
-      </div>
-      <div class="window-body">
-        <h3>Obi's Observatory</h3>
-        <p>A fun app for Obi content, goofy updates, favorite photos, ball-chasing moments, and everything Obanator.</p>
-        <div class="window-section">
-          <div class="mini-card"><div class="mini-card-title">App Type</div><div class="mini-card-value">Obi dashboard</div></div>
-          <div class="mini-card"><div class="mini-card-title">Next Step</div><div class="mini-card-value">Photos, memories, and treats</div></div>
-        </div>
-      </div>
-    </section>
+const powerButton = document.getElementById("powerButton")
+const powerScreen = document.getElementById("powerScreen")
+const loadingScreen = document.getElementById("loadingScreen")
+const bar = document.getElementById("bar")
+const status = document.getElementById("status")
 
-    <section id="window-jaxsons-journey" class="window hidden" style="top: 140px; left: 390px;">
-      <div class="window-head">
-        <div class="window-left">
-          <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
-          <span class="window-title">Jaxson's Journey</span>
-        </div>
-        <button class="window-close" data-close="window-jaxsons-journey">✕</button>
-      </div>
-      <div class="window-body">
-        <h3>Jaxson's Journey</h3>
-        <p>A future home for milestones, countdowns, baby updates, keepsakes, and every chapter of Jaxson's story.</p>
-        <div class="window-section">
-          <div class="mini-card"><div class="mini-card-title">App Type</div><div class="mini-card-value">Milestone tracker</div></div>
-          <div class="mini-card"><div class="mini-card-title">Next Step</div><div class="mini-card-value">Timeline, photos, and memories</div></div>
-        </div>
-      </div>
-    </section>
+const messages=[
+"Initializing system...",
+"Loading desktop environment...",
+"Connecting Scott's Space...",
+"Preparing family apps...",
+"Starting services...",
+"Launching desktop..."
+]
 
-    <section id="window-obi-treat" class="window hidden" style="top: 170px; left: 180px;">
-      <div class="window-head">
-        <div class="window-left">
-          <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
-          <span class="window-title">Obi Treat</span>
-        </div>
-        <button class="window-close" data-close="window-obi-treat">✕</button>
-      </div>
-      <div class="window-body">
-        <h3>Obi Treat</h3>
-        <p>A playful one-click app for Obi alerts, treat reminders, and future notifications that make the OS feel alive.</p>
-        <div class="window-section">
-          <div class="mini-card"><div class="mini-card-title">App Type</div><div class="mini-card-value">Quick action app</div></div>
-          <div class="mini-card"><div class="mini-card-title">Next Step</div><div class="mini-card-value">Popup alert or real trigger</div></div>
-        </div>
-      </div>
-    </section>
-  </div>
+powerButton.onclick=()=>{
+powerScreen.classList.add("hidden")
+loadingScreen.classList.remove("hidden")
 
-  <div id="page-transition" class="page-transition"></div>
+let progress=0
+let msgIndex=0
 
-  <script>
-    const powerScreen = document.getElementById("power-screen");
-    const loadingScreen = document.getElementById("loading-screen");
-    const desktopScreen = document.getElementById("desktop-screen");
-    const powerButton = document.getElementById("power-button");
-    const progressBar = document.getElementById("progress-bar");
-    const loadingStatus = document.getElementById("loading-status");
-    const clock = document.getElementById("clock");
-    const launchScott = document.getElementById("launch-scott");
-    const pageTransition = document.getElementById("page-transition");
+const interval=setInterval(()=>{
 
-    const statuses = [
-      "Initializing system...",
-      "Loading app launcher...",
-      "Connecting Scott's Space...",
-      "Preparing Courtney's Corner...",
-      "Starting Obi systems...",
-      "Launching desktop..."
-    ];
+progress+=2
+bar.style.width=progress+"%"
 
-    let statusIndex = 0;
-    let statusTimer = null;
+if(progress%18===0 && msgIndex<messages.length-1){
+msgIndex++
+status.textContent=messages[msgIndex]
+}
 
-    function showScreen(name) {
-      powerScreen.classList.remove("active");
-      loadingScreen.classList.remove("active");
-      desktopScreen.classList.remove("active");
+if(progress>=100){
+clearInterval(interval)
 
-      if (name === "power") powerScreen.classList.add("active");
-      if (name === "loading") loadingScreen.classList.add("active");
-      if (name === "desktop") desktopScreen.classList.add("active");
-    }
+setTimeout(()=>{
+window.location.href="home.html"
+},300)
 
-    function updateClock() {
-      const now = new Date();
-      clock.textContent = now.toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit"
-      });
-    }
+}
 
-    function bootSystem() {
-      showScreen("loading");
-      progressBar.style.width = "0%";
-      statusIndex = 0;
-      loadingStatus.textContent = statuses[0];
+},80)
 
-      const bootLength = 5000;
-      const start = performance.now();
+}
 
-      if (statusTimer) clearInterval(statusTimer);
-      statusTimer = setInterval(() => {
-        statusIndex = Math.min(statusIndex + 1, statuses.length - 1);
-        loadingStatus.textContent = statuses[statusIndex];
-      }, 850);
+</script>
 
-      function animate(now) {
-        const elapsed = now - start;
-        const percent = Math.min((elapsed / bootLength) * 100, 100);
-        progressBar.style.width = percent + "%";
-
-        if (elapsed < bootLength) {
-          requestAnimationFrame(animate);
-        } else {
-          clearInterval(statusTimer);
-          loadingStatus.textContent = "Desktop ready.";
-          setTimeout(() => showScreen("desktop"), 220);
-        }
-      }
-
-      requestAnimationFrame(animate);
-    }
-
-    function launchScottPage() {
-      document.body.classList.add("launching");
-      pageTransition.classList.add("active");
-
-      setTimeout(() => {
-        window.location.href = "Scott.html";
-      }, 700);
-    }
-
-    powerButton.addEventListener("click", bootSystem);
-
-    if (launchScott) {
-      launchScott.addEventListener("click", launchScottPage);
-    }
-
-    updateClock();
-    setInterval(updateClock, 1000);
-
-    const windowsByKey = {
-      "courtneys-corner": document.getElementById("window-courtneys-corner"),
-      "obis-observatory": document.getElementById("window-obis-observatory"),
-      "jaxsons-journey": document.getElementById("window-jaxsons-journey"),
-      "obi-treat": document.getElementById("window-obi-treat")
-    };
-
-    let topZ = 20;
-
-    function openWindow(key) {
-      const el = windowsByKey[key];
-      if (!el) return;
-      el.classList.remove("hidden");
-      topZ += 1;
-      el.style.zIndex = topZ;
-    }
-
-    document.querySelectorAll(".desktop-icon[data-window]").forEach((icon) => {
-      icon.addEventListener("click", () => openWindow(icon.dataset.window));
-    });
-
-    document.querySelectorAll(".window-close").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const target = document.getElementById(btn.dataset.close);
-        if (target) target.classList.add("hidden");
-      });
-    });
-
-    document.querySelectorAll(".window").forEach((win) => {
-      const handle = win.querySelector(".window-head");
-      let dragging = false;
-      let offsetX = 0;
-      let offsetY = 0;
-
-      function startDrag(clientX, clientY) {
-        dragging = true;
-        const rect = win.getBoundingClientRect();
-        offsetX = clientX - rect.left;
-        offsetY = clientY - rect.top;
-        topZ += 1;
-        win.style.zIndex = topZ;
-      }
-
-      function moveDrag(clientX, clientY) {
-        if (!dragging) return;
-        if (window.innerWidth <= 640) return;
-
-        const maxLeft = window.innerWidth - win.offsetWidth - 12;
-        const maxTop = window.innerHeight - win.offsetHeight - 12;
-        const left = Math.max(12, Math.min(clientX - offsetX, maxLeft));
-        const top = Math.max(60, Math.min(clientY - offsetY, maxTop));
-
-        win.style.left = left + "px";
-        win.style.top = top + "px";
-      }
-
-      handle.addEventListener("mousedown", (e) => {
-        if (window.innerWidth <= 640) return;
-        startDrag(e.clientX, e.clientY);
-      });
-
-      window.addEventListener("mousemove", (e) => moveDrag(e.clientX, e.clientY));
-      window.addEventListener("mouseup", () => {
-        dragging = false;
-      });
-
-      handle.addEventListener(
-        "touchstart",
-        (e) => {
-          if (window.innerWidth <= 640) return;
-          const touch = e.touches[0];
-          startDrag(touch.clientX, touch.clientY);
-        },
-        { passive: true }
-      );
-
-      window.addEventListener(
-        "touchmove",
-        (e) => {
-          const touch = e.touches[0];
-          if (touch) moveDrag(touch.clientX, touch.clientY);
-        },
-        { passive: true }
-      );
-
-      window.addEventListener("touchend", () => {
-        dragging = false;
-      });
-
-      win.addEventListener("mousedown", () => {
-        topZ += 1;
-        win.style.zIndex = topZ;
-      });
-    });
-  </script>
 </body>
 </html>
