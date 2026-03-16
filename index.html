@@ -2,38 +2,52 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  />
+  <meta name="theme-color" content="#020617" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="mobile-web-app-capable" content="yes" />
   <title>Malgieri OS</title>
+
   <style>
     :root {
       --bg-1: #020617;
       --bg-2: #0f172a;
       --bg-3: #000000;
       --white: #ffffff;
-      --white-90: rgba(255,255,255,0.90);
-      --white-75: rgba(255,255,255,0.75);
-      --white-70: rgba(255,255,255,0.70);
-      --white-65: rgba(255,255,255,0.65);
-      --white-60: rgba(255,255,255,0.60);
-      --white-55: rgba(255,255,255,0.55);
-      --white-50: rgba(255,255,255,0.50);
-      --white-15: rgba(255,255,255,0.15);
-      --white-10: rgba(255,255,255,0.10);
-      --white-05: rgba(255,255,255,0.05);
+      --white-90: rgba(255, 255, 255, 0.9);
+      --white-75: rgba(255, 255, 255, 0.75);
+      --white-70: rgba(255, 255, 255, 0.7);
+      --white-65: rgba(255, 255, 255, 0.65);
+      --white-60: rgba(255, 255, 255, 0.6);
+      --white-55: rgba(255, 255, 255, 0.55);
+      --white-50: rgba(255, 255, 255, 0.5);
+      --white-15: rgba(255, 255, 255, 0.15);
+      --white-10: rgba(255, 255, 255, 0.1);
+      --white-05: rgba(255, 255, 255, 0.05);
       --cyan: #67e8f9;
       --cyan-soft: rgba(34, 211, 238, 0.14);
-      --blue: #3b82f6;
-      --violet: #8b5cf6;
       --green: #4ade80;
       --red: #f87171;
       --yellow: #facc15;
-      --shadow: 0 24px 70px rgba(0,0,0,0.45);
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
       --blur: blur(18px);
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-right: env(safe-area-inset-right, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-left: env(safe-area-inset-left, 0px);
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-    html, body {
+    html,
+    body {
       margin: 0;
       min-height: 100%;
       font-family: Arial, Helvetica, sans-serif;
@@ -47,17 +61,27 @@
       -webkit-overflow-scrolling: touch;
     }
 
-    body { position: relative; }
-    button { font: inherit; }
+    body {
+      position: relative;
+      padding-left: var(--safe-left);
+      padding-right: var(--safe-right);
+      min-height: 100dvh;
+    }
+
+    button {
+      font: inherit;
+    }
 
     .screen {
       display: none;
-      min-height: 100vh;
+      min-height: 100dvh;
       width: 100%;
       position: relative;
     }
 
-    .screen.active { display: flex; }
+    .screen.active {
+      display: flex;
+    }
 
     .power-screen,
     .loading-screen {
@@ -65,6 +89,8 @@
       justify-content: center;
       text-align: center;
       padding: 24px;
+      padding-top: calc(24px + var(--safe-top));
+      padding-bottom: calc(24px + var(--safe-bottom));
       overflow: hidden;
     }
 
@@ -93,7 +119,7 @@
       width: 96px;
       height: 96px;
       border-radius: 999px;
-      border: 1px solid rgba(34, 211, 238, 0.40);
+      border: 1px solid rgba(34, 211, 238, 0.4);
       background: var(--cyan-soft);
       color: var(--cyan);
       display: inline-flex;
@@ -106,7 +132,7 @@
 
     .power-button:hover {
       transform: scale(1.05);
-      background: rgba(34, 211, 238, 0.20);
+      background: rgba(34, 211, 238, 0.2);
       box-shadow: 0 0 24px rgba(103,232,249,0.18);
     }
 
@@ -165,7 +191,9 @@
       animation: spin 1s linear infinite;
     }
 
-    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
 
     .loading-title {
       font-size: clamp(28px, 4vw, 40px);
@@ -206,18 +234,20 @@
 
     .desktop-screen {
       flex-direction: column;
-      min-height: 100vh;
+      min-height: 100dvh;
     }
 
     .topbar {
-      height: 48px;
+      height: calc(48px + var(--safe-top));
+      padding-top: var(--safe-top);
       border-bottom: 1px solid var(--white-10);
-      background: rgba(0,0,0,0.30);
-      backdrop-filter: blur(12px);
+      background: rgba(0,0,0,0.35);
+      backdrop-filter: blur(14px);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 16px;
+      padding-left: 16px;
+      padding-right: 16px;
       font-size: 14px;
       position: sticky;
       top: 0;
@@ -236,7 +266,7 @@
       height: 10px;
       border-radius: 50%;
       background: var(--green);
-      box-shadow: 0 0 14px rgba(74, 222, 128, 0.80);
+      box-shadow: 0 0 14px rgba(74, 222, 128, 0.8);
       animation: pulse 1.6s infinite;
     }
 
@@ -245,7 +275,9 @@
       50% { opacity: 0.45; }
     }
 
-    .muted { color: var(--white-50); }
+    .muted {
+      color: var(--white-50);
+    }
 
     .desktop-main {
       flex: 1;
@@ -307,7 +339,9 @@
       transition: transform 0.2s ease;
     }
 
-    .desktop-icon:hover .desktop-icon-badge { transform: scale(1.05); }
+    .desktop-icon:hover .desktop-icon-badge {
+      transform: scale(1.05);
+    }
 
     .desktop-icon-label {
       font-size: 15px;
@@ -318,11 +352,11 @@
     }
 
     .dock-wrap {
-      padding: 14px 18px 18px;
+      padding: 14px 18px calc(18px + var(--safe-bottom));
       position: sticky;
       bottom: 0;
       z-index: 11;
-      background: linear-gradient(to top, rgba(2,6,23,0.92), rgba(2,6,23,0));
+      background: linear-gradient(to top, rgba(2,6,23,0.95), rgba(2,6,23,0));
     }
 
     .dock {
@@ -361,10 +395,12 @@
       backdrop-filter: blur(18px);
       box-shadow: 0 26px 90px rgba(0,0,0,0.55);
       pointer-events: auto;
-      max-height: calc(100vh - 88px);
+      max-height: calc(100vh - 88px - var(--safe-top) - var(--safe-bottom));
     }
 
-    .window.hidden { display: none; }
+    .window.hidden {
+      display: none;
+    }
 
     .window-head {
       padding: 14px 18px;
@@ -409,13 +445,15 @@
       transition: background 0.2s ease;
     }
 
-    .window-close:hover { background: rgba(255,255,255,0.16); }
+    .window-close:hover {
+      background: rgba(255,255,255,0.16);
+    }
 
     .window-body {
       padding: 22px;
       color: var(--white-90);
       overflow-y: auto;
-      max-height: calc(100vh - 150px);
+      max-height: calc(100vh - 150px - var(--safe-top) - var(--safe-bottom));
       -webkit-overflow-scrolling: touch;
     }
 
@@ -458,17 +496,21 @@
     }
 
     @media (max-width: 640px) {
-      html, body,
+      html,
+      body,
       .screen,
       .desktop-screen {
         min-height: 100dvh;
       }
 
       .topbar {
-        padding: 0 12px;
+        padding-left: 12px;
+        padding-right: 12px;
       }
 
-      .topbar-left .muted { display: none; }
+      .topbar-left .muted {
+        display: none;
+      }
 
       .desktop-main {
         padding: 18px 14px 0;
@@ -498,7 +540,7 @@
       }
 
       .dock-wrap {
-        padding: 10px 12px 14px;
+        padding: 10px 12px calc(14px + var(--safe-bottom));
       }
 
       .dock {
@@ -513,10 +555,10 @@
       }
 
       .window {
-        width: calc(100vw - 20px);
+        width: calc(100vw - 20px - var(--safe-left) - var(--safe-right));
         left: 10px !important;
-        top: 68px !important;
-        max-height: calc(100dvh - 86px);
+        top: calc(68px + var(--safe-top)) !important;
+        max-height: calc(100dvh - 86px - var(--safe-top) - var(--safe-bottom));
         border-radius: 22px;
       }
 
@@ -526,7 +568,7 @@
 
       .window-body {
         padding: 18px;
-        max-height: calc(100dvh - 150px);
+        max-height: calc(100dvh - 150px - var(--safe-top) - var(--safe-bottom));
       }
     }
   </style>
@@ -564,7 +606,7 @@
         <span class="muted">App Launcher</span>
       </div>
       <div class="topbar-right">
-        <span class="muted">Wi‑Fi</span>
+        <span class="muted">Wi-Fi</span>
         <span class="muted">•</span>
         <span id="clock">--:--</span>
       </div>
@@ -703,43 +745,47 @@
   </div>
 
   <script>
-    const powerScreen = document.getElementById('power-screen');
-    const loadingScreen = document.getElementById('loading-screen');
-    const desktopScreen = document.getElementById('desktop-screen');
-    const powerButton = document.getElementById('power-button');
-    const progressBar = document.getElementById('progress-bar');
-    const loadingStatus = document.getElementById('loading-status');
-    const clock = document.getElementById('clock');
+    const powerScreen = document.getElementById("power-screen");
+    const loadingScreen = document.getElementById("loading-screen");
+    const desktopScreen = document.getElementById("desktop-screen");
+    const powerButton = document.getElementById("power-button");
+    const progressBar = document.getElementById("progress-bar");
+    const loadingStatus = document.getElementById("loading-status");
+    const clock = document.getElementById("clock");
 
     const statuses = [
-      'Initializing system...',
-      'Loading app launcher...',
-      'Connecting Scott\'s Space...',
-      'Preparing Courtney\'s Corner...',
-      'Starting Obi systems...',
-      'Launching desktop...'
+      "Initializing system...",
+      "Loading app launcher...",
+      "Connecting Scott's Space...",
+      "Preparing Courtney's Corner...",
+      "Starting Obi systems...",
+      "Launching desktop..."
     ];
 
     let statusIndex = 0;
     let statusTimer = null;
 
     function showScreen(name) {
-      powerScreen.classList.remove('active');
-      loadingScreen.classList.remove('active');
-      desktopScreen.classList.remove('active');
-      if (name === 'power') powerScreen.classList.add('active');
-      if (name === 'loading') loadingScreen.classList.add('active');
-      if (name === 'desktop') desktopScreen.classList.add('active');
+      powerScreen.classList.remove("active");
+      loadingScreen.classList.remove("active");
+      desktopScreen.classList.remove("active");
+
+      if (name === "power") powerScreen.classList.add("active");
+      if (name === "loading") loadingScreen.classList.add("active");
+      if (name === "desktop") desktopScreen.classList.add("active");
     }
 
     function updateClock() {
       const now = new Date();
-      clock.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      clock.textContent = now.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit"
+      });
     }
 
     function bootSystem() {
-      showScreen('loading');
-      progressBar.style.width = '0%';
+      showScreen("loading");
+      progressBar.style.width = "0%";
       statusIndex = 0;
       loadingStatus.textContent = statuses[0];
 
@@ -755,30 +801,30 @@
       function animate(now) {
         const elapsed = now - start;
         const percent = Math.min((elapsed / bootLength) * 100, 100);
-        progressBar.style.width = percent + '%';
+        progressBar.style.width = percent + "%";
 
         if (elapsed < bootLength) {
           requestAnimationFrame(animate);
         } else {
           clearInterval(statusTimer);
-          loadingStatus.textContent = 'Desktop ready.';
-          setTimeout(() => showScreen('desktop'), 220);
+          loadingStatus.textContent = "Desktop ready.";
+          setTimeout(() => showScreen("desktop"), 220);
         }
       }
 
       requestAnimationFrame(animate);
     }
 
-    powerButton.addEventListener('click', bootSystem);
+    powerButton.addEventListener("click", bootSystem);
     updateClock();
     setInterval(updateClock, 1000);
 
     const windowsByKey = {
-      'scotts-space': document.getElementById('window-scotts-space'),
-      'courtneys-corner': document.getElementById('window-courtneys-corner'),
-      'obis-observatory': document.getElementById('window-obis-observatory'),
-      'jaxsons-journey': document.getElementById('window-jaxsons-journey'),
-      'obi-treat': document.getElementById('window-obi-treat')
+      "scotts-space": document.getElementById("window-scotts-space"),
+      "courtneys-corner": document.getElementById("window-courtneys-corner"),
+      "obis-observatory": document.getElementById("window-obis-observatory"),
+      "jaxsons-journey": document.getElementById("window-jaxsons-journey"),
+      "obi-treat": document.getElementById("window-obi-treat")
     };
 
     let topZ = 20;
@@ -786,24 +832,24 @@
     function openWindow(key) {
       const el = windowsByKey[key];
       if (!el) return;
-      el.classList.remove('hidden');
+      el.classList.remove("hidden");
       topZ += 1;
       el.style.zIndex = topZ;
     }
 
-    document.querySelectorAll('.desktop-icon').forEach((icon) => {
-      icon.addEventListener('click', () => openWindow(icon.dataset.window));
+    document.querySelectorAll(".desktop-icon").forEach((icon) => {
+      icon.addEventListener("click", () => openWindow(icon.dataset.window));
     });
 
-    document.querySelectorAll('.window-close').forEach((btn) => {
-      btn.addEventListener('click', () => {
+    document.querySelectorAll(".window-close").forEach((btn) => {
+      btn.addEventListener("click", () => {
         const target = document.getElementById(btn.dataset.close);
-        if (target) target.classList.add('hidden');
+        if (target) target.classList.add("hidden");
       });
     });
 
-    document.querySelectorAll('.window').forEach((win) => {
-      const handle = win.querySelector('.window-head');
+    document.querySelectorAll(".window").forEach((win) => {
+      const handle = win.querySelector(".window-head");
       let dragging = false;
       let offsetX = 0;
       let offsetY = 0;
@@ -820,36 +866,50 @@
       function moveDrag(clientX, clientY) {
         if (!dragging) return;
         if (window.innerWidth <= 640) return;
+
         const maxLeft = window.innerWidth - win.offsetWidth - 12;
         const maxTop = window.innerHeight - win.offsetHeight - 12;
         const left = Math.max(12, Math.min(clientX - offsetX, maxLeft));
         const top = Math.max(60, Math.min(clientY - offsetY, maxTop));
-        win.style.left = left + 'px';
-        win.style.top = top + 'px';
+
+        win.style.left = left + "px";
+        win.style.top = top + "px";
       }
 
-      handle.addEventListener('mousedown', (e) => {
+      handle.addEventListener("mousedown", (e) => {
         if (window.innerWidth <= 640) return;
         startDrag(e.clientX, e.clientY);
       });
 
-      window.addEventListener('mousemove', (e) => moveDrag(e.clientX, e.clientY));
-      window.addEventListener('mouseup', () => { dragging = false; });
+      window.addEventListener("mousemove", (e) => moveDrag(e.clientX, e.clientY));
+      window.addEventListener("mouseup", () => {
+        dragging = false;
+      });
 
-      handle.addEventListener('touchstart', (e) => {
-        if (window.innerWidth <= 640) return;
-        const touch = e.touches[0];
-        startDrag(touch.clientX, touch.clientY);
-      }, { passive: true });
+      handle.addEventListener(
+        "touchstart",
+        (e) => {
+          if (window.innerWidth <= 640) return;
+          const touch = e.touches[0];
+          startDrag(touch.clientX, touch.clientY);
+        },
+        { passive: true }
+      );
 
-      window.addEventListener('touchmove', (e) => {
-        const touch = e.touches[0];
-        if (touch) moveDrag(touch.clientX, touch.clientY);
-      }, { passive: true });
+      window.addEventListener(
+        "touchmove",
+        (e) => {
+          const touch = e.touches[0];
+          if (touch) moveDrag(touch.clientX, touch.clientY);
+        },
+        { passive: true }
+      );
 
-      window.addEventListener('touchend', () => { dragging = false; });
+      window.addEventListener("touchend", () => {
+        dragging = false;
+      });
 
-      win.addEventListener('mousedown', () => {
+      win.addEventListener("mousedown", () => {
         topZ += 1;
         win.style.zIndex = topZ;
       });
