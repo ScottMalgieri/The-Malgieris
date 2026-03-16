@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Malgieri OS</title>
   <style>
     :root {
@@ -42,7 +42,13 @@
         radial-gradient(circle at bottom left, rgba(168,85,247,0.14), transparent 26%),
         linear-gradient(135deg, var(--bg-1) 0%, var(--bg-2) 45%, var(--bg-3) 100%);
       color: var(--white);
-      overflow: hidden;
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    body {
+      position: relative;
     }
 
     button { font: inherit; }
@@ -64,6 +70,7 @@
       justify-content: center;
       text-align: center;
       padding: 24px;
+      overflow: hidden;
     }
 
     .power-wrap,
@@ -204,6 +211,7 @@
 
     .desktop-screen {
       flex-direction: column;
+      min-height: 100vh;
     }
 
     .topbar {
@@ -216,8 +224,9 @@
       justify-content: space-between;
       padding: 0 16px;
       font-size: 14px;
-      position: relative;
-      z-index: 2;
+      position: sticky;
+      top: 0;
+      z-index: 12;
     }
 
     .topbar-left,
@@ -248,7 +257,9 @@
       padding: 24px 28px 0;
       position: relative;
       z-index: 2;
-      overflow: auto;
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .icon-grid {
@@ -404,8 +415,10 @@
 
     .dock-wrap {
       padding: 14px 18px 18px;
-      position: relative;
-      z-index: 2;
+      position: sticky;
+      bottom: 0;
+      z-index: 11;
+      background: linear-gradient(to top, rgba(2,6,23,0.92), rgba(2,6,23,0));
     }
 
     .dock {
@@ -431,7 +444,7 @@
       position: fixed;
       inset: 0;
       pointer-events: none;
-      z-index: 10;
+      z-index: 20;
     }
 
     .window {
@@ -444,6 +457,7 @@
       backdrop-filter: blur(18px);
       box-shadow: 0 26px 90px rgba(0,0,0,0.55);
       pointer-events: auto;
+      max-height: calc(100vh - 88px);
     }
 
     .window.hidden { display: none; }
@@ -486,6 +500,9 @@
     .window-body {
       padding: 22px;
       color: var(--white-90);
+      overflow-y: auto;
+      max-height: calc(100vh - 150px);
+      -webkit-overflow-scrolling: touch;
     }
 
     .window-body h3 {
@@ -532,11 +549,95 @@
     }
 
     @media (max-width: 640px) {
-      .topbar { padding: 0 12px; }
+      html, body,
+      .screen,
+      .desktop-screen {
+        min-height: 100dvh;
+      }
+
+      .topbar {
+        padding: 0 12px;
+      }
+
       .topbar-left .muted { display: none; }
-      .quick-links { grid-template-columns: 1fr; }
-      .dock { gap: 10px; padding: 12px 16px; }
-      .panel h2 { font-size: 28px; }
+
+      .desktop-main {
+        padding: 16px 14px 0;
+      }
+
+      .icon-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        max-width: none;
+        gap: 14px;
+      }
+
+      .desktop-icon {
+        padding: 8px;
+      }
+
+      .desktop-icon-badge {
+        width: 68px;
+        height: 68px;
+        border-radius: 22px;
+        font-size: 32px;
+      }
+
+      .desktop-icon-label {
+        font-size: 13px;
+      }
+
+      .panel-grid {
+        margin-top: 24px;
+        gap: 16px;
+      }
+
+      .panel {
+        min-height: auto;
+      }
+
+      .panel-body {
+        padding: 18px;
+      }
+
+      .panel h2 {
+        font-size: 28px;
+      }
+
+      .quick-links {
+        grid-template-columns: 1fr;
+      }
+
+      .dock-wrap {
+        padding: 10px 12px 14px;
+      }
+
+      .dock {
+        gap: 10px;
+        padding: 12px 16px;
+        border-radius: 22px;
+        justify-content: flex-start;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        width: 100%;
+        max-width: 100%;
+      }
+
+      .window {
+        width: calc(100vw - 20px);
+        left: 10px !important;
+        top: 68px !important;
+        max-height: calc(100dvh - 86px);
+        border-radius: 22px;
+      }
+
+      .window-head {
+        cursor: default;
+      }
+
+      .window-body {
+        padding: 18px;
+        max-height: calc(100dvh - 150px);
+      }
     }
   </style>
 </head>
@@ -897,6 +998,7 @@
 
       function moveDrag(clientX, clientY) {
         if (!dragging) return;
+        if (window.innerWidth <= 640) return;
         const maxLeft = window.innerWidth - win.offsetWidth - 12;
         const maxTop = window.innerHeight - win.offsetHeight - 12;
         const left = Math.max(12, Math.min(clientX - offsetX, maxLeft));
@@ -906,6 +1008,7 @@
       }
 
       handle.addEventListener('mousedown', (e) => {
+        if (window.innerWidth <= 640) return;
         startDrag(e.clientX, e.clientY);
       });
 
@@ -913,6 +1016,7 @@
       window.addEventListener('mouseup', () => { dragging = false; });
 
       handle.addEventListener('touchstart', (e) => {
+        if (window.innerWidth <= 640) return;
         const touch = e.touches[0];
         startDrag(touch.clientX, touch.clientY);
       }, { passive: true });
