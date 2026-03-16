@@ -235,6 +235,7 @@
     .desktop-screen {
       flex-direction: column;
       min-height: 100dvh;
+      transition: transform 0.45s ease, filter 0.45s ease, opacity 0.45s ease;
     }
 
     .topbar {
@@ -252,6 +253,7 @@
       position: sticky;
       top: 0;
       z-index: 12;
+      transition: transform 0.45s ease, filter 0.45s ease, opacity 0.45s ease;
     }
 
     .topbar-left,
@@ -290,6 +292,7 @@
       display: flex;
       align-items: flex-start;
       justify-content: center;
+      transition: transform 0.45s ease, filter 0.45s ease, opacity 0.45s ease;
     }
 
     .app-grid {
@@ -357,6 +360,7 @@
       bottom: 0;
       z-index: 11;
       background: linear-gradient(to top, rgba(2,6,23,0.95), rgba(2,6,23,0));
+      transition: transform 0.45s ease, filter 0.45s ease, opacity 0.45s ease;
     }
 
     .dock {
@@ -383,6 +387,7 @@
       inset: 0;
       pointer-events: none;
       z-index: 20;
+      transition: opacity 0.35s ease;
     }
 
     .window {
@@ -495,6 +500,54 @@
       font-weight: 600;
     }
 
+    .page-transition {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0;
+      transform: scale(1.04);
+      background:
+        radial-gradient(circle at center, rgba(103, 232, 249, 0.22), transparent 20%),
+        radial-gradient(circle at center, rgba(59, 130, 246, 0.18), transparent 38%),
+        linear-gradient(135deg, #020617 0%, #0f172a 45%, #000000 100%);
+      transition: opacity 0.55s ease, transform 0.7s ease;
+    }
+
+    .page-transition.active {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .page-transition::after {
+      content: "Launching Scott's Space";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      color: rgba(255,255,255,0.92);
+      font-size: clamp(18px, 3vw, 28px);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      opacity: 0;
+      transition: opacity 0.25s ease 0.15s;
+      text-shadow: 0 0 24px rgba(103, 232, 249, 0.18);
+    }
+
+    .page-transition.active::after {
+      opacity: 1;
+    }
+
+    body.launching .desktop-screen,
+    body.launching .topbar,
+    body.launching .desktop-main,
+    body.launching .dock-wrap,
+    body.launching .window-layer {
+      filter: blur(10px);
+      transform: scale(0.985);
+      opacity: 0.7;
+    }
+
     @media (max-width: 640px) {
       html,
       body,
@@ -570,6 +623,10 @@
         padding: 18px;
         max-height: calc(100dvh - 150px - var(--safe-top) - var(--safe-bottom));
       }
+
+      .page-transition::after {
+        font-size: 18px;
+      }
     }
   </style>
 </head>
@@ -614,7 +671,7 @@
 
     <main class="desktop-main">
       <div class="app-grid">
-        <button class="desktop-icon" data-window="scotts-space">
+        <button class="desktop-icon" id="launch-scott">
           <div class="desktop-icon-badge">💻</div>
           <div class="desktop-icon-label">Scott's Space</div>
         </button>
@@ -653,24 +710,6 @@
   </section>
 
   <div class="window-layer">
-    <section id="window-scotts-space" class="window hidden" style="top: 120px; left: 120px;">
-      <div class="window-head">
-        <div class="window-left">
-          <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
-          <span class="window-title">Scott's Space</span>
-        </div>
-        <button class="window-close" data-close="window-scotts-space">✕</button>
-      </div>
-      <div class="window-body">
-        <h3>Scott's Space</h3>
-        <p>Your personal tech zone for projects, links, ideas, gadgets, and whatever cool stuff you want to build next.</p>
-        <div class="window-section">
-          <div class="mini-card"><div class="mini-card-title">App Type</div><div class="mini-card-value">Personal workspace</div></div>
-          <div class="mini-card"><div class="mini-card-title">Next Step</div><div class="mini-card-value">Turn this into its own page</div></div>
-        </div>
-      </div>
-    </section>
-
     <section id="window-courtneys-corner" class="window hidden" style="top: 150px; left: 210px;">
       <div class="window-head">
         <div class="window-left">
@@ -744,6 +783,8 @@
     </section>
   </div>
 
+  <div id="page-transition" class="page-transition"></div>
+
   <script>
     const powerScreen = document.getElementById("power-screen");
     const loadingScreen = document.getElementById("loading-screen");
@@ -752,6 +793,8 @@
     const progressBar = document.getElementById("progress-bar");
     const loadingStatus = document.getElementById("loading-status");
     const clock = document.getElementById("clock");
+    const launchScott = document.getElementById("launch-scott");
+    const pageTransition = document.getElementById("page-transition");
 
     const statuses = [
       "Initializing system...",
@@ -815,12 +858,25 @@
       requestAnimationFrame(animate);
     }
 
+    function launchScottPage() {
+      document.body.classList.add("launching");
+      pageTransition.classList.add("active");
+
+      setTimeout(() => {
+        window.location.href = "Scott.html";
+      }, 700);
+    }
+
     powerButton.addEventListener("click", bootSystem);
+
+    if (launchScott) {
+      launchScott.addEventListener("click", launchScottPage);
+    }
+
     updateClock();
     setInterval(updateClock, 1000);
 
     const windowsByKey = {
-      "scotts-space": document.getElementById("window-scotts-space"),
       "courtneys-corner": document.getElementById("window-courtneys-corner"),
       "obis-observatory": document.getElementById("window-obis-observatory"),
       "jaxsons-journey": document.getElementById("window-jaxsons-journey"),
@@ -837,7 +893,7 @@
       el.style.zIndex = topZ;
     }
 
-    document.querySelectorAll(".desktop-icon").forEach((icon) => {
+    document.querySelectorAll(".desktop-icon[data-window]").forEach((icon) => {
       icon.addEventListener("click", () => openWindow(icon.dataset.window));
     });
 
