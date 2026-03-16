@@ -1,1 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  />
+  <meta name="theme-color" content="#020617" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <title>Scott's Space</title>
 
+  <style>
+    :root {
+      --bg-1: #020617;
+      --bg-2: #0f172a;
+      --bg-3: #000000;
+      --white: #ffffff;
+      --white-90: rgba(255,255,255,0.90);
+      --white-75: rgba(255,255,255,0.75);
+      --white-70: rgba(255,255,255,0.70);
+      --white-65: rgba(255,255,255,0.65);
+      --white-60: rgba(255,255,255,0.60);
+      --white-55: rgba(255,255,255,0.55);
+      --white-50: rgba(255,255,255,0.50);
+      --white-15: rgba(255,255,255,0.15);
+      --white-10: rgba(255,255,255,0.10);
+      --white-05: rgba(255,255,255,0.05);
+      --cyan: #67e8f9;
+      --green: #4ade80;
+      --red: #f87171;
+      --yellow: #facc15;
+      --shadow: 0 24px 70px rgba(0,0,0,0.45);
+      --blur: blur(18px);
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-right: env(safe-area-inset-right, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-left: env(safe-area-inset-left, 0px);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(59,130,246,0.18), transparent 28%),
+        radial-gradient(circle at bottom left, rgba(168,85,247,0.14), transparent 26%),
+        linear-gradient(135deg, var(--bg-1) 0%, var(--bg-2) 45%, var(--bg-3) 100%);
+      color: var(--white);
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    body {
+      padding-left: var(--safe-left);
+      padding-right: var(--safe-right);
+      min-height: 100dvh;
+      opacity: 0;
+      transform: scale(1.015);
+      animation: pageIn 0.55s ease forwards;
+    }
+
+    @keyframes pageIn {
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .topbar {
+      height: calc(52px + var(--safe-top));
+      padding-top: var(--safe-top);
+      border-bottom: 1px solid var(--white-10);
+      background: rgba(0,0,0,0.35);
+      backdrop-filter: blur(14px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-left: 16px;
+      padding-right: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .topbar-left,
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 14px rgba(74, 222, 128, 0.8);
+    }
+
+    .muted {
+      color: var(--white-50);
+      font-size: 14px;
+    }
+
+    .clock {
+      font-size: 14px;
+      color: var(--white-75);
+    }
+
+    .page-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 20px calc(28px + var(--safe-bottom));
+    }
+
+    .hero {
+      border: 1px solid var(--white-10);
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: var(--blur);
+      border-radius: 30px;
+      box-shadow: var(--shadow);
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--white-10);
+      background: rgba(255,255,255,0.05);
+      color: var(--white-90);
+      padding: 10px 14px;
+      border-radius: 999px;
+      text-decoration: none;
+      margin-bottom: 18px;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .back-btn:hover {
+      background: rgba(255,255,255,0.10);
+      transform: translateY(-2px);
+    }
+
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: clamp(34px, 5vw, 52px);
+      line-height: 1.05;
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--white-70);
+      font-size: 18px;
+      line-height: 1.65;
+      max-width: 780px;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .pill {
+      border: 1px solid var(--white-10);
+      background: rgba(255,255,255,0.04);
+      color: var(--white-75);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 14px;
+    }
+
+    .section-title {
+      margin: 0 0 16px;
+      font-size: 24px;
+    }
+
+    .app-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+
+    .app-card {
+      border: 1px solid var(--white-10);
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: var(--blur);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 22px 18px;
+      min-height: 170px;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .app-card:hover {
+      transform: translateY(-4px);
+      background: rgba(255,255,255,0.08);
+    }
+
+    .app-icon {
+      width: 70px;
+      height: 70px;
+      border-radius: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid var(--white-10);
+      margin-bottom: 14px;
+    }
+
+    .app-card h3 {
+      margin: 0 0 8px;
+      font-size: 20px;
+    }
+
+    .app-card p {
+      margin: 0;
+      color: var(--white-65);
+      line-height: 1.55;
+      font-size: 15px;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 18px;
+    }
+
+    .panel {
+      border: 1px solid var(--white-10);
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: var(--blur);
+      border-radius: 28px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--white-10);
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .dot.red { background: var(--red); }
+    .dot.yellow { background: var(--yellow); }
+    .dot.green { background: var(--green); }
+
+    .panel-title {
+      margin-left: 8px;
+      color: var(--white-70);
+      font-size: 14px;
+    }
+
+    .panel-body {
+      padding: 22px;
+    }
+
+    .panel-body h3 {
+      margin: 0 0 10px;
+      font-size: 24px;
+    }
+
+    .panel-body p,
+    .panel-body li {
+      color: var(--white-70);
+      line-height: 1.65;
+      font-size: 16px;
+    }
+
+    .panel-body ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .quick-stack {
+      display: grid;
+      gap: 12px;
+    }
+
+    .mini-card {
+      border: 1px solid var(--white-10);
+      background: rgba(255,255,255,0.04);
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .mini-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--white-50);
+      margin-bottom: 6px;
+    }
+
+    .mini-value {
+      font-size: 17px;
+      color: var(--white-90);
+      font-weight: 600;
+    }
+
+    @media (max-width: 860px) {
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .topbar {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+
+      .hero {
+        padding: 22px 18px;
+        border-radius: 24px;
+      }
+
+      .hero p {
+        font-size: 16px;
+      }
+
+      .app-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .app-card {
+        min-height: 150px;
+        padding: 18px 14px;
+        border-radius: 20px;
+      }
+
+      .app-icon {
+        width: 58px;
+        height: 58px;
+        font-size: 28px;
+        border-radius: 18px;
+      }
+
+      .app-card h3 {
+        font-size: 17px;
+      }
+
+      .app-card p {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-left">
+      <span class="status-dot"></span>
+      <strong>Scott's Space</strong>
+      <span class="muted">Malgieri OS App</span>
+    </div>
+    <div class="topbar-right">
+      <span class="muted">Online</span>
+      <span class="muted">•</span>
+      <span id="clock" class="clock">--:--</span>
+    </div>
+  </header>
+
+  <main class="page-wrap">
+    <section class="hero">
+      <a href="index.html" class="back-btn">← Back to Desktop</a>
+      <h1>Welcome to Scott’s Space</h1>
+      <p>
+        This is your personal zone inside Malgieri OS — a place for your projects,
+        favorite links, setup ideas, tech experiments, family creations, and whatever
+        cool stuff you want to build next.
+      </p>
+
+      <div class="hero-meta">
+        <div class="pill">💻 Tech Hub</div>
+        <div class="pill">⚡ Project Launcher</div>
+        <div class="pill">🚀 Future Build Zone</div>
+      </div>
+    </section>
+
+    <h2 class="section-title">Apps</h2>
+    <section class="app-grid">
+      <div class="app-card">
+        <div class="app-icon">🛠️</div>
+        <h3>Projects</h3>
+        <p>Track current builds, website ideas, home tech projects, and experiments.</p>
+      </div>
+
+      <div class="app-card">
+        <div class="app-icon">🌐</div>
+        <h3>Links</h3>
+        <p>Quick access to your favorite sites, dashboards, tools, and resources.</p>
+      </div>
+
+      <div class="app-card">
+        <div class="app-icon">🎮</div>
+        <h3>Setup</h3>
+        <p>Your gaming, streaming, desk setup, gear ideas, and future upgrades.</p>
+      </div>
+
+      <div class="app-card">
+        <div class="app-icon">🧠</div>
+        <h3>Ideas</h3>
+        <p>A place to store random sparks, site concepts, automations, and fun builds.</p>
+      </div>
+    </section>
+
+    <section class="content-grid">
+      <div class="panel">
+        <div class="panel-head">
+          <span class="dot red"></span>
+          <span class="dot yellow"></span>
+          <span class="dot green"></span>
+          <span class="panel-title">Workspace Overview</span>
+        </div>
+        <div class="panel-body">
+          <h3>Your Command Center</h3>
+          <p>
+            Scott’s Space should feel like your personal operating system inside the operating system.
+            This can become the place where everything you care about lives in one clean, futuristic hub.
+          </p>
+          <ul>
+            <li>Project cards and active builds</li>
+            <li>Favorite links and shortcuts</li>
+            <li>Tech gear and setup plans</li>
+            <li>Blog-style updates</li>
+            <li>Creative ideas and notes</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="quick-stack">
+        <div class="mini-card">
+          <div class="mini-title">Status</div>
+          <div class="mini-value">Scott’s Space v1</div>
+        </div>
+        <div class="mini-card">
+          <div class="mini-title">Theme</div>
+          <div class="mini-value">Dark / Futuristic / Clean</div>
+        </div>
+        <div class="mini-card">
+          <div class="mini-title">Next Move</div>
+          <div class="mini-value">Build your real modules</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    function updateClock() {
+      const now = new Date();
+      document.getElementById("clock").textContent = now.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    }
+
+    updateClock();
+    setInterval(updateClock, 1000);
+  </script>
+</body>
+</html>
