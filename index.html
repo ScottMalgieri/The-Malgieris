@@ -1,367 +1,404 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-  />
-  <meta name="theme-color" content="#020617" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="mobile-web-app-capable" content="yes" />
-  <title>Malgieri OS</title>
+<meta charset="UTF-8">
 
-  <style>
-    :root {
-      --bg-1: #020617;
-      --bg-2: #0f172a;
-      --bg-3: #000000;
-      --white: #ffffff;
-      --white-70: rgba(255,255,255,0.70);
-      --white-60: rgba(255,255,255,0.60);
-      --white-50: rgba(255,255,255,0.50);
-      --white-15: rgba(255,255,255,0.15);
-      --white-10: rgba(255,255,255,0.10);
-      --white-05: rgba(255,255,255,0.05);
-      --cyan: #67e8f9;
-      --cyan-soft: rgba(34, 211, 238, 0.14);
-      --safe-top: env(safe-area-inset-top, 0px);
-      --safe-right: env(safe-area-inset-right, 0px);
-      --safe-bottom: env(safe-area-inset-bottom, 0px);
-      --safe-left: env(safe-area-inset-left, 0px);
-    }
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
+<meta name="theme-color" content="#020617">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-    html,
-    body {
-      margin: 0;
-      min-height: 100%;
-      font-family: Arial, Helvetica, sans-serif;
-      background:
-        radial-gradient(circle at top right, rgba(59,130,246,0.18), transparent 28%),
-        radial-gradient(circle at bottom left, rgba(168,85,247,0.14), transparent 26%),
-        linear-gradient(135deg, var(--bg-1) 0%, var(--bg-2) 45%, var(--bg-3) 100%);
-      color: var(--white);
-      overflow: hidden;
-    }
+<title>Malgieri OS</title>
 
-    body {
-      min-height: 100dvh;
-      padding-left: var(--safe-left);
-      padding-right: var(--safe-right);
-    }
+<style>
 
-    .screen {
-      position: fixed;
-      inset: 0;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 28px;
-      padding-top: calc(28px + var(--safe-top));
-      padding-bottom: calc(28px + var(--safe-bottom));
-      overflow: hidden;
-    }
+:root{
+--bg1:#020617;
+--bg2:#0f172a;
+--bg3:#000000;
+--white:#ffffff;
+--white60:rgba(255,255,255,0.60);
+--white50:rgba(255,255,255,0.50);
+--white10:rgba(255,255,255,0.10);
+--cyan:#67e8f9;
 
-    .screen.active {
-      display: flex;
-    }
+--safe-top:env(safe-area-inset-top,0px);
+--safe-bottom:env(safe-area-inset-bottom,0px);
+--safe-left:env(safe-area-inset-left,0px);
+--safe-right:env(safe-area-inset-right,0px);
+}
 
-    .screen::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(circle at top right, rgba(59,130,246,0.18), transparent 28%),
-        radial-gradient(circle at bottom left, rgba(168,85,247,0.14), transparent 26%);
-      pointer-events: none;
-    }
+*{
+box-sizing:border-box;
+-webkit-tap-highlight-color:transparent;
+}
 
-    .center-wrap {
-      position: relative;
-      z-index: 2;
-      width: min(92vw, 640px);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
+html,body{
 
-    .power-ring {
-      width: 150px;
-      height: 150px;
-      margin: 0 auto 30px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 999px;
-      border: 1px solid var(--white-15);
-      background: var(--white-05);
-      backdrop-filter: blur(16px);
-      box-shadow: 0 0 60px rgba(59,130,246,0.18);
-    }
+margin:0;
+min-height:100%;
+font-family:Arial,Helvetica,sans-serif;
 
-    .power-button {
-      width: 96px;
-      height: 96px;
-      border-radius: 999px;
-      border: 1px solid rgba(34, 211, 238, 0.40);
-      background: var(--cyan-soft);
-      color: var(--cyan);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
-      box-shadow: 0 0 0 rgba(103,232,249,0);
-    }
+background:
+radial-gradient(circle at top right, rgba(59,130,246,0.18), transparent 30%),
+radial-gradient(circle at bottom left, rgba(168,85,247,0.14), transparent 30%),
+linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));
 
-    .power-button:hover {
-      transform: scale(1.05);
-      background: rgba(34, 211, 238, 0.20);
-      box-shadow: 0 0 24px rgba(103,232,249,0.18);
-    }
+color:white;
+overflow:hidden;
 
-    .power-icon {
-      width: 40px;
-      height: 40px;
-      border: 4px solid currentColor;
-      border-top-color: transparent;
-      border-radius: 50%;
-      position: relative;
-    }
+}
 
-    .power-icon::before {
-      content: "";
-      position: absolute;
-      left: 50%;
-      top: -8px;
-      transform: translateX(-50%);
-      width: 4px;
-      height: 18px;
-      border-radius: 999px;
-      background: currentColor;
-    }
+body{
 
-    .title {
-      font-size: clamp(36px, 6vw, 50px);
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      line-height: 1.05;
-    }
+min-height:100dvh;
+padding-left:var(--safe-left);
+padding-right:var(--safe-right);
 
-    .subtitle {
-      margin-top: 12px;
-      color: var(--white-60);
-      font-size: 18px;
-      line-height: 1.5;
-      max-width: 520px;
-    }
+}
 
-    .loader-shell {
-      width: 96px;
-      height: 96px;
-      margin: 0 auto 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 999px;
-      border: 1px solid var(--white-10);
-      background: var(--white-05);
-      backdrop-filter: blur(16px);
-    }
+.screen{
 
-    .spinner {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      border: 4px solid rgba(125, 211, 252, 0.18);
-      border-top-color: var(--cyan);
-      animation: spin 1s linear infinite;
-    }
+position:fixed;
+inset:0;
 
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
+display:none;
+align-items:center;
+justify-content:center;
+text-align:center;
 
-    .loading-title {
-      font-size: clamp(28px, 5vw, 40px);
-      font-weight: 600;
-      line-height: 1.1;
-    }
+padding:28px;
+padding-top:calc(28px + var(--safe-top));
+padding-bottom:calc(28px + var(--safe-bottom));
 
-    .loading-text {
-      margin-top: 12px;
-      color: var(--white-60);
-      font-size: 18px;
-      line-height: 1.5;
-    }
+}
 
-    .loading-status {
-      margin-top: 18px;
-      min-height: 22px;
-      color: var(--white-50);
-      font-size: 14px;
-      letter-spacing: 0.02em;
-    }
+.screen.active{
+display:flex;
+}
 
-    .progress-shell {
-      margin-top: 28px;
-      width: min(420px, 100%);
-      height: 14px;
-      border-radius: 999px;
-      overflow: hidden;
-      border: 1px solid var(--white-10);
-      background: var(--white-05);
-    }
+.center{
+width:min(92vw,600px);
+}
 
-    .progress-bar {
-      width: 0%;
-      height: 100%;
-      border-radius: 999px;
-      background: linear-gradient(90deg, #22d3ee, #3b82f6, #8b5cf6);
-      box-shadow: 0 0 26px rgba(59,130,246,0.35);
-      transition: width 0.18s linear;
-    }
+.power-ring{
 
-    @media (max-width: 640px) {
-      body {
-        min-height: 100dvh;
-      }
+width:150px;
+height:150px;
 
-      .screen {
-        min-height: 100dvh;
-        padding: 22px;
-        padding-top: calc(22px + var(--safe-top));
-        padding-bottom: calc(22px + var(--safe-bottom));
-      }
+border-radius:50%;
+border:1px solid rgba(255,255,255,0.15);
 
-      .power-ring {
-        width: 132px;
-        height: 132px;
-        margin-bottom: 26px;
-      }
+display:flex;
+align-items:center;
+justify-content:center;
 
-      .power-button {
-        width: 88px;
-        height: 88px;
-      }
+margin:0 auto 28px;
 
-      .power-icon {
-        width: 36px;
-        height: 36px;
-      }
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(16px);
 
-      .subtitle,
-      .loading-text {
-        font-size: 16px;
-      }
+}
 
-      .loading-status {
-        font-size: 13px;
-      }
+.power-button{
 
-      .progress-shell {
-        margin-top: 24px;
-      }
-    }
-  </style>
+width:95px;
+height:95px;
+
+border-radius:50%;
+
+border:1px solid rgba(34,211,238,0.4);
+background:rgba(34,211,238,0.18);
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+cursor:pointer;
+
+transition:.25s;
+
+}
+
+.power-button:hover{
+transform:scale(1.05);
+}
+
+.power-icon{
+
+width:40px;
+height:40px;
+
+border:4px solid var(--cyan);
+border-top-color:transparent;
+border-radius:50%;
+
+position:relative;
+
+}
+
+.power-icon:before{
+
+content:"";
+
+position:absolute;
+left:50%;
+top:-8px;
+
+transform:translateX(-50%);
+
+width:4px;
+height:18px;
+
+background:var(--cyan);
+border-radius:2px;
+
+}
+
+.title{
+font-size:40px;
+font-weight:700;
+}
+
+.subtitle{
+margin-top:10px;
+color:var(--white60);
+}
+
+.loader{
+
+width:42px;
+height:42px;
+
+border-radius:50%;
+
+border:4px solid rgba(125,211,252,0.18);
+border-top-color:var(--cyan);
+
+animation:spin 1s linear infinite;
+
+margin:0 auto 18px;
+
+}
+
+@keyframes spin{
+to{transform:rotate(360deg);}
+}
+
+.progress{
+
+margin-top:24px;
+height:14px;
+border-radius:999px;
+
+border:1px solid var(--white10);
+background:rgba(255,255,255,0.05);
+
+overflow:hidden;
+
+}
+
+.bar{
+
+height:100%;
+width:0%;
+
+background:linear-gradient(90deg,#22d3ee,#3b82f6,#8b5cf6);
+
+transition:.15s linear;
+
+}
+
+.status{
+
+margin-top:14px;
+font-size:14px;
+color:var(--white50);
+
+}
+
+/* STARTUP TRANSITION */
+
+.startup{
+
+position:fixed;
+inset:0;
+
+z-index:9999;
+
+pointer-events:none;
+
+opacity:0;
+transform:scale(1.04);
+
+background:
+radial-gradient(circle at center, rgba(103,232,249,0.25), transparent 20%),
+radial-gradient(circle at center, rgba(59,130,246,0.18), transparent 40%),
+linear-gradient(135deg,#020617,#0f172a,#000);
+
+transition:opacity .55s ease, transform .7s ease;
+
+}
+
+.startup.active{
+
+opacity:1;
+transform:scale(1);
+
+}
+
+.startup:after{
+
+content:"Launching Desktop...";
+
+position:absolute;
+left:50%;
+top:50%;
+
+transform:translate(-50%,-50%);
+
+font-size:26px;
+font-weight:700;
+
+opacity:0;
+
+transition:opacity .25s ease .2s;
+
+}
+
+.startup.active:after{
+opacity:1;
+}
+
+body.launching .screen.active{
+
+filter:blur(8px);
+transform:scale(.98);
+
+transition:.4s;
+
+}
+
+</style>
 </head>
+
 <body>
-  <section id="power-screen" class="screen active">
-    <div class="center-wrap">
-      <div class="power-ring">
-        <button id="power-button" class="power-button" aria-label="Power on Malgieri OS">
-          <span class="power-icon" aria-hidden="true"></span>
-        </button>
-      </div>
-      <div class="title">Malgieri OS</div>
-      <div class="subtitle">Press Power To Boot The System.</div>
-    </div>
-  </section>
 
-  <section id="loading-screen" class="screen">
-    <div class="center-wrap">
-      <div class="loader-shell">
-        <div class="spinner"></div>
-      </div>
-      <div class="loading-title">Booting Malgieri OS</div>
-      <div class="loading-text">Loading Apps and Desktop Environment...</div>
-      <div id="loading-status" class="loading-status">Initializing System...</div>
-      <div class="progress-shell">
-        <div id="progress-bar" class="progress-bar"></div>
-      </div>
-    </div>
-  </section>
+<section id="power" class="screen active">
 
-  <script>
-    const powerScreen = document.getElementById("power-screen");
-    const loadingScreen = document.getElementById("loading-screen");
-    const powerButton = document.getElementById("power-button");
-    const progressBar = document.getElementById("progress-bar");
-    const loadingStatus = document.getElementById("loading-status");
+<div class="center">
 
-    const statuses = [
-      "Initializing System...",
-      "Loading Desktop Environment...",
-      "Connecting To Scott's Space...",
-      "Preparing Courtney's Corner...",
-      "Starting Services...",
-      "Launching desktop..."
-    ];
+<div class="power-ring">
 
-    let statusIndex = 0;
-    let statusTimer = null;
+<div id="powerBtn" class="power-button">
 
-    function showScreen(name) {
-      powerScreen.classList.remove("active");
-      loadingScreen.classList.remove("active");
+<div class="power-icon"></div>
 
-      if (name === "power") powerScreen.classList.add("active");
-      if (name === "loading") loadingScreen.classList.add("active");
-    }
+</div>
 
-    function bootSystem() {
-      showScreen("loading");
-      progressBar.style.width = "0%";
-      statusIndex = 0;
-      loadingStatus.textContent = statuses[0];
+</div>
 
-      const bootLength = 5000;
-      const start = performance.now();
+<div class="title">Malgieri OS</div>
 
-      if (statusTimer) clearInterval(statusTimer);
-      statusTimer = setInterval(() => {
-        statusIndex = Math.min(statusIndex + 1, statuses.length - 1);
-        loadingStatus.textContent = statuses[statusIndex];
-      }, 850);
+<div class="subtitle">Press Power To Boot The system</div>
 
-      function animate(now) {
-        const elapsed = now - start;
-        const percent = Math.min((elapsed / bootLength) * 100, 100);
-        progressBar.style.width = percent + "%";
+</div>
 
-        if (elapsed < bootLength) {
-          requestAnimationFrame(animate);
-        } else {
-          clearInterval(statusTimer);
-          loadingStatus.textContent = "Desktop ready.";
-          setTimeout(() => {
-            window.location.href = "home.html";
-          }, 250);
-        }
-      }
+</section>
 
-      requestAnimationFrame(animate);
-    }
 
-    powerButton.addEventListener("click", bootSystem);
-  </script>
+<section id="loading" class="screen">
+
+<div class="center">
+
+<div class="loader"></div>
+
+<div class="title" style="font-size:28px">Booting Malgieri OS</div>
+
+<div class="progress">
+
+<div id="bar" class="bar"></div>
+
+</div>
+
+<div id="status" class="status">Initializing System...</div>
+
+</div>
+
+</section>
+
+
+<div id="startup" class="startup"></div>
+
+<script>
+
+const powerBtn=document.getElementById("powerBtn")
+const power=document.getElementById("power")
+const loading=document.getElementById("loading")
+
+const bar=document.getElementById("bar")
+const status=document.getElementById("status")
+
+const startup=document.getElementById("startup")
+
+const messages=[
+
+"Initializing System...",
+"Loading Desktop Environment...",
+"Connecting To Scott's Space...",
+"Preparing Courtney's Corner...",
+"Starting Services...",
+"Launching Desktop..."
+
+]
+
+powerBtn.onclick=()=>{
+
+power.classList.remove("active")
+loading.classList.add("active")
+
+let progress=0
+let msg=0
+
+const interval=setInterval(()=>{
+
+progress+=2
+
+bar.style.width=progress+"%"
+
+if(progress%18===0 && msg<messages.length-1){
+
+msg++
+status.textContent=messages[msg]
+
+}
+
+if(progress>=100){
+
+clearInterval(interval)
+
+setTimeout(()=>{
+
+document.body.classList.add("launching")
+startup.classList.add("active")
+
+setTimeout(()=>{
+
+window.location.href="home.html"
+
+},850)
+
+},300)
+
+}
+
+},80)
+
+}
+
+</script>
+
 </body>
 </html>
