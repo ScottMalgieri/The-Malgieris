@@ -28,12 +28,8 @@
       --white70: rgba(255, 255, 255, 0.7);
       --white60: rgba(255, 255, 255, 0.6);
       --white50: rgba(255, 255, 255, 0.5);
-      --white15: rgba(255, 255, 255, 0.15);
       --white10: rgba(255, 255, 255, 0.1);
       --white05: rgba(255, 255, 255, 0.05);
-
-      --cyan: #67e8f9;
-      --red: #f87171;
 
       --safe-top: env(safe-area-inset-top, 0px);
       --safe-bottom: env(safe-area-inset-bottom, 0px);
@@ -49,22 +45,23 @@
     html,
     body {
       margin: 0;
+      width: 100%;
+      max-width: 100%;
       min-height: 100%;
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
       font-family: Arial, Helvetica, sans-serif;
       color: var(--white);
       background:
         radial-gradient(circle at top right, rgba(59,130,246,0.18), transparent 30%),
         radial-gradient(circle at bottom left, rgba(168,85,247,0.14), transparent 30%),
         linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
-      overflow-x: hidden;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
     }
 
     body {
       min-height: 100dvh;
-      padding-left: var(--safe-left);
-      padding-right: var(--safe-right);
+      overscroll-behavior: none;
     }
 
     .app-shell {
@@ -74,7 +71,7 @@
       opacity: 0;
       transform: scale(1.01);
       animation: pageIn 0.35s ease forwards;
-      transition: transform 0.55s ease, filter 0.55s ease, opacity 0.55s ease;
+      transition: filter 0.5s ease, opacity 0.5s ease, transform 0.5s ease;
       will-change: transform, filter, opacity;
     }
 
@@ -92,19 +89,18 @@
     }
 
     body.shutdown-transition .app-shell {
-      transform: scale(0.94);
-      filter: blur(14px) brightness(0.55);
-      opacity: 0;
+      filter: blur(8px) brightness(0.55);
+      opacity: 0.2;
     }
 
     .topbar {
       height: calc(54px + var(--safe-top));
       padding-top: var(--safe-top);
+      padding-left: calc(16px + var(--safe-left));
+      padding-right: calc(16px + var(--safe-right));
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding-left: 16px;
-      padding-right: 16px;
       border-bottom: 1px solid var(--white10);
       background: rgba(0, 0, 0, 0.35);
       backdrop-filter: blur(14px);
@@ -255,9 +251,6 @@
       transform: translateY(-2px);
       background: rgba(248, 113, 113, 0.14);
       border-color: rgba(248, 113, 113, 0.4);
-      box-shadow:
-        0 0 18px rgba(248, 113, 113, 0.16),
-        0 12px 30px rgba(0, 0, 0, 0.28);
     }
 
     .shutdown-icon {
@@ -334,30 +327,15 @@
     }
 
     @keyframes iconBlast {
-      0% {
-        opacity: 1;
-        transform: translateY(-2px) scale(1.02);
-      }
-      22% {
-        opacity: 1;
-        transform: translateY(-10px) scale(1.08);
-      }
-      100% {
-        opacity: 0;
-        transform: scale(2.8);
-      }
+      0% { opacity: 1; transform: translateY(-2px) scale(1.02); }
+      22% { opacity: 1; transform: translateY(-10px) scale(1.08); }
+      100% { opacity: 0; transform: scale(2.8); }
     }
 
     @keyframes badgeBlast {
-      0% {
-        transform: scale(1);
-      }
-      22% {
-        transform: scale(1.12);
-      }
-      100% {
-        transform: scale(1.55);
-      }
+      0% { transform: scale(1); }
+      22% { transform: scale(1.12); }
+      100% { transform: scale(1.55); }
     }
 
     .launch {
@@ -373,39 +351,11 @@
         linear-gradient(135deg, #020617, #0f172a, #000);
       transition: opacity 0.42s ease, transform 0.9s ease;
       overflow: hidden;
-      will-change: transform, opacity;
     }
 
     .launch.active {
       opacity: 1;
       transform: scale(1);
-    }
-
-    .launch::before {
-      content: "";
-      position: absolute;
-      inset: -10%;
-      background:
-        radial-gradient(circle at center, rgba(103, 232, 249, 0.16), transparent 26%);
-      opacity: 0;
-    }
-
-    .launch.active::before {
-      animation: launchBloom 1.15s ease-out forwards;
-    }
-
-    @keyframes launchBloom {
-      0% {
-        opacity: 0;
-        transform: scale(0.5);
-      }
-      28% {
-        opacity: 1;
-      }
-      100% {
-        opacity: 0;
-        transform: scale(1.8);
-      }
     }
 
     .launch::after {
@@ -425,10 +375,8 @@
       opacity: 0;
       text-shadow:
         0 0 12px rgba(103, 232, 249, 0.95),
-        0 0 30px rgba(59, 130, 246, 0.85),
-        0 0 60px rgba(139, 92, 246, 0.35);
+        0 0 30px rgba(59, 130, 246, 0.85);
       transition: opacity 0.22s ease 0.06s, transform 0.6s cubic-bezier(.2,.8,.2,1) 0.06s;
-      will-change: transform, opacity;
     }
 
     .launch.active::after {
@@ -436,103 +384,7 @@
       transform: translate(-50%, -50%) scale(1);
     }
 
-    .launch-ring {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 190px;
-      height: 190px;
-      border-radius: 50%;
-      transform: translate(-50%, -50%) scale(0.22);
-      border: 2px solid rgba(103, 232, 249, 0.98);
-      box-shadow:
-        0 0 28px rgba(103, 232, 249, 0.85),
-        0 0 80px rgba(59, 130, 246, 0.5),
-        inset 0 0 26px rgba(103, 232, 249, 0.18);
-      opacity: 0;
-      will-change: transform, opacity;
-    }
-
-    .launch.active .launch-ring {
-      animation: ringExpand 1s cubic-bezier(.2,.8,.2,1) forwards;
-    }
-
-    @keyframes ringExpand {
-      0% {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(0.16);
-      }
-      12% {
-        opacity: 1;
-      }
-      100% {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(4.2);
-      }
-    }
-
-    .launch-pulse {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      transform: translate(-50%, -50%) scale(0.1);
-      background: radial-gradient(
-        circle,
-        rgba(255,255,255,1) 0%,
-        rgba(103,232,249,0.98) 22%,
-        rgba(59,130,246,0.58) 48%,
-        transparent 72%
-      );
-      filter: blur(1px);
-      opacity: 0;
-      will-change: transform, opacity;
-    }
-
-    .launch.active .launch-pulse {
-      animation: centerPulse 0.9s cubic-bezier(.2,.8,.2,1) forwards;
-    }
-
-    @keyframes centerPulse {
-      0% {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(0.1);
-      }
-      18% {
-        opacity: 1;
-      }
-      100% {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(11);
-      }
-    }
-
-    .launch-flash {
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at center, rgba(255,255,255,0.16), transparent 28%);
-      opacity: 0;
-      mix-blend-mode: screen;
-    }
-
-    .launch.active .launch-flash {
-      animation: flashFade 0.75s ease-out forwards;
-    }
-
-    @keyframes flashFade {
-      0% {
-        opacity: 0;
-      }
-      18% {
-        opacity: 1;
-      }
-      100% {
-        opacity: 0;
-      }
-    }
-
+    /* Shutdown overlay */
     .shutdown-overlay {
       position: fixed;
       inset: 0;
@@ -540,25 +392,79 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      pointer-events: none;
+      padding-left: var(--safe-left);
+      padding-right: var(--safe-right);
+      padding-top: var(--safe-top);
+      padding-bottom: var(--safe-bottom);
       opacity: 0;
+      pointer-events: none;
+      overflow: hidden;
       background:
-        radial-gradient(circle at center, rgba(248,113,113,0.12), transparent 24%),
+        radial-gradient(circle at center, rgba(248,113,113,0.14), transparent 22%),
         linear-gradient(135deg, #020617, #0f172a, #000);
+      transition: opacity 0.35s ease;
+    }
+
+    .shutdown-overlay.active {
+      opacity: 1;
+    }
+
+    .shutdown-text {
+      position: relative;
+      z-index: 2;
+      width: min(88vw, 700px);
+      text-align: center;
       color: white;
       font-family: "Orbitron", Arial, sans-serif;
       font-size: clamp(22px, 4vw, 36px);
       font-weight: 900;
       letter-spacing: 0.14em;
-      text-align: center;
-      transition: opacity 0.35s ease;
+      line-height: 1.35;
       text-shadow:
         0 0 12px rgba(255,255,255,0.18),
-        0 0 24px rgba(248,113,113,0.18);
+        0 0 24px rgba(248,113,113,0.22);
     }
 
-    .shutdown-overlay.active {
-      opacity: 1;
+    .shutdown-glow,
+    .shutdown-flicker {
+      position: absolute;
+      inset: 0;
+    }
+
+    .shutdown-glow {
+      background:
+        radial-gradient(circle at center, rgba(248,113,113,0.16), transparent 20%);
+      opacity: 0;
+    }
+
+    .shutdown-overlay.active .shutdown-glow {
+      animation: shutdownGlow 1s ease-out forwards;
+    }
+
+    @keyframes shutdownGlow {
+      0% { opacity: 0; transform: scale(0.5); }
+      28% { opacity: 1; }
+      100% { opacity: 0; transform: scale(1.65); }
+    }
+
+    .shutdown-flicker {
+      background: rgba(255,255,255,0.04);
+      opacity: 0;
+      mix-blend-mode: screen;
+    }
+
+    .shutdown-overlay.active .shutdown-flicker {
+      animation: shutdownFlicker 0.45s linear 1;
+    }
+
+    @keyframes shutdownFlicker {
+      0% { opacity: 0; }
+      12% { opacity: 0.12; }
+      22% { opacity: 0; }
+      34% { opacity: 0.08; }
+      46% { opacity: 0; }
+      60% { opacity: 0.1; }
+      100% { opacity: 0; }
     }
 
     @media (max-width: 760px) {
@@ -602,29 +508,25 @@
         justify-content: flex-start;
       }
 
-      .launch::after,
-      .shutdown-overlay {
+      .launch::after {
         width: min(84vw, 360px);
         font-size: 24px;
         letter-spacing: 0.1em;
         line-height: 1.45;
       }
 
-      .launch-ring {
-        width: 150px;
-        height: 150px;
-      }
-
-      .launch-pulse {
-        width: 44px;
-        height: 44px;
+      .shutdown-text {
+        width: min(84vw, 360px);
+        font-size: 24px;
+        letter-spacing: 0.1em;
+        line-height: 1.45;
       }
     }
 
     @media (max-width: 420px) {
       .topbar {
-        padding-left: 12px;
-        padding-right: 12px;
+        padding-left: calc(12px + var(--safe-left));
+        padding-right: calc(12px + var(--safe-right));
       }
 
       .top-title {
@@ -719,13 +621,13 @@
     </div>
   </div>
 
-  <div id="launch" class="launch">
-    <div class="launch-ring"></div>
-    <div class="launch-pulse"></div>
-    <div class="launch-flash"></div>
-  </div>
+  <div id="launch" class="launch"></div>
 
-  <div id="shutdownOverlay" class="shutdown-overlay">SHUTTING DOWN...</div>
+  <div id="shutdownOverlay" class="shutdown-overlay">
+    <div class="shutdown-glow"></div>
+    <div class="shutdown-flicker"></div>
+    <div class="shutdown-text">SHUTTING DOWN...</div>
+  </div>
 
   <script>
     function updateClock() {
@@ -780,11 +682,8 @@
 
     window.addEventListener("pageshow", (event) => {
       resetVisualState();
-
       if (event.persisted) {
-        requestAnimationFrame(() => {
-          resetVisualState();
-        });
+        requestAnimationFrame(resetVisualState);
       }
     });
   </script>
