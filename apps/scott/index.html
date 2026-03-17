@@ -69,6 +69,14 @@
       opacity: 0;
       transform: scale(1.015);
       animation: pageIn 0.55s ease forwards;
+      transition: opacity 0.28s ease, transform 0.28s ease, filter 0.28s ease;
+    }
+
+    body.page-leaving {
+      opacity: 0;
+      transform: scale(0.99);
+      filter: blur(4px);
+      pointer-events: none;
     }
 
     @keyframes pageIn {
@@ -218,6 +226,7 @@
         box-shadow 0.22s ease;
       position: relative;
       overflow: hidden;
+      cursor: pointer;
     }
 
     .folder-card::after {
@@ -473,7 +482,7 @@
 
   <main class="page-wrap">
     <section class="hero">
-      <a href="/home.html" class="back-btn">← Back To Desktop</a>
+      <a href="/home.html" class="back-btn smooth-link">← Back To Desktop</a>
       <h1>Welcome to Scott’s Space</h1>
       <p>
         This is your personal zone inside Malgieri OS — a place for your projects,
@@ -491,7 +500,7 @@
     <h2 class="section-title">Folders</h2>
 
     <section class="folders-grid">
-      <a class="folder-card" href="#">
+      <a class="folder-card smooth-link" href="/apps/scott/pictures/">
         <div class="folder-icon-wrap">
           <div class="folder-tab"></div>
           <div class="folder-back"></div>
@@ -576,6 +585,21 @@
 
     updateClock();
     setInterval(updateClock, 1000);
+
+    document.querySelectorAll(".smooth-link").forEach((link) => {
+      link.addEventListener("click", function (e) {
+        const href = this.getAttribute("href");
+
+        if (!href || href === "#" || href.startsWith("javascript:")) return;
+
+        e.preventDefault();
+        document.body.classList.add("page-leaving");
+
+        setTimeout(() => {
+          window.location.href = href;
+        }, 240);
+      });
+    });
   </script>
 </body>
 </html>
