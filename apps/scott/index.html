@@ -79,6 +79,13 @@
       pointer-events: none;
     }
 
+    body.page-restored {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+      filter: none !important;
+    }
+
     @keyframes pageIn {
       to {
         opacity: 1;
@@ -593,12 +600,28 @@
         if (!href || href === "#" || href.startsWith("javascript:")) return;
 
         e.preventDefault();
+        document.body.classList.remove("page-restored");
         document.body.classList.add("page-leaving");
 
         setTimeout(() => {
           window.location.href = href;
         }, 240);
       });
+    });
+
+    window.addEventListener("pageshow", function (event) {
+      document.body.classList.remove("page-leaving");
+
+      if (event.persisted) {
+        document.body.classList.add("page-restored");
+      } else {
+        document.body.classList.remove("page-restored");
+      }
+    });
+
+    window.addEventListener("popstate", function () {
+      document.body.classList.remove("page-leaving");
+      document.body.classList.add("page-restored");
     });
   </script>
 </body>
