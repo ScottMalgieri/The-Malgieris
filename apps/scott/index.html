@@ -32,14 +32,15 @@
       --safe-right: env(safe-area-inset-right, 0px);
       --safe-bottom: env(safe-area-inset-bottom, 0px);
       --safe-left: env(safe-area-inset-left, 0px);
-      --folder-top: #f8e3af;
-      --folder-mid: #ebc97f;
-      --folder-bottom: #d9a854;
-      --folder-tab-top: #f9e8bb;
-      --folder-tab-bottom: #efcf85;
-      --folder-front-top: #f3d996;
-      --folder-front-bottom: #ddb05a;
-      --folder-glow: rgba(244, 196, 92, 0.22);
+
+      --folder-back-top: #f7e3b2;
+      --folder-back-bottom: #e6c77e;
+      --folder-tab-top: #f9e9c0;
+      --folder-tab-bottom: #efcf87;
+      --folder-front-top: #f0d38e;
+      --folder-front-bottom: #d8a956;
+      --folder-front-edge: #c6923e;
+      --folder-glow: rgba(244, 196, 92, 0.20);
     }
 
     * {
@@ -209,7 +210,7 @@
       border-radius: 24px;
       box-shadow: var(--shadow);
       padding: 20px 18px 22px;
-      min-height: 210px;
+      min-height: 220px;
       transition:
         transform 0.22s ease,
         background 0.22s ease,
@@ -244,75 +245,118 @@
 
     .folder-icon-wrap {
       position: relative;
-      width: 118px;
-      height: 84px;
+      width: 124px;
+      height: 88px;
       margin-bottom: 18px;
+      perspective: 700px;
     }
 
-    .folder-icon {
+    .folder-back {
       position: absolute;
       left: 0;
       bottom: 0;
-      width: 118px;
-      height: 70px;
-      border-radius: 14px 14px 18px 18px;
+      width: 124px;
+      height: 68px;
+      border-radius: 14px 14px 16px 16px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.10), rgba(255,255,255,0.00)),
+        linear-gradient(180deg, var(--folder-back-top) 0%, var(--folder-back-bottom) 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.30),
+        0 12px 24px rgba(0,0,0,0.28);
+      overflow: hidden;
+    }
+
+    .folder-back::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(rgba(255,255,255,0.07) 0.6px, transparent 0.8px),
+        linear-gradient(135deg, rgba(255,255,255,0.05), rgba(0,0,0,0.03));
+      background-size: 8px 8px, 100% 100%;
+      mix-blend-mode: soft-light;
+      opacity: 0.55;
+      pointer-events: none;
+    }
+
+    .folder-tab {
+      position: absolute;
+      top: 6px;
+      left: 14px;
+      width: 46px;
+      height: 16px;
+      border-radius: 10px 10px 0 0;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.00)),
+        linear-gradient(180deg, var(--folder-tab-top) 0%, var(--folder-tab-bottom) 100%);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.34),
+        0 1px 0 rgba(0,0,0,0.08);
+      z-index: 2;
+    }
+
+    .folder-front {
+      position: absolute;
+      left: 6px;
+      right: 6px;
+      bottom: 2px;
+      height: 42px;
+      border-radius: 12px 12px 16px 16px;
       background:
         linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.00)),
-        linear-gradient(180deg, var(--folder-top) 0%, var(--folder-mid) 58%, var(--folder-bottom) 100%);
+        linear-gradient(180deg, var(--folder-front-top) 0%, var(--folder-front-bottom) 100%);
       box-shadow:
-        inset 0 1px 0 rgba(255,255,255,0.35),
-        inset 0 -1px 0 rgba(120,80,20,0.16),
-        0 14px 24px rgba(0,0,0,0.35);
+        inset 0 1px 0 rgba(255,255,255,0.18),
+        inset 0 -1px 0 rgba(110,72,18,0.14);
+      transform-origin: bottom center;
+      transform: rotateX(-16deg);
+      border-bottom: 1px solid rgba(198,146,62,0.45);
+      overflow: hidden;
+      z-index: 3;
       transition:
         transform 0.24s ease,
         box-shadow 0.24s ease,
         filter 0.24s ease;
-      overflow: visible;
     }
 
-    .folder-icon::before {
+    .folder-front::before {
       content: "";
       position: absolute;
-      top: -11px;
-      left: 14px;
-      width: 44px;
-      height: 18px;
-      border-radius: 10px 10px 0 0;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.2), rgba(255,255,255,0.00)),
-        linear-gradient(180deg, var(--folder-tab-top) 0%, var(--folder-tab-bottom) 100%);
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,0.36),
-        0 1px 0 rgba(0,0,0,0.08);
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 7px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.02));
     }
 
-    .folder-icon::after {
+    .folder-front::after {
       content: "";
       position: absolute;
-      left: 8px;
-      right: 8px;
-      bottom: 7px;
-      height: 34px;
-      border-radius: 10px 10px 14px 14px;
+      inset: 0;
       background:
         radial-gradient(rgba(255,255,255,0.08) 0.6px, transparent 0.8px),
-        linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.02)),
-        linear-gradient(180deg, var(--folder-front-top) 0%, var(--folder-front-bottom) 100%);
-      background-size: 8px 8px, 100% 100%, 100% 100%;
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,0.22),
-        0 -1px 0 rgba(110,72,18,0.12);
-      opacity: 0.98;
+        linear-gradient(135deg, rgba(255,255,255,0.04), rgba(0,0,0,0.03));
+      background-size: 8px 8px, 100% 100%;
+      mix-blend-mode: soft-light;
+      opacity: 0.55;
+      pointer-events: none;
     }
 
-    .folder-card:hover .folder-icon {
-      transform: translateY(-4px) rotateX(10deg) scale(1.03);
+    .folder-card:hover .folder-front {
+      transform: rotateX(-28deg) translateY(-2px);
       box-shadow:
-        inset 0 1px 0 rgba(255,255,255,0.35),
-        inset 0 -1px 0 rgba(120,80,20,0.16),
-        0 18px 28px rgba(0,0,0,0.4),
-        0 0 22px rgba(244,196,92,0.16);
+        inset 0 1px 0 rgba(255,255,255,0.18),
+        inset 0 -1px 0 rgba(110,72,18,0.14),
+        0 10px 18px rgba(0,0,0,0.18);
       filter: saturate(1.03) brightness(1.02);
+    }
+
+    .folder-card:hover .folder-back {
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.30),
+        0 16px 28px rgba(0,0,0,0.34),
+        0 0 18px rgba(244,196,92,0.14);
     }
 
     .folder-card h3 {
@@ -390,22 +434,17 @@
       }
 
       .folder-icon-wrap {
-        width: 106px;
-        height: 76px;
+        width: 112px;
+        height: 82px;
       }
 
-      .folder-icon {
-        width: 106px;
+      .folder-back {
+        width: 112px;
         height: 64px;
       }
 
-      .folder-icon::before {
-        width: 40px;
-        height: 16px;
-      }
-
-      .folder-icon::after {
-        height: 31px;
+      .folder-front {
+        height: 40px;
       }
 
       .folder-card h3 {
@@ -454,7 +493,9 @@
     <section class="folders-grid">
       <a class="folder-card" href="#">
         <div class="folder-icon-wrap">
-          <div class="folder-icon"></div>
+          <div class="folder-tab"></div>
+          <div class="folder-back"></div>
+          <div class="folder-front"></div>
         </div>
         <h3>Scott’s Pictures</h3>
         <p>
@@ -464,7 +505,9 @@
 
       <a class="folder-card" href="#">
         <div class="folder-icon-wrap">
-          <div class="folder-icon"></div>
+          <div class="folder-tab"></div>
+          <div class="folder-back"></div>
+          <div class="folder-front"></div>
         </div>
         <h3>Scott’s Notes</h3>
         <p>
@@ -474,7 +517,9 @@
 
       <a class="folder-card" href="#">
         <div class="folder-icon-wrap">
-          <div class="folder-icon"></div>
+          <div class="folder-tab"></div>
+          <div class="folder-back"></div>
+          <div class="folder-front"></div>
         </div>
         <h3>Scott’s Setup</h3>
         <p>
@@ -484,7 +529,9 @@
 
       <a class="folder-card" href="#">
         <div class="folder-icon-wrap">
-          <div class="folder-icon"></div>
+          <div class="folder-tab"></div>
+          <div class="folder-back"></div>
+          <div class="folder-front"></div>
         </div>
         <h3>Scott’s Projects</h3>
         <p>
@@ -494,7 +541,9 @@
 
       <a class="folder-card" href="#">
         <div class="folder-icon-wrap">
-          <div class="folder-icon"></div>
+          <div class="folder-tab"></div>
+          <div class="folder-back"></div>
+          <div class="folder-front"></div>
         </div>
         <h3>Scott’s Links</h3>
         <p>
@@ -504,7 +553,9 @@
 
       <a class="folder-card" href="#">
         <div class="folder-icon-wrap">
-          <div class="folder-icon"></div>
+          <div class="folder-tab"></div>
+          <div class="folder-back"></div>
+          <div class="folder-front"></div>
         </div>
         <h3>Scott’s Ideas</h3>
         <p>
