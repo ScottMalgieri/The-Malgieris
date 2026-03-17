@@ -1,396 +1,588 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-
-<meta name="theme-color" content="#020617">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="mobile-web-app-capable" content="yes">
-
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&display=swap" rel="stylesheet">
-
-<title>Malgieri OS</title>
-
-<style>
-
-:root{
---bg1:#020617;
---bg2:#0f172a;
---bg3:#000;
-
---white60:rgba(255,255,255,0.6);
---white50:rgba(255,255,255,0.5);
---white10:rgba(255,255,255,0.1);
-
---cyan:#67e8f9;
-
---safe-top:env(safe-area-inset-top,0px);
---safe-bottom:env(safe-area-inset-bottom,0px);
---safe-left:env(safe-area-inset-left,0px);
---safe-right:env(safe-area-inset-right,0px);
-}
-
-*{
-box-sizing:border-box;
--webkit-tap-highlight-color:transparent;
-}
-
-html,body{
-margin:0;
-min-height:100%;
-
-font-family:Arial,Helvetica,sans-serif;
-
-background:
-radial-gradient(circle at top right, rgba(59,130,246,0.18), transparent 30%),
-radial-gradient(circle at bottom left, rgba(168,85,247,0.14), transparent 30%),
-linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));
-
-color:white;
-overflow:hidden;
-}
-
-body{
-min-height:100dvh;
-padding-left:var(--safe-left);
-padding-right:var(--safe-right);
-}
-
-/* screens */
-
-.screen{
-position:fixed;
-inset:0;
-
-display:none;
-align-items:center;
-justify-content:center;
-text-align:center;
-
-padding:28px;
-padding-top:calc(28px + var(--safe-top));
-padding-bottom:calc(28px + var(--safe-bottom));
-}
-
-.screen.active{
-display:flex;
-}
-
-/* power */
-
-.power-ring{
-width:150px;
-height:150px;
-
-border-radius:50%;
-border:1px solid rgba(255,255,255,0.15);
-
-display:flex;
-align-items:center;
-justify-content:center;
-
-margin:0 auto 28px;
-
-background:rgba(255,255,255,0.05);
-backdrop-filter:blur(16px);
-}
-
-.power-button{
-width:95px;
-height:95px;
-
-border-radius:50%;
-
-border:1px solid rgba(34,211,238,0.4);
-background:rgba(34,211,238,0.18);
-
-display:flex;
-align-items:center;
-justify-content:center;
-
-cursor:pointer;
-
-transition:.25s;
-}
-
-.power-button:hover{
-transform:scale(1.05);
-}
-
-.power-icon{
-width:40px;
-height:40px;
-
-border:4px solid var(--cyan);
-border-top-color:transparent;
-
-border-radius:50%;
-position:relative;
-}
-
-.power-icon:before{
-content:"";
-position:absolute;
-left:50%;
-top:-8px;
-
-transform:translateX(-50%);
-
-width:4px;
-height:18px;
-
-background:var(--cyan);
-}
-
-/* text */
-
-.title{
-font-family:"Orbitron";
-font-size:clamp(32px,6vw,48px);
-font-weight:800;
-}
-
-.subtitle{
-margin-top:10px;
-color:var(--white60);
-}
-
-/* loading */
-
-.loader{
-width:42px;
-height:42px;
-
-border-radius:50%;
-
-border:4px solid rgba(125,211,252,0.18);
-border-top-color:var(--cyan);
-
-animation:spin 1s linear infinite;
-
-margin:0 auto 18px;
-}
-
-@keyframes spin{
-to{transform:rotate(360deg);}
-}
-
-.progress{
-margin-top:24px;
-height:14px;
-border-radius:999px;
-
-border:1px solid var(--white10);
-background:rgba(255,255,255,0.05);
-
-overflow:hidden;
-}
-
-.bar{
-height:100%;
-width:0%;
-
-background:linear-gradient(90deg,#22d3ee,#3b82f6,#8b5cf6);
-
-transition:.1s linear;
-}
-
-.status{
-margin-top:14px;
-font-size:14px;
-color:var(--white50);
-}
-
-/* launch */
-
-.launch{
-position:fixed;
-inset:0;
-
-z-index:9999;
-
-pointer-events:none;
-
-opacity:0;
-transform:scale(1.05);
-
-background:
-radial-gradient(circle at center, rgba(103,232,249,0.25), transparent 20%),
-radial-gradient(circle at center, rgba(59,130,246,0.18), transparent 40%),
-linear-gradient(135deg,#020617,#0f172a,#000);
-
-transition:opacity .55s ease, transform .7s ease;
-}
-
-.launch.active{
-opacity:1;
-transform:scale(1);
-}
-
-.launch:after{
-content:"LAUNCHING DESKTOP";
-
-position:absolute;
-left:50%;
-top:50%;
-
-transform:translate(-50%,-50%);
-
-font-family:"Orbitron";
-font-size:clamp(20px,4vw,32px);
-font-weight:800;
-
-letter-spacing:0.12em;
-
-opacity:0;
-
-text-shadow:
-0 0 10px rgba(103,232,249,0.75),
-0 0 24px rgba(59,130,246,0.40);
-
-transition:.3s .2s;
-}
-
-.launch.active:after{
-opacity:1;
-}
-
-</style>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  />
+  <meta name="theme-color" content="#020617" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800;900&display=swap"
+    rel="stylesheet"
+  />
+  <title>Malgieri OS</title>
+
+  <style>
+    :root {
+      --bg1: #020617;
+      --bg2: #0f172a;
+      --bg3: #000000;
+
+      --white: #ffffff;
+      --white-60: rgba(255, 255, 255, 0.6);
+      --white-50: rgba(255, 255, 255, 0.5);
+      --white-15: rgba(255, 255, 255, 0.15);
+      --white-10: rgba(255, 255, 255, 0.1);
+      --white-05: rgba(255, 255, 255, 0.05);
+
+      --cyan: #67e8f9;
+      --cyan-2: #22d3ee;
+      --blue: #3b82f6;
+      --violet: #8b5cf6;
+
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-left: env(safe-area-inset-left, 0px);
+      --safe-right: env(safe-area-inset-right, 0px);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(59, 130, 246, 0.18), transparent 30%),
+        radial-gradient(circle at bottom left, rgba(168, 85, 247, 0.14), transparent 30%),
+        linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
+      color: var(--white);
+      overflow: hidden;
+    }
+
+    body {
+      min-height: 100dvh;
+      padding-left: var(--safe-left);
+      padding-right: var(--safe-right);
+      position: relative;
+    }
+
+    .screen {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 28px;
+      padding-top: calc(28px + var(--safe-top));
+      padding-bottom: calc(28px + var(--safe-bottom));
+      overflow: hidden;
+      transform-origin: center center;
+    }
+
+    .screen.active {
+      display: flex;
+    }
+
+    .screen::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at top right, rgba(59, 130, 246, 0.18), transparent 28%),
+        radial-gradient(circle at bottom left, rgba(168, 85, 247, 0.14), transparent 26%);
+      pointer-events: none;
+    }
+
+    .center {
+      width: min(92vw, 620px);
+      position: relative;
+      z-index: 2;
+    }
+
+    .power-ring {
+      width: 150px;
+      height: 150px;
+      margin: 0 auto 28px;
+      border-radius: 50%;
+      border: 1px solid var(--white-15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--white-05);
+      backdrop-filter: blur(16px);
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.03) inset,
+        0 0 55px rgba(59, 130, 246, 0.16);
+    }
+
+    .power-button {
+      width: 95px;
+      height: 95px;
+      border-radius: 50%;
+      border: 1px solid rgba(34, 211, 238, 0.4);
+      background: rgba(34, 211, 238, 0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+      box-shadow: 0 0 0 rgba(103, 232, 249, 0);
+    }
+
+    .power-button:hover {
+      transform: scale(1.05);
+      background: rgba(34, 211, 238, 0.24);
+      box-shadow: 0 0 24px rgba(103, 232, 249, 0.16);
+    }
+
+    .power-icon {
+      width: 40px;
+      height: 40px;
+      border: 4px solid var(--cyan);
+      border-top-color: transparent;
+      border-radius: 50%;
+      position: relative;
+    }
+
+    .power-icon::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: -8px;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 18px;
+      background: var(--cyan);
+      border-radius: 3px;
+    }
+
+    .title {
+      font-family: "Orbitron", Arial, sans-serif;
+      font-size: clamp(32px, 6vw, 48px);
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-shadow:
+        0 0 16px rgba(103, 232, 249, 0.08),
+        0 0 30px rgba(59, 130, 246, 0.08);
+    }
+
+    .subtitle {
+      margin-top: 10px;
+      color: var(--white-60);
+      font-size: 18px;
+      line-height: 1.5;
+    }
+
+    .loader {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 4px solid rgba(125, 211, 252, 0.18);
+      border-top-color: var(--cyan);
+      animation: spin 1s linear infinite;
+      margin: 0 auto 18px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .progress {
+      margin-top: 24px;
+      height: 14px;
+      border-radius: 999px;
+      border: 1px solid var(--white-10);
+      background: var(--white-05);
+      overflow: hidden;
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+    }
+
+    .bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--cyan-2), var(--blue), var(--violet));
+      transition: width 0.1s linear;
+      box-shadow:
+        0 0 18px rgba(59, 130, 246, 0.32),
+        0 0 34px rgba(139, 92, 246, 0.16);
+    }
+
+    .status {
+      margin-top: 14px;
+      font-size: 14px;
+      color: var(--white-50);
+      letter-spacing: 0.02em;
+      min-height: 20px;
+    }
+
+    /* Launch animation */
+    .launch {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0;
+      transform: scale(1.12);
+      background:
+        radial-gradient(circle at center, rgba(103, 232, 249, 0.42), transparent 10%),
+        radial-gradient(circle at center, rgba(59, 130, 246, 0.28), transparent 24%),
+        linear-gradient(135deg, #020617, #0f172a, #000);
+      transition: opacity 0.45s ease, transform 0.9s ease;
+      overflow: hidden;
+      will-change: transform, opacity;
+    }
+
+    .launch.active {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .launch::before {
+      content: "";
+      position: absolute;
+      inset: -10%;
+      background:
+        radial-gradient(circle at center, rgba(103, 232, 249, 0.16), transparent 26%);
+      opacity: 0;
+    }
+
+    .launch.active::before {
+      animation: launchBloom 1.2s ease-out forwards;
+    }
+
+    @keyframes launchBloom {
+      0% {
+        opacity: 0;
+        transform: scale(0.5);
+      }
+      30% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        transform: scale(1.8);
+      }
+    }
+
+    .launch::after {
+      content: "LAUNCHING DESKTOP";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) scale(0.78);
+      font-family: "Orbitron", Arial, sans-serif;
+      font-size: clamp(22px, 4vw, 38px);
+      font-weight: 900;
+      letter-spacing: 0.16em;
+      line-height: 1.35;
+      width: min(92vw, 760px);
+      text-align: center;
+      color: var(--white);
+      opacity: 0;
+      text-shadow:
+        0 0 12px rgba(103, 232, 249, 0.95),
+        0 0 30px rgba(59, 130, 246, 0.85),
+        0 0 60px rgba(139, 92, 246, 0.35);
+      transition: opacity 0.24s ease 0.08s, transform 0.55s cubic-bezier(.2,.8,.2,1) 0.08s;
+      will-change: transform, opacity;
+    }
+
+    .launch.active::after {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .launch-ring {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 190px;
+      height: 190px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%) scale(0.25);
+      border: 2px solid rgba(103, 232, 249, 0.98);
+      box-shadow:
+        0 0 28px rgba(103, 232, 249, 0.85),
+        0 0 80px rgba(59, 130, 246, 0.5),
+        inset 0 0 26px rgba(103, 232, 249, 0.18);
+      opacity: 0;
+      will-change: transform, opacity;
+    }
+
+    .launch.active .launch-ring {
+      animation: ringExpand 1.05s cubic-bezier(.2,.8,.2,1) forwards;
+    }
+
+    @keyframes ringExpand {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.18);
+      }
+      12% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(4.1);
+      }
+    }
+
+    .launch-pulse {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      transform: translate(-50%, -50%) scale(0.15);
+      background: radial-gradient(
+        circle,
+        rgba(255,255,255,1) 0%,
+        rgba(103,232,249,0.98) 22%,
+        rgba(59,130,246,0.58) 48%,
+        transparent 72%
+      );
+      filter: blur(1px);
+      opacity: 0;
+      will-change: transform, opacity;
+    }
+
+    .launch.active .launch-pulse {
+      animation: centerPulse 0.95s cubic-bezier(.2,.8,.2,1) forwards;
+    }
+
+    @keyframes centerPulse {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.12);
+      }
+      18% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(10);
+      }
+    }
+
+    .launch-flash {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(255,255,255,0.16), transparent 28%);
+      opacity: 0;
+      mix-blend-mode: screen;
+    }
+
+    .launch.active .launch-flash {
+      animation: flashFade 0.75s ease-out forwards;
+    }
+
+    @keyframes flashFade {
+      0% {
+        opacity: 0;
+      }
+      18% {
+        opacity: 1;
+      }
+      100% {
+        opacity: 0;
+      }
+    }
+
+    body.launching .screen.active {
+      filter: blur(10px);
+      transform: scale(0.965);
+      opacity: 0.72;
+      transition: transform 0.55s ease, filter 0.55s ease, opacity 0.55s ease;
+    }
+
+    @media (max-width: 640px) {
+      body {
+        min-height: 100dvh;
+      }
+
+      .screen {
+        min-height: 100dvh;
+        padding: 22px;
+        padding-top: calc(22px + var(--safe-top));
+        padding-bottom: calc(22px + var(--safe-bottom));
+      }
+
+      .power-ring {
+        width: 132px;
+        height: 132px;
+        margin-bottom: 24px;
+      }
+
+      .power-button {
+        width: 88px;
+        height: 88px;
+      }
+
+      .power-icon {
+        width: 36px;
+        height: 36px;
+      }
+
+      .subtitle {
+        font-size: 16px;
+      }
+
+      .status {
+        font-size: 13px;
+      }
+
+      .launch::after {
+        top: 50%;
+        left: 50%;
+        width: min(84vw, 360px);
+        font-size: 24px;
+        letter-spacing: 0.12em;
+        line-height: 1.45;
+        transform: translate(-50%, -50%) scale(0.72);
+      }
+
+      .launch.active::after {
+        transform: translate(-50%, -50%) scale(1);
+      }
+
+      .launch-ring {
+        width: 150px;
+        height: 150px;
+      }
+
+      .launch-pulse {
+        width: 42px;
+        height: 42px;
+      }
+    }
+  </style>
 </head>
 
 <body>
+  <audio id="bootSound" preload="auto">
+    <source src="boot.mp3" type="audio/mpeg" />
+  </audio>
 
-<!-- AUDIO -->
-<audio id="bootSound" preload="auto">
-<source src="boot.mp3" type="audio/mpeg">
-</audio>
+  <section id="power" class="screen active">
+    <div class="center">
+      <div class="power-ring">
+        <div id="powerBtn" class="power-button" aria-label="Power on Malgieri OS">
+          <div class="power-icon"></div>
+        </div>
+      </div>
 
-<!-- POWER -->
-<section id="power" class="screen active">
+      <div class="title">Malgieri OS</div>
+      <div class="subtitle">Press Power To Launch OS</div>
+    </div>
+  </section>
 
-<div>
+  <section id="loading" class="screen">
+    <div class="center">
+      <div class="loader"></div>
+      <div class="title" style="font-size: clamp(24px, 4vw, 30px);">Booting Malgieri OS</div>
 
-<div class="power-ring">
-<div id="powerBtn" class="power-button">
-<div class="power-icon"></div>
-</div>
-</div>
+      <div class="progress">
+        <div id="bar" class="bar"></div>
+      </div>
 
-<div class="title">Malgieri OS</div>
-<div class="subtitle">Press Power to Load Into The System</div>
+      <div id="status" class="status">Initializing System...</div>
+    </div>
+  </section>
 
-</div>
+  <div id="launch" class="launch">
+    <div class="launch-ring"></div>
+    <div class="launch-pulse"></div>
+    <div class="launch-flash"></div>
+  </div>
 
-</section>
+  <script>
+    const powerBtn = document.getElementById("powerBtn");
+    const power = document.getElementById("power");
+    const loading = document.getElementById("loading");
+    const bar = document.getElementById("bar");
+    const status = document.getElementById("status");
+    const launch = document.getElementById("launch");
+    const bootSound = document.getElementById("bootSound");
 
-<!-- LOADING -->
-<section id="loading" class="screen">
+    const messages = [
+      "Initializing System...",
+      "Loading Desktop Environment...",
+      "Starting Scott's Space...",
+      "Connecting To Courtney's Corner...",
+      "Starting Services...",
+      "Launching Desktop..."
+    ];
 
-<div>
+    function fadeOutAudio(audio, intervalMs = 80, step = 0.05) {
+      if (!audio) return;
+      const fade = setInterval(() => {
+        if (audio.volume > step) {
+          audio.volume = Math.max(0, audio.volume - step);
+        } else {
+          audio.pause();
+          clearInterval(fade);
+        }
+      }, intervalMs);
+    }
 
-<div class="loader"></div>
-<div class="title" style="font-size:28px;">Booting Malgieri OS</div>
+    function startLaunch() {
+      document.body.classList.add("launching");
 
-<div class="progress">
-<div id="bar" class="bar"></div>
-</div>
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          launch.classList.add("active");
 
-<div id="status" class="status">Initializing System...</div>
+          setTimeout(() => {
+            window.location.href = "home.html";
+          }, 1400);
+        });
+      });
+    }
 
-</div>
+    powerBtn.onclick = () => {
+      if (bootSound) {
+        bootSound.currentTime = 0;
+        bootSound.volume = 1;
+        bootSound.play().catch(() => {});
+      }
 
-</section>
+      power.classList.remove("active");
+      loading.classList.add("active");
 
-<!-- LAUNCH -->
-<div id="launch" class="launch"></div>
+      let progress = 0;
+      let msg = 0;
 
-<script>
+      const totalTime = 6000;
+      const intervalTime = 50;
+      const steps = totalTime / intervalTime;
+      const increment = 100 / steps;
 
-const powerBtn = document.getElementById("powerBtn")
-const power = document.getElementById("power")
-const loading = document.getElementById("loading")
+      const interval = setInterval(() => {
+        progress += increment;
 
-const bar = document.getElementById("bar")
-const status = document.getElementById("status")
+        if (progress > 100) progress = 100;
 
-const launch = document.getElementById("launch")
-const bootSound = document.getElementById("bootSound")
+        bar.style.width = progress + "%";
 
-const messages = [
-"Initializing System...",
-"Loading Desktop Environment...",
-"Starting Scott's Space...",
-"Communicating With Courtney's Corner...",
-"Starting Services...",
-"Launching Desktop..."
-]
+        const nextThreshold = ((msg + 1) / messages.length) * 100;
+        if (progress >= nextThreshold && msg < messages.length - 1) {
+          msg++;
+          status.textContent = messages[msg];
+        }
 
-powerBtn.onclick = () => {
+        if (progress >= 100) {
+          clearInterval(interval);
+          fadeOutAudio(bootSound, 80, 0.05);
 
-if(bootSound){
-bootSound.currentTime = 0
-bootSound.volume = 1
-bootSound.play().catch(()=>{})
-}
-
-power.classList.remove("active")
-loading.classList.add("active")
-
-let progress = 0
-let msg = 0
-
-const totalTime = 6000
-const intervalTime = 50
-const steps = totalTime / intervalTime
-const increment = 100 / steps
-
-const interval = setInterval(()=>{
-
-progress += increment
-
-if(progress > 100) progress = 100
-
-bar.style.width = progress + "%"
-
-if(Math.floor(progress) % 18 === 0 && msg < messages.length - 1){
-msg++
-status.textContent = messages[msg]
-}
-
-if(progress >= 100){
-
-clearInterval(interval)
-
-/* 🔊 FADE OUT SOUND */
-let fade = setInterval(()=>{
-if(bootSound.volume > 0.05){
-bootSound.volume -= 0.05
-}else{
-bootSound.pause()
-clearInterval(fade)
-}
-},80)
-
-setTimeout(()=>{
-
-launch.classList.add("active")
-
-setTimeout(()=>{
-window.location.href = "home.html"
-},900)
-
-},300)
-
-}
-
-}, intervalTime)
-
-}
-
-</script>
-
+          setTimeout(() => {
+            startLaunch();
+          }, 220);
+        }
+      }, intervalTime);
+    };
+  </script>
 </body>
 </html>
