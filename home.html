@@ -33,9 +33,6 @@
       --white05: rgba(255, 255, 255, 0.05);
 
       --cyan: #67e8f9;
-      --cyan2: #22d3ee;
-      --blue: #3b82f6;
-      --violet: #8b5cf6;
       --red: #f87171;
 
       --safe-top: env(safe-area-inset-top, 0px);
@@ -317,7 +314,7 @@
       display: none;
     }
 
-    /* Scott launch animation */
+    /* Scott launch */
     .icon.app-launching {
       z-index: 1000;
       transform: translateY(-6px) scale(1.05);
@@ -536,6 +533,34 @@
       }
     }
 
+    .shutdown-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      opacity: 0;
+      background:
+        radial-gradient(circle at center, rgba(248,113,113,0.12), transparent 24%),
+        linear-gradient(135deg, #020617, #0f172a, #000);
+      color: white;
+      font-family: "Orbitron", Arial, sans-serif;
+      font-size: clamp(22px, 4vw, 36px);
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      text-align: center;
+      transition: opacity 0.35s ease;
+      text-shadow:
+        0 0 12px rgba(255,255,255,0.18),
+        0 0 24px rgba(248,113,113,0.18);
+    }
+
+    .shutdown-overlay.active {
+      opacity: 1;
+    }
+
     @media (max-width: 760px) {
       .desktop {
         padding: 20px 14px 8px;
@@ -577,7 +602,8 @@
         justify-content: flex-start;
       }
 
-      .launch::after {
+      .launch::after,
+      .shutdown-overlay {
         width: min(84vw, 360px);
         font-size: 24px;
         letter-spacing: 0.1em;
@@ -699,6 +725,8 @@
     <div class="launch-flash"></div>
   </div>
 
+  <div id="shutdownOverlay" class="shutdown-overlay">SHUTTING DOWN...</div>
+
   <script>
     function updateClock() {
       const now = new Date();
@@ -714,6 +742,14 @@
     const scott = document.getElementById("scott");
     const launch = document.getElementById("launch");
     const shutdownBtn = document.getElementById("shutdownBtn");
+    const shutdownOverlay = document.getElementById("shutdownOverlay");
+
+    function resetVisualState() {
+      document.body.classList.remove("app-transition", "shutdown-transition");
+      launch.classList.remove("active");
+      scott.classList.remove("app-launching");
+      shutdownOverlay.classList.remove("active");
+    }
 
     function startScottLaunch() {
       document.body.classList.add("app-transition");
@@ -732,19 +768,24 @@
 
     function shutDown() {
       document.body.classList.add("shutdown-transition");
+      shutdownOverlay.classList.add("active");
 
       setTimeout(() => {
         window.location.href = "index.html";
-      }, 700);
+      }, 1100);
     }
 
     scott.addEventListener("click", startScottLaunch);
     shutdownBtn.addEventListener("click", shutDown);
 
-    window.addEventListener("pageshow", () => {
-      document.body.classList.remove("app-transition", "shutdown-transition");
-      launch.classList.remove("active");
-      scott.classList.remove("app-launching");
+    window.addEventListener("pageshow", (event) => {
+      resetVisualState();
+
+      if (event.persisted) {
+        requestAnimationFrame(() => {
+          resetVisualState();
+        });
+      }
     });
   </script>
 </body>
