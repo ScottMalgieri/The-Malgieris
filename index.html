@@ -1,460 +1,395 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<meta name="theme-color" content="#020617" />
-<meta name="apple-mobile-web-app-capable" content="yes" />
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-<meta name="mobile-web-app-capable" content="yes" />
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+<meta name="theme-color" content="#020617">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&display=swap" rel="stylesheet">
+
 <title>Malgieri OS</title>
 
 <style>
-:root{
-  --bg1:#020617;
-  --bg2:#0f172a;
-  --bg3:#000000;
-  --white:#ffffff;
-  --white60:rgba(255,255,255,0.60);
-  --white50:rgba(255,255,255,0.50);
-  --white10:rgba(255,255,255,0.10);
-  --white05:rgba(255,255,255,0.05);
-  --cyan:#67e8f9;
-  --cyan2:#22d3ee;
-  --blue:#3b82f6;
-  --violet:#8b5cf6;
 
-  --safe-top:env(safe-area-inset-top,0px);
-  --safe-bottom:env(safe-area-inset-bottom,0px);
-  --safe-left:env(safe-area-inset-left,0px);
-  --safe-right:env(safe-area-inset-right,0px);
+:root{
+--bg1:#020617;
+--bg2:#0f172a;
+--bg3:#000;
+
+--white60:rgba(255,255,255,0.6);
+--white50:rgba(255,255,255,0.5);
+--white10:rgba(255,255,255,0.1);
+
+--cyan:#67e8f9;
+
+--safe-top:env(safe-area-inset-top,0px);
+--safe-bottom:env(safe-area-inset-bottom,0px);
+--safe-left:env(safe-area-inset-left,0px);
+--safe-right:env(safe-area-inset-right,0px);
 }
 
 *{
-  box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
+box-sizing:border-box;
+-webkit-tap-highlight-color:transparent;
 }
 
 html,body{
-  margin:0;
-  min-height:100%;
-  font-family:Arial,Helvetica,sans-serif;
-  background:
-    radial-gradient(circle at top right, rgba(59,130,246,0.18), transparent 30%),
-    radial-gradient(circle at bottom left, rgba(168,85,247,0.14), transparent 30%),
-    linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));
-  color:white;
-  overflow:hidden;
+margin:0;
+min-height:100%;
+
+font-family:Arial,Helvetica,sans-serif;
+
+background:
+radial-gradient(circle at top right, rgba(59,130,246,0.18), transparent 30%),
+radial-gradient(circle at bottom left, rgba(168,85,247,0.14), transparent 30%),
+linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));
+
+color:white;
+overflow:hidden;
 }
 
 body{
-  min-height:100dvh;
-  padding-left:var(--safe-left);
-  padding-right:var(--safe-right);
-  position:relative;
+min-height:100dvh;
+padding-left:var(--safe-left);
+padding-right:var(--safe-right);
 }
 
+/* screens */
+
 .screen{
-  position:fixed;
-  inset:0;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:28px;
-  padding-top:calc(28px + var(--safe-top));
-  padding-bottom:calc(28px + var(--safe-bottom));
+position:fixed;
+inset:0;
+
+display:none;
+align-items:center;
+justify-content:center;
+text-align:center;
+
+padding:28px;
+padding-top:calc(28px + var(--safe-top));
+padding-bottom:calc(28px + var(--safe-bottom));
 }
 
 .screen.active{
-  display:flex;
+display:flex;
 }
 
-.center{
-  width:min(92vw,600px);
-  position:relative;
-  z-index:2;
-}
+/* power */
 
 .power-ring{
-  width:150px;
-  height:150px;
-  border-radius:50%;
-  border:1px solid rgba(255,255,255,0.15);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  margin:0 auto 28px;
-  background:rgba(255,255,255,0.05);
-  backdrop-filter:blur(16px);
-  box-shadow:
-    0 0 0 1px rgba(255,255,255,0.04) inset,
-    0 0 50px rgba(59,130,246,0.18);
+width:150px;
+height:150px;
+
+border-radius:50%;
+border:1px solid rgba(255,255,255,0.15);
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+margin:0 auto 28px;
+
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(16px);
 }
 
 .power-button{
-  width:95px;
-  height:95px;
-  border-radius:50%;
-  border:1px solid rgba(34,211,238,0.4);
-  background:rgba(34,211,238,0.18);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-  transition:transform .25s ease, box-shadow .25s ease, background .25s ease;
-  box-shadow:0 0 0 rgba(103,232,249,0);
+width:95px;
+height:95px;
+
+border-radius:50%;
+
+border:1px solid rgba(34,211,238,0.4);
+background:rgba(34,211,238,0.18);
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+cursor:pointer;
+
+transition:.25s;
 }
 
 .power-button:hover{
-  transform:scale(1.05);
-  background:rgba(34,211,238,0.24);
-  box-shadow:0 0 24px rgba(103,232,249,0.18);
+transform:scale(1.05);
 }
 
 .power-icon{
-  width:40px;
-  height:40px;
-  border:4px solid var(--cyan);
-  border-top-color:transparent;
-  border-radius:50%;
-  position:relative;
+width:40px;
+height:40px;
+
+border:4px solid var(--cyan);
+border-top-color:transparent;
+
+border-radius:50%;
+position:relative;
 }
 
 .power-icon:before{
-  content:"";
-  position:absolute;
-  left:50%;
-  top:-8px;
-  transform:translateX(-50%);
-  width:4px;
-  height:18px;
-  background:var(--cyan);
-  border-radius:2px;
+content:"";
+position:absolute;
+left:50%;
+top:-8px;
+
+transform:translateX(-50%);
+
+width:4px;
+height:18px;
+
+background:var(--cyan);
 }
 
+/* text */
+
 .title{
-  font-family:"Orbitron", sans-serif;
-  font-size:clamp(34px,6vw,48px);
-  font-weight:800;
-  letter-spacing:0.08em;
-  text-shadow:
-    0 0 18px rgba(103,232,249,0.10),
-    0 0 32px rgba(59,130,246,0.08);
+font-family:"Orbitron";
+font-size:clamp(32px,6vw,48px);
+font-weight:800;
 }
 
 .subtitle{
-  margin-top:10px;
-  color:var(--white60);
-  font-size:18px;
+margin-top:10px;
+color:var(--white60);
 }
 
+/* loading */
+
 .loader{
-  width:42px;
-  height:42px;
-  border-radius:50%;
-  border:4px solid rgba(125,211,252,0.18);
-  border-top-color:var(--cyan);
-  animation:spin 1s linear infinite;
-  margin:0 auto 18px;
+width:42px;
+height:42px;
+
+border-radius:50%;
+
+border:4px solid rgba(125,211,252,0.18);
+border-top-color:var(--cyan);
+
+animation:spin 1s linear infinite;
+
+margin:0 auto 18px;
 }
 
 @keyframes spin{
-  to{transform:rotate(360deg);}
+to{transform:rotate(360deg);}
 }
 
 .progress{
-  margin-top:24px;
-  height:14px;
-  border-radius:999px;
-  border:1px solid var(--white10);
-  background:rgba(255,255,255,0.05);
-  overflow:hidden;
-  position:relative;
-  box-shadow:0 0 0 1px rgba(255,255,255,0.03) inset;
+margin-top:24px;
+height:14px;
+border-radius:999px;
+
+border:1px solid var(--white10);
+background:rgba(255,255,255,0.05);
+
+overflow:hidden;
 }
 
 .bar{
-  height:100%;
-  width:0%;
-  background:linear-gradient(90deg,#22d3ee,#3b82f6,#8b5cf6);
-  transition:.15s linear;
-  box-shadow:
-    0 0 18px rgba(59,130,246,0.35),
-    0 0 34px rgba(139,92,246,0.18);
+height:100%;
+width:0%;
+
+background:linear-gradient(90deg,#22d3ee,#3b82f6,#8b5cf6);
+
+transition:.1s linear;
 }
 
 .status{
-  margin-top:14px;
-  font-size:14px;
-  color:var(--white50);
-  letter-spacing:0.02em;
+margin-top:14px;
+font-size:14px;
+color:var(--white50);
 }
 
-/* startup overlay */
+/* launch */
 
-.startup{
-  position:fixed;
-  inset:0;
-  z-index:9999;
-  pointer-events:none;
-  opacity:0;
-  transform:scale(1.05);
-  background:
-    radial-gradient(circle at center, rgba(103,232,249,0.22), transparent 14%),
-    radial-gradient(circle at center, rgba(59,130,246,0.18), transparent 32%),
-    linear-gradient(135deg,#020617,#0f172a,#000);
-  transition:opacity .55s ease, transform .8s ease;
-  overflow:hidden;
+.launch{
+position:fixed;
+inset:0;
+
+z-index:9999;
+
+pointer-events:none;
+
+opacity:0;
+transform:scale(1.05);
+
+background:
+radial-gradient(circle at center, rgba(103,232,249,0.25), transparent 20%),
+radial-gradient(circle at center, rgba(59,130,246,0.18), transparent 40%),
+linear-gradient(135deg,#020617,#0f172a,#000);
+
+transition:opacity .55s ease, transform .7s ease;
 }
 
-.startup.active{
-  opacity:1;
-  transform:scale(1);
+.launch.active{
+opacity:1;
+transform:scale(1);
 }
 
-.startup::before{
-  content:"";
-  position:absolute;
-  inset:-20%;
-  background:
-    repeating-linear-gradient(
-      to bottom,
-      rgba(255,255,255,0.02) 0px,
-      rgba(255,255,255,0.02) 1px,
-      transparent 2px,
-      transparent 6px
-    );
-  opacity:.22;
-  animation:scanMove 5s linear infinite;
+.launch:after{
+content:"LAUNCHING DESKTOP";
+
+position:absolute;
+left:50%;
+top:50%;
+
+transform:translate(-50%,-50%);
+
+font-family:"Orbitron";
+font-size:clamp(20px,4vw,32px);
+font-weight:800;
+
+letter-spacing:0.12em;
+
+opacity:0;
+
+text-shadow:
+0 0 10px rgba(103,232,249,0.75),
+0 0 24px rgba(59,130,246,0.40);
+
+transition:.3s .2s;
 }
 
-@keyframes scanMove{
-  from{transform:translateY(-10px);}
-  to{transform:translateY(10px);}
+.launch.active:after{
+opacity:1;
 }
 
-.startup::after{
-  content:"LAUNCHING DESKTOP";
-  position:absolute;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
-  font-family:"Orbitron",sans-serif;
-  font-size:clamp(22px,4vw,34px);
-  font-weight:800;
-  letter-spacing:0.14em;
-  text-align:center;
-  color:white;
-  opacity:0;
-  text-shadow:
-    0 0 10px rgba(103,232,249,0.75),
-    0 0 24px rgba(59,130,246,0.40),
-    0 0 42px rgba(139,92,246,0.20);
-  transition:opacity .3s ease .18s;
-  width:min(90vw,700px);
-}
-
-.startup.active::after{
-  opacity:1;
-}
-
-.startup-ring{
-  position:absolute;
-  left:50%;
-  top:50%;
-  width:180px;
-  height:180px;
-  border-radius:50%;
-  transform:translate(-50%,-50%) scale(.7);
-  border:1px solid rgba(103,232,249,0.28);
-  box-shadow:
-    0 0 40px rgba(103,232,249,0.14),
-    inset 0 0 24px rgba(103,232,249,0.08);
-  opacity:0;
-}
-
-.startup.active .startup-ring{
-  animation:ringExpand .8s ease forwards;
-}
-
-@keyframes ringExpand{
-  0%{
-    opacity:0;
-    transform:translate(-50%,-50%) scale(.65);
-  }
-  25%{
-    opacity:1;
-  }
-  100%{
-    opacity:0;
-    transform:translate(-50%,-50%) scale(2.8);
-  }
-}
-
-.startup-pulse{
-  position:absolute;
-  left:50%;
-  top:50%;
-  width:26px;
-  height:26px;
-  border-radius:50%;
-  transform:translate(-50%,-50%);
-  background:radial-gradient(circle, rgba(103,232,249,0.95), rgba(59,130,246,0.3), transparent 70%);
-  filter:blur(2px);
-  opacity:0;
-}
-
-.startup.active .startup-pulse{
-  animation:centerPulse .8s ease forwards;
-}
-
-@keyframes centerPulse{
-  0%{
-    opacity:0;
-    transform:translate(-50%,-50%) scale(.2);
-  }
-  25%{
-    opacity:1;
-  }
-  100%{
-    opacity:0;
-    transform:translate(-50%,-50%) scale(8);
-  }
-}
-
-body.launching .screen.active{
-  filter:blur(8px);
-  transform:scale(.985);
-  transition:transform .45s ease, filter .45s ease, opacity .45s ease;
-}
-
-@media (max-width:640px){
-  body{
-    min-height:100dvh;
-  }
-
-  .screen{
-    min-height:100dvh;
-    padding:22px;
-    padding-top:calc(22px + var(--safe-top));
-    padding-bottom:calc(22px + var(--safe-bottom));
-  }
-
-  .power-ring{
-    width:132px;
-    height:132px;
-    margin-bottom:24px;
-  }
-
-  .power-button{
-    width:88px;
-    height:88px;
-  }
-
-  .power-icon{
-    width:36px;
-    height:36px;
-  }
-
-  .subtitle{
-    font-size:16px;
-  }
-
-  .status{
-    font-size:13px;
-  }
-
-  .startup::after{
-    font-size:18px;
-    letter-spacing:0.10em;
-    line-height:1.4;
-  }
-}
 </style>
 </head>
 
 <body>
 
+<!-- AUDIO -->
+<audio id="bootSound" preload="auto">
+<source src="boot.mp3" type="audio/mpeg">
+</audio>
+
+<!-- POWER -->
 <section id="power" class="screen active">
-  <div class="center">
-    <div class="power-ring">
-      <div id="powerBtn" class="power-button">
-        <div class="power-icon"></div>
-      </div>
-    </div>
 
-    <div class="title">Malgieri OS</div>
-    <div class="subtitle">Press Power To Turn On The System</div>
-  </div>
-</section>
+<div>
 
-<section id="loading" class="screen">
-  <div class="center">
-    <div class="loader"></div>
-    <div class="title" style="font-size:clamp(24px,4vw,30px);">Booting Malgieri OS</div>
-
-    <div class="progress">
-      <div id="bar" class="bar"></div>
-    </div>
-
-    <div id="status" class="status">Initializing System...</div>
-  </div>
-</section>
-
-<div id="startup" class="startup">
-  <div class="startup-ring"></div>
-  <div class="startup-pulse"></div>
+<div class="power-ring">
+<div id="powerBtn" class="power-button">
+<div class="power-icon"></div>
+</div>
 </div>
 
+<div class="title">Malgieri OS</div>
+<div class="subtitle">Press power to boot</div>
+
+</div>
+
+</section>
+
+<!-- LOADING -->
+<section id="loading" class="screen">
+
+<div>
+
+<div class="loader"></div>
+<div class="title" style="font-size:28px;">Booting Malgieri OS</div>
+
+<div class="progress">
+<div id="bar" class="bar"></div>
+</div>
+
+<div id="status" class="status">Initializing system...</div>
+
+</div>
+
+</section>
+
+<!-- LAUNCH -->
+<div id="launch" class="launch"></div>
+
 <script>
-const powerBtn = document.getElementById("powerBtn");
-const power = document.getElementById("power");
-const loading = document.getElementById("loading");
-const bar = document.getElementById("bar");
-const status = document.getElementById("status");
-const startup = document.getElementById("startup");
+
+const powerBtn = document.getElementById("powerBtn")
+const power = document.getElementById("power")
+const loading = document.getElementById("loading")
+
+const bar = document.getElementById("bar")
+const status = document.getElementById("status")
+
+const launch = document.getElementById("launch")
+const bootSound = document.getElementById("bootSound")
 
 const messages = [
-  "Initializing System...",
-  "Loading Desktop Environment...",
-  "Connecting Scott's Space...",
-  "Preparing Courtney's Corner...",
-  "Starting Services...",
-  "Launching Desktop..."
-];
+"Initializing system...",
+"Loading desktop environment...",
+"Connecting Scott's Space...",
+"Preparing apps...",
+"Starting services...",
+"Launching desktop..."
+]
 
 powerBtn.onclick = () => {
-  power.classList.remove("active");
-  loading.classList.add("active");
 
-  let progress = 0;
-  let msg = 0;
+if(bootSound){
+bootSound.currentTime = 0
+bootSound.volume = 1
+bootSound.play().catch(()=>{})
+}
 
-  const interval = setInterval(() => {
-    progress += 2;
-    bar.style.width = progress + "%";
+power.classList.remove("active")
+loading.classList.add("active")
 
-    if (progress % 18 === 0 && msg < messages.length - 1) {
-      msg++;
-      status.textContent = messages[msg];
-    }
+let progress = 0
+let msg = 0
 
-    if (progress >= 100) {
-      clearInterval(interval);
+const totalTime = 6000
+const intervalTime = 50
+const steps = totalTime / intervalTime
+const increment = 100 / steps
 
-      setTimeout(() => {
-        document.body.classList.add("launching");
-        startup.classList.add("active");
+const interval = setInterval(()=>{
 
-        setTimeout(() => {
-          window.location.href = "home.html";
-        }, 950);
-      }, 260);
-    }
-  }, 80);
-};
+progress += increment
+
+if(progress > 100) progress = 100
+
+bar.style.width = progress + "%"
+
+if(Math.floor(progress) % 18 === 0 && msg < messages.length - 1){
+msg++
+status.textContent = messages[msg]
+}
+
+if(progress >= 100){
+
+clearInterval(interval)
+
+/* 🔊 FADE OUT SOUND */
+let fade = setInterval(()=>{
+if(bootSound.volume > 0.05){
+bootSound.volume -= 0.05
+}else{
+bootSound.pause()
+clearInterval(fade)
+}
+},80)
+
+setTimeout(()=>{
+
+launch.classList.add("active")
+
+setTimeout(()=>{
+window.location.href = "home.html"
+},900)
+
+},300)
+
+}
+
+}, intervalTime)
+
+}
+
 </script>
 
 </body>
