@@ -28,10 +28,7 @@
       --white-15: rgba(255,255,255,0.15);
       --white-10: rgba(255,255,255,0.10);
       --white-05: rgba(255,255,255,0.05);
-      --cyan: #67e8f9;
       --green: #4ade80;
-      --red: #f87171;
-      --yellow: #facc15;
       --shadow: 0 24px 70px rgba(0,0,0,0.45);
       --blur: blur(18px);
       --safe-top: env(safe-area-inset-top, 0px);
@@ -88,7 +85,7 @@
       padding-right: 16px;
       position: sticky;
       top: 0;
-      z-index: 10;
+      z-index: 20;
     }
 
     .topbar-left,
@@ -96,6 +93,7 @@
       display: flex;
       align-items: center;
       gap: 10px;
+      min-width: 0;
     }
 
     .status-dot {
@@ -104,16 +102,19 @@
       border-radius: 50%;
       background: var(--green);
       box-shadow: 0 0 14px rgba(74, 222, 128, 0.8);
+      flex-shrink: 0;
     }
 
     .muted {
       color: var(--white-50);
       font-size: 14px;
+      white-space: nowrap;
     }
 
     .clock {
       font-size: 14px;
       color: var(--white-75);
+      white-space: nowrap;
     }
 
     .page-wrap {
@@ -129,7 +130,7 @@
       border-radius: 30px;
       box-shadow: var(--shadow);
       padding: 28px;
-      margin-bottom: 24px;
+      margin-bottom: 26px;
     }
 
     .back-btn {
@@ -183,146 +184,89 @@
 
     .section-title {
       margin: 0 0 16px;
-      font-size: 24px;
+      font-size: 26px;
+      line-height: 1.2;
     }
 
-    .app-grid {
+    .folders-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 18px;
-      margin-bottom: 28px;
     }
 
-    .app-card {
+    .folder-card {
+      display: block;
+      text-decoration: none;
+      color: inherit;
       border: 1px solid var(--white-10);
       background: rgba(255,255,255,0.05);
       backdrop-filter: var(--blur);
       border-radius: 24px;
       box-shadow: var(--shadow);
       padding: 22px 18px;
-      min-height: 170px;
-      transition: transform 0.2s ease, background 0.2s ease;
+      min-height: 190px;
+      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
     }
 
-    .app-card:hover {
+    .folder-card:hover {
       transform: translateY(-4px);
       background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.18);
     }
 
-    .app-icon {
-      width: 70px;
-      height: 70px;
-      border-radius: 22px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 32px;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid var(--white-10);
-      margin-bottom: 14px;
+    .folder-icon-wrap {
+      margin-bottom: 16px;
     }
 
-    .app-card h3 {
+    .folder-icon {
+      width: 74px;
+      height: 58px;
+      position: relative;
+      border-radius: 16px 16px 18px 18px;
+      background: linear-gradient(180deg, rgba(96,165,250,0.95), rgba(37,99,235,0.92));
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.22),
+        0 14px 26px rgba(0,0,0,0.28);
+    }
+
+    .folder-icon::before {
+      content: "";
+      position: absolute;
+      top: -8px;
+      left: 10px;
+      width: 30px;
+      height: 14px;
+      border-radius: 10px 10px 0 0;
+      background: linear-gradient(180deg, rgba(147,197,253,0.95), rgba(96,165,250,0.95));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);
+    }
+
+    .folder-card h3 {
       margin: 0 0 8px;
-      font-size: 20px;
+      font-size: 22px;
+      line-height: 1.2;
+      color: var(--white-90);
     }
 
-    .app-card p {
+    .folder-card p {
       margin: 0;
       color: var(--white-65);
-      line-height: 1.55;
+      line-height: 1.6;
       font-size: 15px;
     }
 
-    .content-grid {
-      display: grid;
-      grid-template-columns: 1.2fr 0.8fr;
-      gap: 18px;
-    }
-
-    .panel {
-      border: 1px solid var(--white-10);
-      background: rgba(255,255,255,0.05);
-      backdrop-filter: var(--blur);
-      border-radius: 28px;
-      box-shadow: var(--shadow);
-      overflow: hidden;
-    }
-
-    .panel-head {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 14px 18px;
-      border-bottom: 1px solid var(--white-10);
-    }
-
-    .dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-    }
-
-    .dot.red { background: var(--red); }
-    .dot.yellow { background: var(--yellow); }
-    .dot.green { background: var(--green); }
-
-    .panel-title {
-      margin-left: 8px;
-      color: var(--white-70);
-      font-size: 14px;
-    }
-
-    .panel-body {
-      padding: 22px;
-    }
-
-    .panel-body h3 {
-      margin: 0 0 10px;
-      font-size: 24px;
-    }
-
-    .panel-body p,
-    .panel-body li {
-      color: var(--white-70);
-      line-height: 1.65;
-      font-size: 16px;
-    }
-
-    .panel-body ul {
-      margin: 0;
-      padding-left: 18px;
-    }
-
-    .quick-stack {
-      display: grid;
-      gap: 12px;
-    }
-
-    .mini-card {
-      border: 1px solid var(--white-10);
-      background: rgba(255,255,255,0.04);
-      border-radius: 18px;
-      padding: 16px;
-    }
-
-    .mini-title {
-      font-size: 12px;
+    .folder-tag {
+      display: inline-block;
+      margin-top: 14px;
+      color: var(--white-55);
+      font-size: 13px;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      letter-spacing: 0.16em;
-      color: var(--white-50);
-      margin-bottom: 6px;
-    }
-
-    .mini-value {
-      font-size: 17px;
-      color: var(--white-90);
-      font-weight: 600;
     }
 
     @media (max-width: 860px) {
-      .content-grid {
-        grid-template-columns: 1fr;
+      .folders-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
 
@@ -332,38 +276,64 @@
         padding-right: 12px;
       }
 
+      .topbar-left strong {
+        max-width: 120px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .muted {
+        font-size: 12px;
+      }
+
+      .clock {
+        font-size: 12px;
+      }
+
+      .page-wrap {
+        padding: 20px 14px calc(22px + var(--safe-bottom));
+      }
+
       .hero {
         padding: 22px 18px;
         border-radius: 24px;
+      }
+
+      .hero h1 {
+        font-size: clamp(30px, 11vw, 42px);
       }
 
       .hero p {
         font-size: 16px;
       }
 
-      .app-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+      .section-title {
+        font-size: 22px;
+        margin-bottom: 14px;
+      }
+
+      .folders-grid {
+        grid-template-columns: 1fr;
         gap: 14px;
       }
 
-      .app-card {
-        min-height: 150px;
-        padding: 18px 14px;
+      .folder-card {
+        min-height: unset;
+        padding: 18px 16px;
         border-radius: 20px;
       }
 
-      .app-icon {
-        width: 58px;
-        height: 58px;
-        font-size: 28px;
-        border-radius: 18px;
+      .folder-icon {
+        width: 68px;
+        height: 54px;
       }
 
-      .app-card h3 {
-        font-size: 17px;
+      .folder-card h3 {
+        font-size: 19px;
       }
 
-      .app-card p {
+      .folder-card p {
         font-size: 14px;
       }
     }
@@ -400,71 +370,74 @@
       </div>
     </section>
 
-    <h2 class="section-title">Apps</h2>
-    <section class="app-grid">
-      <div class="app-card">
-        <div class="app-icon">🛠️</div>
-        <h3>Projects</h3>
-        <p>Track current builds, website ideas, home tech projects, and experiments.</p>
-      </div>
+    <h2 class="section-title">Folders</h2>
 
-      <div class="app-card">
-        <div class="app-icon">🌐</div>
-        <h3>Links</h3>
-        <p>Quick access to your favorite sites, dashboards, tools, and resources.</p>
-      </div>
+    <section class="folders-grid">
+      <a class="folder-card" href="#">
+        <div class="folder-icon-wrap">
+          <div class="folder-icon"></div>
+        </div>
+        <h3>Scott’s Pictures</h3>
+        <p>
+          Photos, screenshots, memories, saved images, and visuals you want to keep organized.
+        </p>
+        <span class="folder-tag">Folder</span>
+      </a>
 
-      <div class="app-card">
-        <div class="app-icon">🎮</div>
-        <h3>Setup</h3>
-        <p>Your gaming, streaming, desk setup, gear ideas, and future upgrades.</p>
-      </div>
+      <a class="folder-card" href="#">
+        <div class="folder-icon-wrap">
+          <div class="folder-icon"></div>
+        </div>
+        <h3>Scott’s Notes</h3>
+        <p>
+          Ideas, reminders, thoughts, rough concepts, and anything you want to write down fast.
+        </p>
+        <span class="folder-tag">Folder</span>
+      </a>
 
-      <div class="app-card">
-        <div class="app-icon">🧠</div>
-        <h3>Ideas</h3>
-        <p>A place to store random sparks, site concepts, automations, and fun builds.</p>
-      </div>
-    </section>
+      <a class="folder-card" href="#">
+        <div class="folder-icon-wrap">
+          <div class="folder-icon"></div>
+        </div>
+        <h3>Scott’s Setup</h3>
+        <p>
+          Your desk setup, gaming gear, streaming ideas, tech wishlist, and future upgrades.
+        </p>
+        <span class="folder-tag">Folder</span>
+      </a>
 
-    <section class="content-grid">
-      <div class="panel">
-        <div class="panel-head">
-          <span class="dot red"></span>
-          <span class="dot yellow"></span>
-          <span class="dot green"></span>
-          <span class="panel-title">Workspace Overview</span>
+      <a class="folder-card" href="#">
+        <div class="folder-icon-wrap">
+          <div class="folder-icon"></div>
         </div>
-        <div class="panel-body">
-          <h3>Your Command Center</h3>
-          <p>
-            Scott’s Space should feel like your personal operating system inside the operating system.
-            This can become the place where everything you care about lives in one clean, futuristic hub.
-          </p>
-          <ul>
-            <li>Project cards and active builds</li>
-            <li>Favorite links and shortcuts</li>
-            <li>Tech gear and setup plans</li>
-            <li>Blog-style updates</li>
-            <li>Creative ideas and notes</li>
-          </ul>
-        </div>
-      </div>
+        <h3>Scott’s Projects</h3>
+        <p>
+          Current builds, Malgieri OS plans, experiments, and all the cool stuff you are working on.
+        </p>
+        <span class="folder-tag">Folder</span>
+      </a>
 
-      <div class="quick-stack">
-        <div class="mini-card">
-          <div class="mini-title">Status</div>
-          <div class="mini-value">Scott’s Space v1</div>
+      <a class="folder-card" href="#">
+        <div class="folder-icon-wrap">
+          <div class="folder-icon"></div>
         </div>
-        <div class="mini-card">
-          <div class="mini-title">Theme</div>
-          <div class="mini-value">Dark / Futuristic / Clean</div>
+        <h3>Scott’s Links</h3>
+        <p>
+          Favorite websites, dashboards, tools, shortcuts, and the pages you use most often.
+        </p>
+        <span class="folder-tag">Folder</span>
+      </a>
+
+      <a class="folder-card" href="#">
+        <div class="folder-icon-wrap">
+          <div class="folder-icon"></div>
         </div>
-        <div class="mini-card">
-          <div class="mini-title">Next Move</div>
-          <div class="mini-value">Build your real modules</div>
-        </div>
-      </div>
+        <h3>Scott’s Ideas</h3>
+        <p>
+          Future concepts, fun automations, site upgrades, and random sparks worth saving.
+        </p>
+        <span class="folder-tag">Folder</span>
+      </a>
     </section>
   </main>
 
