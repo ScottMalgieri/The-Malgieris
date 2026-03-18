@@ -36,7 +36,6 @@
       --safe-right: env(safe-area-inset-right, 0px);
       --safe-bottom: env(safe-area-inset-bottom, 0px);
       --safe-left: env(safe-area-inset-left, 0px);
-      --accent: rgba(96, 165, 250, 0.24);
     }
 
     * {
@@ -279,7 +278,7 @@
       position: absolute;
       inset: auto 0 0 0;
       padding: 18px 16px 14px;
-      background: linear-gradient(180deg, transparent, rgba(0,0,0,0.70));
+      background: linear-gradient(180deg, transparent, rgba(0,0,0,0.72));
       pointer-events: none;
     }
 
@@ -317,8 +316,8 @@
         calc(18px + var(--safe-right))
         calc(22px + var(--safe-bottom))
         calc(18px + var(--safe-left));
-      background: rgba(2, 6, 23, 0.70);
-      backdrop-filter: blur(14px);
+      background: rgba(2, 6, 23, 0.74);
+      backdrop-filter: blur(16px);
       opacity: 0;
       visibility: hidden;
       pointer-events: none;
@@ -333,15 +332,12 @@
     }
 
     .modal-panel {
-      width: min(1040px, 100%);
-      max-height: min(88dvh, 920px);
-      overflow: auto;
-      border: 1px solid var(--white-10);
-      background: rgba(10,15,30,0.78);
-      backdrop-filter: blur(22px);
-      border-radius: 30px;
-      box-shadow: 0 28px 80px rgba(0,0,0,0.55);
-      transform: translateY(14px) scale(0.98);
+      width: min(1100px, 100%);
+      max-height: min(88dvh, 940px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: translateY(12px) scale(0.985);
       opacity: 0;
       transition: transform 0.25s ease, opacity 0.25s ease;
       position: relative;
@@ -352,77 +348,24 @@
       opacity: 1;
     }
 
-    .modal-close {
-      position: sticky;
-      top: 0;
-      margin-left: auto;
-      width: 48px;
-      height: 48px;
-      border: 0;
-      border-left: 1px solid var(--white-10);
-      border-bottom: 1px solid var(--white-10);
-      border-radius: 0 30px 0 18px;
-      background: rgba(255,255,255,0.06);
-      color: var(--white);
-      font-size: 24px;
-      cursor: pointer;
-      z-index: 2;
+    .modal-image-wrap {
+      width: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
-      backdrop-filter: blur(14px);
-    }
-
-    .modal-close:hover {
-      background: rgba(255,255,255,0.10);
-    }
-
-    .modal-content {
-      padding: 0 22px 24px;
-      margin-top: -48px;
-    }
-
-    .modal-image-wrap {
-      width: 100%;
-      border-radius: 24px;
-      overflow: hidden;
-      border: 1px solid var(--white-10);
-      background:
-        linear-gradient(135deg, rgba(148,163,184,0.14), rgba(255,255,255,0.03));
-      box-shadow: var(--shadow);
     }
 
     .modal-image {
-      width: 100%;
-      max-height: 68dvh;
-      object-fit: cover;
+      max-width: 100%;
+      max-height: 84dvh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
       display: block;
-    }
-
-    .modal-text {
-      padding-top: 18px;
-    }
-
-    .modal-text h3 {
-      margin: 0 0 10px;
-      font-size: clamp(24px, 4vw, 34px);
-      line-height: 1.1;
-    }
-
-    .modal-text .modal-sub {
-      margin: 0 0 12px;
-      color: var(--white-60);
-      font-size: 14px;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
-
-    .modal-text p {
-      margin: 0;
-      color: var(--white-70);
-      font-size: 16px;
-      line-height: 1.7;
-      max-width: 900px;
+      border-radius: 24px;
+      border: 1px solid var(--white-10);
+      box-shadow: 0 28px 80px rgba(0,0,0,0.55);
+      background: rgba(255,255,255,0.03);
     }
 
     .empty-tip {
@@ -452,20 +395,9 @@
         align-items: flex-start;
       }
 
-      .modal-content {
-        padding: 0 14px 18px;
-      }
-
-      .modal-panel {
-        border-radius: 24px;
-      }
-
-      .modal-close {
-        border-radius: 0 24px 0 16px;
-      }
-
       .modal-image {
-        max-height: 46dvh;
+        max-height: 72dvh;
+        border-radius: 20px;
       }
     }
 
@@ -532,12 +464,9 @@
           calc(10px + var(--safe-left));
       }
 
-      .modal-text h3 {
-        font-size: 26px;
-      }
-
-      .modal-text p {
-        font-size: 15px;
+      .modal-image {
+        max-height: 68dvh;
+        border-radius: 18px;
       }
     }
   </style>
@@ -562,7 +491,7 @@
       <h1>Scott’s Pictures</h1>
       <p>
         A clean photo gallery inside Malgieri OS. Tap any image to bring it forward,
-        view it larger, read the caption underneath, and close it without losing the
+        view the same photo in high resolution, and close it without losing the
         grid in the background.
       </p>
 
@@ -573,14 +502,14 @@
       </div>
 
       <div class="empty-tip">
-        Later, just replace the placeholder image URLs and text in each photo card with your real photos, titles, and descriptions.
+        For your real photos later, use the same image path for both the thumbnail and expanded view so they always match perfectly.
       </div>
     </section>
 
     <div class="gallery-header">
       <h2>Gallery</h2>
       <div class="gallery-subtext">
-        Click a photo to open it in the foreground. Close with the X, Escape, or by clicking outside.
+        Click a photo to expand it. Click outside the image or press Escape to close it.
       </div>
     </div>
 
@@ -588,12 +517,9 @@
       <article
         class="photo-card"
         data-image="https://picsum.photos/1200/1500?random=11"
-        data-title="Desk Setup Shot"
-        data-sub="Placeholder Photo • Setup"
-        data-description="This is a placeholder image for your future setup photos. Later, this can be one of your real desk or gaming room shots with a full description underneath."
       >
         <div class="photo-thumb-wrap">
-          <img class="photo-thumb" src="https://picsum.photos/700/900?random=11" alt="Desk Setup Shot" />
+          <img class="photo-thumb" src="https://picsum.photos/1200/1500?random=11" alt="Desk Setup Shot" />
           <div class="photo-overlay">
             <h3 class="photo-title">Desk Setup Shot</h3>
             <div class="photo-meta">Placeholder Photo • Setup</div>
@@ -607,12 +533,9 @@
       <article
         class="photo-card"
         data-image="https://picsum.photos/1200/1500?random=12"
-        data-title="Favorite Memory"
-        data-sub="Placeholder Photo • Personal"
-        data-description="Use this space for personal moments, snapshots, family memories, or any photo you want in Scott’s Pictures. The full text shows when the image opens."
       >
         <div class="photo-thumb-wrap">
-          <img class="photo-thumb" src="https://picsum.photos/700/900?random=12" alt="Favorite Memory" />
+          <img class="photo-thumb" src="https://picsum.photos/1200/1500?random=12" alt="Favorite Memory" />
           <div class="photo-overlay">
             <h3 class="photo-title">Favorite Memory</h3>
             <div class="photo-meta">Placeholder Photo • Personal</div>
@@ -626,12 +549,9 @@
       <article
         class="photo-card"
         data-image="https://picsum.photos/1200/1500?random=13"
-        data-title="Tech Build Progress"
-        data-sub="Placeholder Photo • Project"
-        data-description="This could hold progress photos of Malgieri OS, tech builds, streaming gear upgrades, or before-and-after shots from a project you’re proud of."
       >
         <div class="photo-thumb-wrap">
-          <img class="photo-thumb" src="https://picsum.photos/700/900?random=13" alt="Tech Build Progress" />
+          <img class="photo-thumb" src="https://picsum.photos/1200/1500?random=13" alt="Tech Build Progress" />
           <div class="photo-overlay">
             <h3 class="photo-title">Tech Build Progress</h3>
             <div class="photo-meta">Placeholder Photo • Project</div>
@@ -645,12 +565,9 @@
       <article
         class="photo-card"
         data-image="https://picsum.photos/1200/1500?random=14"
-        data-title="Weekend Capture"
-        data-sub="Placeholder Photo • Lifestyle"
-        data-description="A clean tile for casual photos, outdoor shots, event photos, or anything you want to keep inside a modern, organized visual gallery."
       >
         <div class="photo-thumb-wrap">
-          <img class="photo-thumb" src="https://picsum.photos/700/900?random=14" alt="Weekend Capture" />
+          <img class="photo-thumb" src="https://picsum.photos/1200/1500?random=14" alt="Weekend Capture" />
           <div class="photo-overlay">
             <h3 class="photo-title">Weekend Capture</h3>
             <div class="photo-meta">Placeholder Photo • Lifestyle</div>
@@ -664,12 +581,9 @@
       <article
         class="photo-card"
         data-image="https://picsum.photos/1200/1500?random=15"
-        data-title="Creative Inspiration"
-        data-sub="Placeholder Photo • Inspiration"
-        data-description="Use this for mockups, design inspiration, screenshots, wallpapers, or visuals you want to reference later inside Scott’s visual folder."
       >
         <div class="photo-thumb-wrap">
-          <img class="photo-thumb" src="https://picsum.photos/700/900?random=15" alt="Creative Inspiration" />
+          <img class="photo-thumb" src="https://picsum.photos/1200/1500?random=15" alt="Creative Inspiration" />
           <div class="photo-overlay">
             <h3 class="photo-title">Creative Inspiration</h3>
             <div class="photo-meta">Placeholder Photo • Inspiration</div>
@@ -683,12 +597,9 @@
       <article
         class="photo-card"
         data-image="https://picsum.photos/1200/1500?random=16"
-        data-title="Another Placeholder"
-        data-sub="Placeholder Photo • Gallery"
-        data-description="You can duplicate these cards as much as you want later. Each one can hold its own image, title, subtitle, and longer text description in the modal."
       >
         <div class="photo-thumb-wrap">
-          <img class="photo-thumb" src="https://picsum.photos/700/900?random=16" alt="Another Placeholder" />
+          <img class="photo-thumb" src="https://picsum.photos/1200/1500?random=16" alt="Another Placeholder" />
           <div class="photo-overlay">
             <h3 class="photo-title">Another Placeholder</h3>
             <div class="photo-meta">Placeholder Photo • Gallery</div>
@@ -703,18 +614,8 @@
 
   <div class="modal" id="photoModal" aria-hidden="true">
     <div class="modal-panel">
-      <button class="modal-close" id="modalClose" aria-label="Close photo viewer">×</button>
-
-      <div class="modal-content">
-        <div class="modal-image-wrap">
-          <img class="modal-image" id="modalImage" src="" alt="" />
-        </div>
-
-        <div class="modal-text">
-          <div class="modal-sub" id="modalSub">Placeholder Photo</div>
-          <h3 id="modalTitle">Photo Title</h3>
-          <p id="modalDescription">Photo description will appear here.</p>
-        </div>
+      <div class="modal-image-wrap">
+        <img class="modal-image" id="modalImage" src="" alt="" />
       </div>
     </div>
   </div>
@@ -764,23 +665,14 @@
 
     const modal = document.getElementById("photoModal");
     const modalImage = document.getElementById("modalImage");
-    const modalTitle = document.getElementById("modalTitle");
-    const modalSub = document.getElementById("modalSub");
-    const modalDescription = document.getElementById("modalDescription");
-    const modalClose = document.getElementById("modalClose");
     const photoCards = document.querySelectorAll(".photo-card");
 
     function openModal(card) {
       const image = card.dataset.image || "";
-      const title = card.dataset.title || "";
-      const sub = card.dataset.sub || "";
-      const description = card.dataset.description || "";
+      const thumb = card.querySelector(".photo-thumb");
 
       modalImage.src = image;
-      modalImage.alt = title;
-      modalTitle.textContent = title;
-      modalSub.textContent = sub;
-      modalDescription.textContent = description;
+      modalImage.alt = thumb ? thumb.alt : "Expanded photo";
 
       modal.classList.add("open");
       modal.setAttribute("aria-hidden", "false");
@@ -803,8 +695,6 @@
     photoCards.forEach((card) => {
       card.addEventListener("click", () => openModal(card));
     });
-
-    modalClose.addEventListener("click", closeModal);
 
     modal.addEventListener("click", (e) => {
       if (e.target === modal) {
