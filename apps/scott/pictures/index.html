@@ -198,15 +198,19 @@
 
     .gallery-header {
       display: flex;
-      justify-content: space-between;
-      align-items: end;
-      gap: 16px;
-      margin-bottom: 16px;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 20px;
+      text-align: center;
     }
 
     .gallery-header h2 {
       margin: 0;
-      font-size: 26px;
+      font-size: clamp(30px, 4vw, 42px);
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      color: var(--white-90);
+      text-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
     }
 
     .gallery-subtext {
@@ -320,8 +324,7 @@
       }
 
       .gallery-header {
-        flex-direction: column;
-        align-items: flex-start;
+        margin-bottom: 18px;
       }
     }
 
@@ -361,7 +364,7 @@
       }
 
       .gallery-header h2 {
-        font-size: 22px;
+        font-size: clamp(26px, 9vw, 34px);
       }
 
       .photo-grid {
@@ -409,9 +412,6 @@
 
     <div class="gallery-header">
       <h2>Gallery</h2>
-      <div class="gallery-subtext">
-        Simple scrollable gallery with overlay text and descriptions underneath each photo.
-      </div>
     </div>
 
     <section class="photo-grid">
