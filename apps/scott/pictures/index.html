@@ -25,10 +25,8 @@
       --white-65: rgba(255,255,255,0.65);
       --white-60: rgba(255,255,255,0.60);
       --white-50: rgba(255,255,255,0.50);
-      --white-20: rgba(255,255,255,0.20);
       --white-15: rgba(255,255,255,0.15);
       --white-10: rgba(255,255,255,0.10);
-      --white-05: rgba(255,255,255,0.05);
       --green: #4ade80;
       --shadow: 0 24px 70px rgba(0,0,0,0.45);
       --blur: blur(18px);
@@ -79,13 +77,6 @@
       opacity: 1 !important;
       transform: none !important;
       filter: none !important;
-    }
-
-    body.modal-open {
-      overflow: hidden;
-      touch-action: none;
-      position: fixed;
-      width: 100%;
     }
 
     @keyframes pageIn {
@@ -238,7 +229,6 @@
       border-radius: 26px;
       box-shadow: var(--shadow);
       overflow: hidden;
-      cursor: pointer;
       transition:
         transform 0.22s ease,
         background 0.22s ease,
@@ -307,100 +297,6 @@
       line-height: 1.55;
     }
 
-    .modal {
-      position: fixed;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding:
-        calc(12px + var(--safe-top))
-        calc(10px + var(--safe-right))
-        calc(12px + var(--safe-bottom))
-        calc(10px + var(--safe-left));
-      background: rgba(2, 6, 23, 0.74);
-      backdrop-filter: blur(16px);
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-      transition: opacity 0.25s ease, visibility 0.25s ease;
-      z-index: 100;
-      overflow: hidden;
-    }
-
-    .modal.open {
-      opacity: 1;
-      visibility: visible;
-      pointer-events: auto;
-    }
-
-    .modal-panel {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transform: scale(0.985);
-      opacity: 0;
-      transition: transform 0.25s ease, opacity 0.25s ease;
-      position: relative;
-    }
-
-    .modal.open .modal-panel {
-      transform: scale(1);
-      opacity: 1;
-    }
-
-    .modal-image-wrap {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-    }
-
-    .modal-image {
-      max-width: 100%;
-      max-height: calc(100dvh - 24px - var(--safe-top) - var(--safe-bottom));
-      width: auto;
-      height: auto;
-      object-fit: contain;
-      display: block;
-      border-radius: 24px;
-      border: 1px solid var(--white-10);
-      box-shadow: 0 28px 80px rgba(0,0,0,0.55);
-      background: rgba(255,255,255,0.03);
-      transform: translateZ(0);
-    }
-
-    .modal-close {
-      position: absolute;
-      top: 14px;
-      right: 14px;
-      width: 48px;
-      height: 48px;
-      border: 1px solid var(--white-10);
-      border-radius: 50%;
-      background: rgba(0,0,0,0.45);
-      backdrop-filter: blur(12px);
-      color: var(--white);
-      font-size: 26px;
-      line-height: 1;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 120;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
-      transition: background 0.2s ease, transform 0.2s ease;
-    }
-
-    .modal-close:hover {
-      background: rgba(255,255,255,0.12);
-      transform: scale(1.04);
-    }
-
     .empty-tip {
       margin-top: 18px;
       border: 1px dashed var(--white-15);
@@ -426,11 +322,6 @@
       .gallery-header {
         flex-direction: column;
         align-items: flex-start;
-      }
-
-      .modal-image {
-        max-height: calc(100dvh - 20px - var(--safe-top) - var(--safe-bottom));
-        border-radius: 20px;
       }
     }
 
@@ -488,27 +379,6 @@
       .photo-title {
         font-size: 18px;
       }
-
-      .modal {
-        padding:
-          calc(10px + var(--safe-top))
-          calc(8px + var(--safe-right))
-          calc(10px + var(--safe-bottom))
-          calc(8px + var(--safe-left));
-      }
-
-      .modal-image {
-        max-height: calc(100dvh - 20px - var(--safe-top) - var(--safe-bottom));
-        border-radius: 18px;
-      }
-
-      .modal-close {
-        top: 10px;
-        right: 10px;
-        width: 44px;
-        height: 44px;
-        font-size: 24px;
-      }
     }
   </style>
 </head>
@@ -531,31 +401,30 @@
       <a href="/apps/scott/" class="back-btn smooth-link">← Back To Scott’s Space</a>
       <h1>Scott’s Pictures</h1>
       <p>
-        A clean photo gallery inside Malgieri OS. Tap any image to bring it forward,
-        view the same photo in high resolution, and close it without losing the
-        grid in the background.
+        A clean photo gallery inside Malgieri OS. Scroll through your pictures in a sleek,
+        modern grid with title text over each image and descriptions underneath.
       </p>
 
       <div class="hero-meta">
         <div class="pill">🖼️ Photo Grid</div>
-        <div class="pill">✨ Click To Expand</div>
+        <div class="pill">✨ Clean Layout</div>
         <div class="pill">📱 Mobile Friendly</div>
       </div>
 
       <div class="empty-tip">
-        For your real photos later, use the exact same image path in both the thumbnail and expanded photo.
+        Later, just replace the placeholder image URLs and text in each photo card with your real photos, titles, and descriptions.
       </div>
     </section>
 
     <div class="gallery-header">
       <h2>Gallery</h2>
       <div class="gallery-subtext">
-        Click a photo to expand it. Click outside the image, tap the X, or press Escape to close it.
+        Simple scrollable gallery with overlay text and descriptions underneath each photo.
       </div>
     </div>
 
     <section class="photo-grid">
-      <article class="photo-card" data-image="https://picsum.photos/1200/1500?random=11">
+      <article class="photo-card">
         <div class="photo-thumb-wrap">
           <img class="photo-thumb" src="https://picsum.photos/1200/1500?random=11" alt="Desk Setup Shot" />
           <div class="photo-overlay">
@@ -568,7 +437,7 @@
         </div>
       </article>
 
-      <article class="photo-card" data-image="https://picsum.photos/1200/1500?random=12">
+      <article class="photo-card">
         <div class="photo-thumb-wrap">
           <img class="photo-thumb" src="https://picsum.photos/1200/1500?random=12" alt="Favorite Memory" />
           <div class="photo-overlay">
@@ -581,7 +450,7 @@
         </div>
       </article>
 
-      <article class="photo-card" data-image="https://picsum.photos/1200/1500?random=13">
+      <article class="photo-card">
         <div class="photo-thumb-wrap">
           <img class="photo-thumb" src="https://picsum.photos/1200/1500?random=13" alt="Tech Build Progress" />
           <div class="photo-overlay">
@@ -594,7 +463,7 @@
         </div>
       </article>
 
-      <article class="photo-card" data-image="https://picsum.photos/1200/1500?random=14">
+      <article class="photo-card">
         <div class="photo-thumb-wrap">
           <img class="photo-thumb" src="https://picsum.photos/1200/1500?random=14" alt="Weekend Capture" />
           <div class="photo-overlay">
@@ -607,7 +476,7 @@
         </div>
       </article>
 
-      <article class="photo-card" data-image="https://picsum.photos/1200/1500?random=15">
+      <article class="photo-card">
         <div class="photo-thumb-wrap">
           <img class="photo-thumb" src="https://picsum.photos/1200/1500?random=15" alt="Creative Inspiration" />
           <div class="photo-overlay">
@@ -620,7 +489,7 @@
         </div>
       </article>
 
-      <article class="photo-card" data-image="https://picsum.photos/1200/1500?random=16">
+      <article class="photo-card">
         <div class="photo-thumb-wrap">
           <img class="photo-thumb" src="https://picsum.photos/1200/1500?random=16" alt="Another Placeholder" />
           <div class="photo-overlay">
@@ -635,15 +504,6 @@
     </section>
   </main>
 
-  <div class="modal" id="photoModal" aria-hidden="true">
-    <div class="modal-panel">
-      <button class="modal-close" id="modalClose" aria-label="Close photo">×</button>
-      <div class="modal-image-wrap">
-        <img class="modal-image" id="modalImage" src="" alt="" />
-      </div>
-    </div>
-  </div>
-
   <script>
     function updateClock() {
       const now = new Date();
@@ -655,8 +515,6 @@
 
     updateClock();
     setInterval(updateClock, 1000);
-
-    let scrollPosition = 0;
 
     document.querySelectorAll(".smooth-link").forEach((link) => {
       link.addEventListener("click", function (e) {
@@ -687,75 +545,6 @@
     window.addEventListener("popstate", function () {
       document.body.classList.remove("page-leaving");
       document.body.classList.add("page-restored");
-    });
-
-    const modal = document.getElementById("photoModal");
-    const modalImage = document.getElementById("modalImage");
-    const modalClose = document.getElementById("modalClose");
-    const photoCards = document.querySelectorAll(".photo-card");
-
-    function lockBodyScroll() {
-      scrollPosition = window.scrollY || window.pageYOffset;
-      document.body.style.top = `-${scrollPosition}px`;
-      document.body.classList.add("modal-open");
-    }
-
-    function unlockBodyScroll() {
-      document.body.classList.remove("modal-open");
-      document.body.style.top = "";
-      window.scrollTo(0, scrollPosition);
-    }
-
-    function openModal(card) {
-      const image = card.dataset.image || "";
-      const thumb = card.querySelector(".photo-thumb");
-
-      modalImage.src = "";
-      modalImage.alt = thumb ? thumb.alt : "Expanded photo";
-
-      lockBodyScroll();
-      modal.classList.add("open");
-      modal.setAttribute("aria-hidden", "false");
-
-      const tempImg = new Image();
-      tempImg.onload = function () {
-        modalImage.src = image;
-        requestAnimationFrame(() => {
-          modalImage.style.transform = "translateZ(0)";
-        });
-      };
-      tempImg.src = image;
-    }
-
-    function closeModal() {
-      modal.classList.remove("open");
-      modal.setAttribute("aria-hidden", "true");
-      unlockBodyScroll();
-
-      setTimeout(() => {
-        if (!modal.classList.contains("open")) {
-          modalImage.src = "";
-          modalImage.alt = "";
-        }
-      }, 220);
-    }
-
-    photoCards.forEach((card) => {
-      card.addEventListener("click", () => openModal(card));
-    });
-
-    modalClose.addEventListener("click", closeModal);
-
-    modal.addEventListener("click", (e) => {
-      if (e.target === modal) {
-        closeModal();
-      }
-    });
-
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && modal.classList.contains("open")) {
-        closeModal();
-      }
     });
   </script>
 </body>
