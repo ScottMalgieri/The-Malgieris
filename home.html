@@ -23,6 +23,7 @@
   --white60:rgba(255,255,255,0.6);
   --white50:rgba(255,255,255,0.5);
   --white10:rgba(255,255,255,0.1);
+  --white05:rgba(255,255,255,0.05);
 
   --safe-top:env(safe-area-inset-top,0px);
   --safe-bottom:env(safe-area-inset-bottom,0px);
@@ -35,6 +36,7 @@
 html,body{
 margin:0;
 width:100%;
+max-width:100%;
 min-height:100%;
 overflow-x:hidden;
 overflow-y:auto;
@@ -42,9 +44,9 @@ overflow-y:auto;
 font-family:Arial,Helvetica,sans-serif;
 color:var(--white);
 background:
-radial-gradient(circle at top right,rgba(59,130,246,0.18),transparent 30%),
-radial-gradient(circle at bottom left,rgba(168,85,247,0.14),transparent 30%),
-linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3));
+radial-gradient(circle at top right, rgba(59,130,246,0.18), transparent 30%),
+radial-gradient(circle at bottom left, rgba(168,85,247,0.14), transparent 30%),
+linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
 }
 
 body{min-height:100dvh;overscroll-behavior:none;}
@@ -56,9 +58,21 @@ flex-direction:column;
 opacity:0;
 transform:scale(1.01);
 animation:pageIn .35s ease forwards;
+transition:filter .5s ease, opacity .5s ease, transform .5s ease;
 }
 
 @keyframes pageIn{to{opacity:1;transform:scale(1);}}
+
+body.app-transition .app-shell{
+transform:scale(.965);
+filter:blur(10px) brightness(.9);
+opacity:.72;
+}
+
+body.shutdown-transition .app-shell{
+filter:blur(8px) brightness(.55);
+opacity:.2;
+}
 
 .topbar{
 height:calc(54px + var(--safe-top));
@@ -124,7 +138,7 @@ color:var(--white90);
 outline:none;
 }
 
-/* DESKTOP */
+/* GRID */
 
 .desktop{
 flex:1;
@@ -189,7 +203,7 @@ color:var(--white90);
 font-weight:600;
 }
 
-/* SHUTDOWN BUTTON ORIGINAL STYLE */
+/* SHUTDOWN */
 
 .shutdown-wrap{
 width:100%;
@@ -257,19 +271,10 @@ color:var(--white70);
 /* MOBILE */
 
 @media(max-width:760px){
-.grid{
-grid-template-columns:repeat(2,1fr);
-gap:14px;
+.grid{grid-template-columns:repeat(2,1fr);gap:14px;}
+.icon{min-height:138px;border-radius:20px;}
+.badge{width:68px;height:68px;font-size:32px;}
 }
-.icon{
-min-height:138px;
-border-radius:20px;
-}
-.badge{
-width:68px;height:68px;font-size:32px;
-}
-}
-
 </style>
 </head>
 
@@ -324,26 +329,48 @@ Family is doing great. Courtney resting. Obi being wild. Jaxson cooking 👶🔥
 
 </div>
 
+<div id="launch" class="launch"></div>
+
+<div id="shutdownOverlay" class="shutdown-overlay">
+<div class="shutdown-glow"></div>
+<div class="shutdown-flicker"></div>
+<div class="shutdown-text">SHUTTING DOWN...</div>
+</div>
+
 <script>
 function updateClock(){
 const now=new Date();
-
-const date=now.toLocaleDateString('en-US',{
-month:'long',
-day:'numeric',
-year:'numeric'
-});
-
-const time=now.toLocaleTimeString([],{
-hour:'numeric',
-minute:'2-digit'
-});
-
+const date=now.toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
+const time=now.toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});
 document.getElementById("clock").innerText = date + " " + time;
 }
-
 updateClock();
 setInterval(updateClock,1000);
+
+const scott=document.getElementById("scott");
+const launch=document.getElementById("launch");
+const shutdownBtn=document.getElementById("shutdownBtn");
+const shutdownOverlay=document.getElementById("shutdownOverlay");
+
+function startScottLaunch(){
+document.body.classList.add("app-transition");
+scott.classList.add("app-launching");
+requestAnimationFrame(()=>{
+requestAnimationFrame(()=>{
+launch.classList.add("active");
+setTimeout(()=>{window.location.href="apps/scott/";},1200);
+});
+});
+}
+
+function shutDown(){
+document.body.classList.add("shutdown-transition");
+shutdownOverlay.classList.add("active");
+setTimeout(()=>{window.location.href="index.html";},1100);
+}
+
+scott.addEventListener("click",startScottLaunch);
+shutdownBtn.addEventListener("click",shutDown);
 </script>
 
 </body>
