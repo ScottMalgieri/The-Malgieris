@@ -187,8 +187,30 @@
       letter-spacing: 0.18em;
       color: #f87171;
       text-shadow:
-        0 0 10px rgba(248, 113, 113, 0.9),
-        0 0 22px rgba(239, 68, 68, 0.45);
+        0 0 8px rgba(248, 113, 113, 0.75),
+        0 0 18px rgba(248, 113, 113, 0.45);
+      animation: unbornPulse 2.6s ease-in-out infinite;
+      will-change: transform, text-shadow, opacity;
+    }
+
+    @keyframes unbornPulse {
+      0%,
+      100% {
+        opacity: 0.9;
+        transform: scale(1);
+        text-shadow:
+          0 0 8px rgba(248, 113, 113, 0.70),
+          0 0 18px rgba(248, 113, 113, 0.40),
+          0 0 28px rgba(239, 68, 68, 0.18);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1.04);
+        text-shadow:
+          0 0 12px rgba(248, 113, 113, 0.95),
+          0 0 28px rgba(248, 113, 113, 0.70),
+          0 0 44px rgba(239, 68, 68, 0.35);
+      }
     }
 
     .grid {
@@ -590,6 +612,11 @@
       .dock {
         gap: 14px;
         padding: 12px 14px;
+      }
+
+      .arrival-status {
+        font-size: 22px;
+        letter-spacing: 0.12em;
       }
     }
   </style>
