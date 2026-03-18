@@ -10,7 +10,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="mobile-web-app-capable" content="yes" />
-  <title>Malgieri OS - Scott's Notes</title>
+  <title>Malgieri OS - Scott's Projects</title>
 
   <style>
     :root {
@@ -182,12 +182,12 @@
       max-width: 820px;
     }
 
-    .notes-header {
+    .projects-header {
       text-align: center;
       margin: 0 0 18px;
     }
 
-    .notes-header h2 {
+    .projects-header h2 {
       margin: 0;
       font-size: clamp(30px, 4vw, 42px);
       font-weight: 800;
@@ -196,101 +196,118 @@
       text-shadow: 0 4px 18px rgba(0,0,0,0.35);
     }
 
-    .notes-panel {
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .project-card {
+      grid-column: span 6;
       border: 1px solid var(--white-10);
       background: rgba(255,255,255,0.05);
       backdrop-filter: var(--blur);
-      border-radius: 28px;
+      border-radius: 26px;
       box-shadow: var(--shadow);
-      padding: 16px;
-    }
-
-    .notes-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .note-file {
-      width: 100%;
-      border: 1px solid var(--white-10);
-      background: rgba(255,255,255,0.04);
-      color: var(--white-90);
-      border-radius: 18px;
-      padding: 16px 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
+      padding: 20px;
       cursor: pointer;
       transition:
-        transform 0.2s ease,
-        background 0.2s ease,
-        border-color 0.2s ease,
-        box-shadow 0.2s ease;
-      text-align: left;
+        transform 0.22s ease,
+        background 0.22s ease,
+        border-color 0.22s ease,
+        box-shadow 0.22s ease;
     }
 
-    .note-file:hover {
-      transform: translateY(-3px);
+    .project-card:hover {
+      transform: translateY(-6px);
       background: rgba(255,255,255,0.08);
       border-color: rgba(255,255,255,0.18);
       box-shadow:
-        0 18px 40px rgba(0,0,0,0.26),
-        0 0 0 1px rgba(255,255,255,0.04);
+        0 24px 70px rgba(0,0,0,0.45),
+        0 0 0 1px rgba(96,165,250,0.08);
     }
 
-    .note-file-left {
+    .project-top {
       display: flex;
       align-items: center;
-      gap: 14px;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .project-icon-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
       min-width: 0;
     }
 
-    .note-icon {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
+    .project-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
       display: grid;
       place-items: center;
       border: 1px solid var(--white-10);
       background: rgba(255,255,255,0.06);
-      font-size: 20px;
+      font-size: 22px;
       flex-shrink: 0;
     }
 
-    .note-meta-wrap {
+    .project-title-wrap {
       min-width: 0;
     }
 
-    .note-name {
-      font-size: 18px;
-      font-weight: 700;
+    .project-title {
+      margin: 0;
+      font-size: 22px;
       color: var(--white-95);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      margin-bottom: 4px;
+      line-height: 1.2;
     }
 
-    .note-preview {
+    .project-subtitle {
+      margin-top: 4px;
       color: var(--white-60);
       font-size: 14px;
-      line-height: 1.5;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      max-width: 100%;
     }
 
-    .note-date {
-      color: var(--white-50);
+    .status-pill {
+      border: 1px solid var(--white-10);
+      background: rgba(255,255,255,0.06);
+      color: var(--white-90);
+      padding: 8px 12px;
+      border-radius: 999px;
       font-size: 13px;
-      flex-shrink: 0;
       white-space: nowrap;
+      flex-shrink: 0;
     }
 
-    .note-modal {
+    .project-desc {
+      color: var(--white-70);
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .project-tag {
+      border: 1px solid var(--white-10);
+      background: rgba(255,255,255,0.04);
+      color: var(--white-75);
+      padding: 8px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+    }
+
+    .project-modal {
       position: fixed;
       inset: 0;
       display: none;
@@ -306,128 +323,99 @@
       z-index: 200;
     }
 
-    .note-modal.open {
+    .project-modal.open {
       display: flex;
     }
 
-    .note-window {
-      width: min(900px, 100%);
-      max-height: min(85dvh, 900px);
-      border-radius: 18px;
+    .project-window {
+      width: min(920px, 100%);
+      max-height: min(86dvh, 900px);
+      border-radius: 20px;
       overflow: hidden;
       box-shadow: 0 40px 100px rgba(0,0,0,0.58);
-      border: 1px solid rgba(0,0,0,0.35);
-      background: #e9e9e9;
-      color: #111111;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: #0b1220;
+      color: #ffffff;
       display: flex;
       flex-direction: column;
     }
 
-    .note-window-topbar {
-      height: 34px;
-      background: linear-gradient(180deg, #f7f7f7 0%, #dadada 100%);
-      border-bottom: 1px solid #b6b6b6;
+    .project-window-topbar {
+      height: 36px;
+      background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
       display: flex;
       align-items: center;
-      padding: 0 10px;
+      padding: 0 12px;
       gap: 8px;
       flex-shrink: 0;
     }
 
-    .note-window-dot {
+    .project-window-dot {
       width: 12px;
       height: 12px;
       border-radius: 50%;
-      border: 1px solid rgba(0,0,0,0.12);
     }
 
-    .note-window-dot.red { background: #ff5f57; }
-    .note-window-dot.yellow { background: #ffbd2f; }
-    .note-window-dot.green { background: #28c840; }
+    .project-window-dot.red { background: #ff5f57; }
+    .project-window-dot.yellow { background: #ffbd2f; }
+    .project-window-dot.green { background: #28c840; }
 
-    .note-window-titlebar {
-      background: #f2f2f2;
-      border-bottom: 1px solid #cfcfcf;
-      padding: 8px 12px;
+    .project-window-header {
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: space-between;
-      gap: 12px;
-      flex-shrink: 0;
+      gap: 14px;
+      flex-wrap: wrap;
     }
 
-    .note-window-title {
+    .project-window-title {
+      margin: 0;
+      font-size: 28px;
+      line-height: 1.1;
+      color: var(--white-95);
+    }
+
+    .project-window-subtitle {
+      margin-top: 6px;
+      color: var(--white-60);
       font-size: 14px;
-      font-weight: 700;
-      color: #111;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
     }
 
-    .note-close-btn {
-      border: 1px solid #bdbdbd;
-      background: #f9f9f9;
-      color: #111;
-      border-radius: 8px;
-      padding: 6px 10px;
+    .project-close-btn {
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color: #fff;
+      border-radius: 10px;
+      padding: 8px 12px;
       font-size: 13px;
       cursor: pointer;
       transition: background 0.2s ease;
       flex-shrink: 0;
     }
 
-    .note-close-btn:hover {
-      background: #ececec;
+    .project-close-btn:hover {
+      background: rgba(255,255,255,0.12);
     }
 
-    .note-window-menu {
-      background: #fafafa;
-      border-bottom: 1px solid #d7d7d7;
-      padding: 6px 12px;
-      color: #444;
-      font-size: 13px;
-      display: flex;
-      gap: 18px;
-      flex-wrap: wrap;
-      flex-shrink: 0;
-    }
-
-    .note-paper {
-      background:
-        repeating-linear-gradient(
-          to bottom,
-          #ffffff 0px,
-          #ffffff 29px,
-          #d9e8ff 30px
-        );
-      min-height: 420px;
+    .project-window-body {
+      padding: 20px;
       overflow: auto;
-      padding: 18px 22px 26px 62px;
-      position: relative;
-      font-family: "Courier New", Courier, monospace;
-      font-size: 17px;
-      line-height: 30px;
-      color: #121212;
       white-space: pre-wrap;
       word-break: break-word;
+      font-size: 16px;
+      line-height: 1.75;
+      color: #dbe4f0;
     }
 
-    .note-paper::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 42px;
-      width: 2px;
-      background: rgba(255, 82, 82, 0.45);
-    }
-
-    .note-footer {
-      border-top: 1px solid #d2d2d2;
-      background: #f6f6f6;
-      padding: 8px 12px;
-      color: #555;
+    .project-window-footer {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+      padding: 10px 14px;
+      color: var(--white-60);
       font-size: 12px;
       display: flex;
       justify-content: space-between;
@@ -437,12 +425,8 @@
     }
 
     @media (max-width: 860px) {
-      .note-file {
-        align-items: flex-start;
-      }
-
-      .note-date {
-        display: none;
+      .project-card {
+        grid-column: span 12;
       }
     }
 
@@ -481,46 +465,34 @@
         font-size: 16px;
       }
 
-      .notes-header h2 {
+      .projects-header h2 {
         font-size: clamp(26px, 9vw, 34px);
       }
 
-      .notes-panel {
-        padding: 12px;
+      .project-card {
         border-radius: 22px;
+        padding: 16px;
       }
 
-      .note-file {
-        padding: 14px;
+      .project-title {
+        font-size: 20px;
+      }
+
+      .project-desc {
+        font-size: 14px;
+      }
+
+      .project-window {
         border-radius: 16px;
       }
 
-      .note-name {
-        font-size: 16px;
+      .project-window-title {
+        font-size: 24px;
       }
 
-      .note-preview {
-        font-size: 13px;
-      }
-
-      .note-window {
-        max-height: min(88dvh, 900px);
-        border-radius: 16px;
-      }
-
-      .note-window-menu {
-        gap: 12px;
-        font-size: 12px;
-      }
-
-      .note-paper {
-        padding: 16px 16px 22px 54px;
+      .project-window-body {
         font-size: 15px;
-        line-height: 28px;
-      }
-
-      .note-paper::before {
-        left: 36px;
+        padding: 16px;
       }
     }
   </style>
@@ -529,11 +501,11 @@
   <header class="topbar">
     <div class="topbar-left">
       <span class="status-dot"></span>
-      <strong>Scott's Notes</strong>
+      <strong>Scott's Projects</strong>
       <span class="muted">Malgieri OS Folder</span>
     </div>
     <div class="topbar-right">
-      <span class="muted">Notes</span>
+      <span class="muted">Projects</span>
       <span class="muted">•</span>
       <span id="clock" class="clock">--:--</span>
     </div>
@@ -542,165 +514,207 @@
   <main class="page-wrap">
     <section class="hero">
       <a href="/apps/scott/" class="back-btn smooth-link">← Back To Scott’s Space</a>
-      <h1>Scott’s Notes</h1>
+      <h1>Scott’s Projects</h1>
       <p>
-        A clean little notes section that gives insight to my thoughts and things I write down.<br>
+        A clean project dashboard inside Malgieri OS.<br>
+        Track what you are building, what is active, what is finished, and what is coming next.
+      </p>
     </section>
 
-    <div class="notes-header">
-      <h2>Text Files</h2>
+    <div class="projects-header">
+      <h2>Active Projects</h2>
     </div>
 
-    <section class="notes-panel">
-      <div class="notes-list">
-
-        <button class="note-file" onclick="openNote('day')">
-          <div class="note-file-left">
-            <div class="note-icon">📝</div>
-            <div class="note-meta-wrap">
-              <div class="note-name">Scotts-Day.txt</div>
-              <div class="note-preview">A quick daily journal entry with thoughts, wins, and random life stuff...</div>
+    <section class="projects-grid">
+      <article class="project-card" onclick="openProject('os')">
+        <div class="project-top">
+          <div class="project-icon-title">
+            <div class="project-icon">💻</div>
+            <div class="project-title-wrap">
+              <h3 class="project-title">Malgieri OS</h3>
+              <div class="project-subtitle">Personal OS Website</div>
             </div>
           </div>
-          <div class="note-date">03-18-2026</div>
-        </button>
+          <div class="status-pill">🔥 Active</div>
+        </div>
+        <div class="project-desc">
+          Building a full interactive personal operating system style website with folders, transitions, and custom pages.
+        </div>
+        <div class="project-tags">
+          <span class="project-tag">Web</span>
+          <span class="project-tag">UI</span>
+          <span class="project-tag">Main Build</span>
+        </div>
+      </article>
 
-        <button class="note-file" onclick="openNote('ideas')">
-          <div class="note-file-left">
-            <div class="note-icon">💡</div>
-            <div class="note-meta-wrap">
-              <div class="note-name">Ideas.txt</div>
-              <div class="note-preview">Site upgrades, future features, random late-night ideas, and cool build concepts...</div>
+      <article class="project-card" onclick="openProject('photos')">
+        <div class="project-top">
+          <div class="project-icon-title">
+            <div class="project-icon">📸</div>
+            <div class="project-title-wrap">
+              <h3 class="project-title">Scott’s Pictures</h3>
+              <div class="project-subtitle">Gallery System</div>
             </div>
           </div>
-          <div class="note-date">03-18-2026</div>
-        </button>
+          <div class="status-pill">🧪 Testing</div>
+        </div>
+        <div class="project-desc">
+          Personal image gallery with real uploaded photos, overlay text, descriptions, and a clean card layout.
+        </div>
+        <div class="project-tags">
+          <span class="project-tag">Photos</span>
+          <span class="project-tag">Gallery</span>
+          <span class="project-tag">UI</span>
+        </div>
+      </article>
 
-        <button class="note-file" onclick="openNote('dadthoughts')">
-          <div class="note-file-left">
-            <div class="note-icon">👶</div>
-            <div class="note-meta-wrap">
-              <div class="note-name">Dad-Thoughts.txt</div>
-              <div class="note-preview">Thoughts about fatherhood, excitement, nerves, goals, and future memories...</div>
+      <article class="project-card" onclick="openProject('notes')">
+        <div class="project-top">
+          <div class="project-icon-title">
+            <div class="project-icon">📝</div>
+            <div class="project-title-wrap">
+              <h3 class="project-title">Scott’s Notes</h3>
+              <div class="project-subtitle">Journal + File System</div>
             </div>
           </div>
-          <div class="note-date">03-18-2026</div>
-        </button>
+          <div class="status-pill">✅ Built</div>
+        </div>
+        <div class="project-desc">
+          Clickable text files that open in a retro notepad window for journal entries, thoughts, and ideas.
+        </div>
+        <div class="project-tags">
+          <span class="project-tag">Notes</span>
+          <span class="project-tag">Journal</span>
+          <span class="project-tag">Windows</span>
+        </div>
+      </article>
 
-        <button class="note-file" onclick="openNote('goals')">
-          <div class="note-file-left">
-            <div class="note-icon">🎯</div>
-            <div class="note-meta-wrap">
-              <div class="note-name">Goals.txt</div>
-              <div class="note-preview">Fitness goals, money goals, family goals, and what you are building toward...</div>
+      <article class="project-card" onclick="openProject('jaxson')">
+        <div class="project-top">
+          <div class="project-icon-title">
+            <div class="project-icon">👶</div>
+            <div class="project-title-wrap">
+              <h3 class="project-title">Jaxson Project</h3>
+              <div class="project-subtitle">Family + Memory Build</div>
             </div>
           </div>
-          <div class="note-date">03-18-2026</div>
-        </button>
-
-        <button class="note-file" onclick="openNote('random')">
-          <div class="note-file-left">
-            <div class="note-icon">⚡</div>
-            <div class="note-meta-wrap">
-              <div class="note-name">Random-Thoughts.txt</div>
-              <div class="note-preview">Stuff that pops into your head, funny lines, quotes, and chaotic brain sparks...</div>
-            </div>
-          </div>
-          <div class="note-date">03-18-2026</div>
-        </button>
-
-      </div>
+          <div class="status-pill">⚡ Planning</div>
+        </div>
+        <div class="project-desc">
+          A space for future baby memories, name art, milestones, and sentimental projects for your family.
+        </div>
+        <div class="project-tags">
+          <span class="project-tag">Family</span>
+          <span class="project-tag">Memories</span>
+          <span class="project-tag">Creative</span>
+        </div>
+      </article>
     </section>
   </main>
 
-  <div id="noteModal" class="note-modal" aria-hidden="true">
-    <div class="note-window" role="dialog" aria-modal="true" aria-labelledby="noteWindowTitle">
-      <div class="note-window-topbar">
-        <span class="note-window-dot red"></span>
-        <span class="note-window-dot yellow"></span>
-        <span class="note-window-dot green"></span>
+  <div id="projectModal" class="project-modal" aria-hidden="true">
+    <div class="project-window" role="dialog" aria-modal="true" aria-labelledby="projectWindowTitle">
+      <div class="project-window-topbar">
+        <span class="project-window-dot red"></span>
+        <span class="project-window-dot yellow"></span>
+        <span class="project-window-dot green"></span>
       </div>
 
-      <div class="note-window-titlebar">
-        <div id="noteWindowTitle" class="note-window-title">note.txt - Notepad</div>
-        <button class="note-close-btn" onclick="closeNote()">Close</button>
+      <div class="project-window-header">
+        <div>
+          <h3 id="projectWindowTitle" class="project-window-title">Project Title</h3>
+          <div id="projectWindowSubtitle" class="project-window-subtitle">Project Subtitle</div>
+        </div>
+        <button class="project-close-btn" onclick="closeProject()">Close</button>
       </div>
 
-      <div class="note-window-menu">
-        <span>File</span>
-        <span>Edit</span>
-        <span>Format</span>
-        <span>View</span>
-        <span>Help</span>
-      </div>
+      <div id="projectWindowBody" class="project-window-body"></div>
 
-      <div id="notePaper" class="note-paper"></div>
-
-      <div class="note-footer">
-        <span id="noteFooterName">note.txt</span>
-        <span>Ln 1, Col 1</span>
+      <div class="project-window-footer">
+        <span id="projectFooterStatus">Status</span>
+        <span>Malgieri OS Project Viewer</span>
       </div>
     </div>
   </div>
 
   <script>
-    const notes = {
-      day: {
-        title: "Scotts-Day.txt",
-        content: `Today was a solid day.
+    const projects = {
+      os: {
+        title: "Malgieri OS",
+        subtitle: "Personal OS Website",
+        status: "🔥 Active",
+        content: `Malgieri OS is the main build.
 
-Worked on Malgieri OS and started getting the notes section together.
-Scott's Pictures is finally in a good place and actually feels real now.
+What it includes so far:
+- Desktop style navigation
+- Scott's Space
+- Scott's Pictures
+- Scott's Notes
+- Smooth transitions between pages
 
-Trying to keep building one page at a time instead of overthinking everything.
+What is next:
+- Projects folder
+- Links folder
+- Setup page
+- More system-like features
 
-Overall mood:
-Focused.
-Motivated.
-A little tired.
-Still locked in.`
+Goal:
+Build a personal website that feels like a real operating system instead of a normal site.`
       },
-      ideas: {
-        title: "Ideas.txt",
-        content: `- Add draggable note windows later
-- Add a typing effect for opening files
-- Create Scott's Setup page
-- Add Obi folder
-- Add Jaxson memories folder
-- Maybe add fake desktop notifications
-- Build a blog/browser page inside Scott's Space`
+      photos: {
+        title: "Scott’s Pictures",
+        subtitle: "Gallery System",
+        status: "🧪 Testing",
+        content: `Scott's Pictures is the image gallery inside Malgieri OS.
+
+Features:
+- Real uploaded photos from GitHub
+- Overlay titles on images
+- Description under each card
+- Mobile friendly layout
+- Smooth and clean card design
+
+Possible future upgrades:
+- Featured image section
+- Filters
+- Category sorting
+- Better transitions`
       },
-      dadthoughts: {
-        title: "Dad-Thoughts.txt",
-        content: `Becoming a dad still feels surreal.
+      notes: {
+        title: "Scott’s Notes",
+        subtitle: "Journal + File System",
+        status: "✅ Built",
+        content: `Scott's Notes is one of the coolest parts of the system so far.
 
-Part of me is unbelievably excited.
-Part of me is nervous.
-But more than anything, I want to be present.
+Features:
+- Text-file style rows
+- Click to open note
+- Retro notepad window
+- Long notes scroll correctly
+- Easy to add more notes later
 
-I want Jaxson to know his dad loves him, shows up, and gives everything he has.
-
-That's the mission.`
+Possible upgrades:
+- Editable notes
+- Save system
+- Draggable windows
+- Create new note button`
       },
-      goals: {
-        title: "Goals.txt",
-        content: `- Be a great husband
-- Be the best dad possible
-- Keep building Malgieri OS
-- Lock in financially
-- Keep improving physically
-- Stay consistent
-- Build a life I am proud of`
-      },
-      random: {
-        title: "Random-Thoughts.txt",
-        content: `Things I randomly think about:
+      jaxson: {
+        title: "Jaxson Project",
+        subtitle: "Family + Memory Build",
+        status: "⚡ Planning",
+        content: `This project is for future family memories and creative ideas.
 
-Why do late-night ideas always hit harder?
-Why does building stuff like this feel so addicting?
-Ghost Strawbango is elite.
-Obi is insane.
-This OS is actually getting fire.`
+Possible sections:
+- Milestone memories
+- Name and logo designs
+- Nursery ideas
+- Special letters
+- Memory timeline
+- Favorite photos
+
+This one is more emotional and long-term.
+It could become one of the most meaningful folders in the whole OS.`
       }
     };
 
@@ -712,36 +726,37 @@ This OS is actually getting fire.`
       });
     }
 
-    function openNote(noteKey) {
-      const note = notes[noteKey];
-      if (!note) return;
+    function openProject(projectKey) {
+      const project = projects[projectKey];
+      if (!project) return;
 
-      document.getElementById("noteWindowTitle").textContent = `${note.title} - Notepad`;
-      document.getElementById("noteFooterName").textContent = note.title;
-      document.getElementById("notePaper").textContent = note.content;
+      document.getElementById("projectWindowTitle").textContent = project.title;
+      document.getElementById("projectWindowSubtitle").textContent = project.subtitle;
+      document.getElementById("projectWindowBody").textContent = project.content;
+      document.getElementById("projectFooterStatus").textContent = project.status;
 
-      const modal = document.getElementById("noteModal");
+      const modal = document.getElementById("projectModal");
       modal.classList.add("open");
       modal.setAttribute("aria-hidden", "false");
       document.body.style.overflow = "hidden";
     }
 
-    function closeNote() {
-      const modal = document.getElementById("noteModal");
+    function closeProject() {
+      const modal = document.getElementById("projectModal");
       modal.classList.remove("open");
       modal.setAttribute("aria-hidden", "true");
       document.body.style.overflow = "";
     }
 
-    document.getElementById("noteModal").addEventListener("click", function (e) {
+    document.getElementById("projectModal").addEventListener("click", function (e) {
       if (e.target === this) {
-        closeNote();
+        closeProject();
       }
     });
 
     document.addEventListener("keydown", function (e) {
       if (e.key === "Escape") {
-        closeNote();
+        closeProject();
       }
     });
 
