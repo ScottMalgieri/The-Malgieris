@@ -2,37 +2,821 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  />
+  <meta name="theme-color" content="#020617" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="mobile-web-app-capable" content="yes" />
   <title>Scott's Pictures</title>
 
   <style>
-    body {
+    :root {
+      --bg-1: #020617;
+      --bg-2: #0f172a;
+      --bg-3: #000000;
+      --white: #ffffff;
+      --white-90: rgba(255,255,255,0.90);
+      --white-80: rgba(255,255,255,0.80);
+      --white-75: rgba(255,255,255,0.75);
+      --white-70: rgba(255,255,255,0.70);
+      --white-65: rgba(255,255,255,0.65);
+      --white-60: rgba(255,255,255,0.60);
+      --white-50: rgba(255,255,255,0.50);
+      --white-20: rgba(255,255,255,0.20);
+      --white-15: rgba(255,255,255,0.15);
+      --white-10: rgba(255,255,255,0.10);
+      --white-05: rgba(255,255,255,0.05);
+      --green: #4ade80;
+      --shadow: 0 24px 70px rgba(0,0,0,0.45);
+      --blur: blur(18px);
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-right: env(safe-area-inset-right, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-left: env(safe-area-inset-left, 0px);
+      --accent: rgba(96, 165, 250, 0.24);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0f172a;
-      color: white;
-      padding: 30px;
+      min-height: 100%;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(59,130,246,0.18), transparent 28%),
+        radial-gradient(circle at bottom left, rgba(168,85,247,0.14), transparent 26%),
+        linear-gradient(135deg, var(--bg-1) 0%, var(--bg-2) 45%, var(--bg-3) 100%);
+      color: var(--white);
+      overflow-x: hidden;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
-    a {
-      color: white;
-      text-decoration: none;
+    body {
+      padding-left: var(--safe-left);
+      padding-right: var(--safe-right);
+      min-height: 100dvh;
+      opacity: 0;
+      transform: scale(1.015);
+      animation: pageIn 0.55s ease forwards;
+      transition: opacity 0.28s ease, transform 0.28s ease, filter 0.28s ease;
+    }
+
+    body.page-leaving {
+      opacity: 0;
+      transform: scale(0.99);
+      filter: blur(4px);
+      pointer-events: none;
+    }
+
+    body.page-restored {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+      filter: none !important;
+    }
+
+    body.modal-open {
+      overflow: hidden;
+      touch-action: none;
+    }
+
+    @keyframes pageIn {
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .topbar {
+      height: calc(52px + var(--safe-top));
+      padding-top: var(--safe-top);
+      border-bottom: 1px solid var(--white-10);
+      background: rgba(0,0,0,0.35);
+      backdrop-filter: blur(14px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-left: 16px;
+      padding-right: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 30;
+    }
+
+    .topbar-left,
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .status-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 14px rgba(74, 222, 128, 0.8);
+      flex-shrink: 0;
+    }
+
+    .muted {
+      color: var(--white-50);
       font-size: 14px;
-      opacity: 0.8;
+      white-space: nowrap;
     }
 
-    h1 {
+    .clock {
+      font-size: 14px;
+      color: var(--white-75);
+      white-space: nowrap;
+    }
+
+    .page-wrap {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 28px 20px calc(28px + var(--safe-bottom));
+    }
+
+    .hero {
+      border: 1px solid var(--white-10);
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: var(--blur);
+      border-radius: 30px;
+      box-shadow: var(--shadow);
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--white-10);
+      background: rgba(255,255,255,0.05);
+      color: var(--white-90);
+      padding: 10px 14px;
+      border-radius: 999px;
+      text-decoration: none;
+      margin-bottom: 18px;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .back-btn:hover {
+      background: rgba(255,255,255,0.10);
+      transform: translateY(-2px);
+    }
+
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: clamp(32px, 5vw, 50px);
+      line-height: 1.05;
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--white-70);
+      font-size: 18px;
+      line-height: 1.65;
+      max-width: 820px;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
       margin-top: 20px;
+    }
+
+    .pill {
+      border: 1px solid var(--white-10);
+      background: rgba(255,255,255,0.04);
+      color: var(--white-75);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 14px;
+    }
+
+    .gallery-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .gallery-header h2 {
+      margin: 0;
+      font-size: 26px;
+    }
+
+    .gallery-subtext {
+      color: var(--white-60);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .photo-card {
+      grid-column: span 4;
+      border: 1px solid var(--white-10);
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: var(--blur);
+      border-radius: 26px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      cursor: pointer;
+      transition:
+        transform 0.22s ease,
+        background 0.22s ease,
+        border-color 0.22s ease,
+        box-shadow 0.22s ease;
+      position: relative;
+    }
+
+    .photo-card:hover {
+      transform: translateY(-6px);
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.18);
+      box-shadow:
+        0 24px 70px rgba(0,0,0,0.45),
+        0 0 0 1px rgba(96,165,250,0.08);
+    }
+
+    .photo-thumb-wrap {
+      position: relative;
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+      background:
+        linear-gradient(135deg, rgba(148,163,184,0.14), rgba(255,255,255,0.03));
+    }
+
+    .photo-thumb {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.35s ease;
+    }
+
+    .photo-card:hover .photo-thumb {
+      transform: scale(1.04);
+    }
+
+    .photo-overlay {
+      position: absolute;
+      inset: auto 0 0 0;
+      padding: 18px 16px 14px;
+      background: linear-gradient(180deg, transparent, rgba(0,0,0,0.70));
+      pointer-events: none;
+    }
+
+    .photo-title {
+      margin: 0;
+      font-size: 19px;
+      color: var(--white-90);
+    }
+
+    .photo-meta {
+      margin-top: 6px;
+      color: var(--white-70);
+      font-size: 13px;
+    }
+
+    .photo-card-body {
+      padding: 14px 16px 18px;
+    }
+
+    .photo-card-body p {
+      margin: 0;
+      color: var(--white-65);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding:
+        calc(22px + var(--safe-top))
+        calc(18px + var(--safe-right))
+        calc(22px + var(--safe-bottom))
+        calc(18px + var(--safe-left));
+      background: rgba(2, 6, 23, 0.70);
+      backdrop-filter: blur(14px);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.25s ease, visibility 0.25s ease;
+      z-index: 100;
+    }
+
+    .modal.open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .modal-panel {
+      width: min(1040px, 100%);
+      max-height: min(88dvh, 920px);
+      overflow: auto;
+      border: 1px solid var(--white-10);
+      background: rgba(10,15,30,0.78);
+      backdrop-filter: blur(22px);
+      border-radius: 30px;
+      box-shadow: 0 28px 80px rgba(0,0,0,0.55);
+      transform: translateY(14px) scale(0.98);
+      opacity: 0;
+      transition: transform 0.25s ease, opacity 0.25s ease;
+      position: relative;
+    }
+
+    .modal.open .modal-panel {
+      transform: translateY(0) scale(1);
+      opacity: 1;
+    }
+
+    .modal-close {
+      position: sticky;
+      top: 0;
+      margin-left: auto;
+      width: 48px;
+      height: 48px;
+      border: 0;
+      border-left: 1px solid var(--white-10);
+      border-bottom: 1px solid var(--white-10);
+      border-radius: 0 30px 0 18px;
+      background: rgba(255,255,255,0.06);
+      color: var(--white);
+      font-size: 24px;
+      cursor: pointer;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(14px);
+    }
+
+    .modal-close:hover {
+      background: rgba(255,255,255,0.10);
+    }
+
+    .modal-content {
+      padding: 0 22px 24px;
+      margin-top: -48px;
+    }
+
+    .modal-image-wrap {
+      width: 100%;
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid var(--white-10);
+      background:
+        linear-gradient(135deg, rgba(148,163,184,0.14), rgba(255,255,255,0.03));
+      box-shadow: var(--shadow);
+    }
+
+    .modal-image {
+      width: 100%;
+      max-height: 68dvh;
+      object-fit: cover;
+      display: block;
+    }
+
+    .modal-text {
+      padding-top: 18px;
+    }
+
+    .modal-text h3 {
+      margin: 0 0 10px;
+      font-size: clamp(24px, 4vw, 34px);
+      line-height: 1.1;
+    }
+
+    .modal-text .modal-sub {
+      margin: 0 0 12px;
+      color: var(--white-60);
+      font-size: 14px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .modal-text p {
+      margin: 0;
+      color: var(--white-70);
+      font-size: 16px;
+      line-height: 1.7;
+      max-width: 900px;
+    }
+
+    .empty-tip {
+      margin-top: 18px;
+      border: 1px dashed var(--white-15);
+      background: rgba(255,255,255,0.03);
+      color: var(--white-60);
+      border-radius: 18px;
+      padding: 14px 16px;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    @media (max-width: 1024px) {
+      .photo-card {
+        grid-column: span 6;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .photo-card {
+        grid-column: span 12;
+      }
+
+      .gallery-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .modal-content {
+        padding: 0 14px 18px;
+      }
+
+      .modal-panel {
+        border-radius: 24px;
+      }
+
+      .modal-close {
+        border-radius: 0 24px 0 16px;
+      }
+
+      .modal-image {
+        max-height: 46dvh;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .topbar {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+
+      .topbar-left strong {
+        max-width: 132px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .muted,
+      .clock {
+        font-size: 12px;
+      }
+
+      .page-wrap {
+        padding: 20px 14px calc(22px + var(--safe-bottom));
+      }
+
+      .hero {
+        padding: 22px 18px;
+        border-radius: 24px;
+      }
+
+      .hero h1 {
+        font-size: clamp(29px, 11vw, 42px);
+      }
+
+      .hero p {
+        font-size: 16px;
+      }
+
+      .gallery-header h2 {
+        font-size: 22px;
+      }
+
+      .photo-grid {
+        gap: 14px;
+      }
+
+      .photo-card {
+        border-radius: 22px;
+      }
+
+      .photo-card-body {
+        padding: 12px 14px 16px;
+      }
+
+      .photo-title {
+        font-size: 18px;
+      }
+
+      .modal {
+        padding:
+          calc(12px + var(--safe-top))
+          calc(10px + var(--safe-right))
+          calc(12px + var(--safe-bottom))
+          calc(10px + var(--safe-left));
+      }
+
+      .modal-text h3 {
+        font-size: 26px;
+      }
+
+      .modal-text p {
+        font-size: 15px;
+      }
     }
   </style>
 </head>
 <body>
+  <header class="topbar">
+    <div class="topbar-left">
+      <span class="status-dot"></span>
+      <strong>Scott's Pictures</strong>
+      <span class="muted">Malgieri OS Folder</span>
+    </div>
+    <div class="topbar-right">
+      <span class="muted">Gallery</span>
+      <span class="muted">•</span>
+      <span id="clock" class="clock">--:--</span>
+    </div>
+  </header>
 
-  <a href="/apps/scott/">← Back to Scott’s Space</a>
+  <main class="page-wrap">
+    <section class="hero">
+      <a href="/apps/scott/" class="back-btn smooth-link">← Back To Scott’s Space</a>
+      <h1>Scott’s Pictures</h1>
+      <p>
+        A clean photo gallery inside Malgieri OS. Tap any image to bring it forward,
+        view it larger, read the caption underneath, and close it without losing the
+        grid in the background.
+      </p>
 
-  <h1>Scott’s Pictures</h1>
+      <div class="hero-meta">
+        <div class="pill">🖼️ Photo Grid</div>
+        <div class="pill">✨ Click To Expand</div>
+        <div class="pill">📱 Mobile Friendly</div>
+      </div>
 
-  <p>This is your Pictures folder. We’ll build this out next.</p>
+      <div class="empty-tip">
+        Later, just replace the placeholder image URLs and text in each photo card with your real photos, titles, and descriptions.
+      </div>
+    </section>
 
+    <div class="gallery-header">
+      <h2>Gallery</h2>
+      <div class="gallery-subtext">
+        Click a photo to open it in the foreground. Close with the X, Escape, or by clicking outside.
+      </div>
+    </div>
+
+    <section class="photo-grid">
+      <article
+        class="photo-card"
+        data-image="https://picsum.photos/1200/1500?random=11"
+        data-title="Desk Setup Shot"
+        data-sub="Placeholder Photo • Setup"
+        data-description="This is a placeholder image for your future setup photos. Later, this can be one of your real desk or gaming room shots with a full description underneath."
+      >
+        <div class="photo-thumb-wrap">
+          <img class="photo-thumb" src="https://picsum.photos/700/900?random=11" alt="Desk Setup Shot" />
+          <div class="photo-overlay">
+            <h3 class="photo-title">Desk Setup Shot</h3>
+            <div class="photo-meta">Placeholder Photo • Setup</div>
+          </div>
+        </div>
+        <div class="photo-card-body">
+          <p>One of your future setup or room photos can live here.</p>
+        </div>
+      </article>
+
+      <article
+        class="photo-card"
+        data-image="https://picsum.photos/1200/1500?random=12"
+        data-title="Favorite Memory"
+        data-sub="Placeholder Photo • Personal"
+        data-description="Use this space for personal moments, snapshots, family memories, or any photo you want in Scott’s Pictures. The full text shows when the image opens."
+      >
+        <div class="photo-thumb-wrap">
+          <img class="photo-thumb" src="https://picsum.photos/700/900?random=12" alt="Favorite Memory" />
+          <div class="photo-overlay">
+            <h3 class="photo-title">Favorite Memory</h3>
+            <div class="photo-meta">Placeholder Photo • Personal</div>
+          </div>
+        </div>
+        <div class="photo-card-body">
+          <p>Perfect for photos with a story or some caption context.</p>
+        </div>
+      </article>
+
+      <article
+        class="photo-card"
+        data-image="https://picsum.photos/1200/1500?random=13"
+        data-title="Tech Build Progress"
+        data-sub="Placeholder Photo • Project"
+        data-description="This could hold progress photos of Malgieri OS, tech builds, streaming gear upgrades, or before-and-after shots from a project you’re proud of."
+      >
+        <div class="photo-thumb-wrap">
+          <img class="photo-thumb" src="https://picsum.photos/700/900?random=13" alt="Tech Build Progress" />
+          <div class="photo-overlay">
+            <h3 class="photo-title">Tech Build Progress</h3>
+            <div class="photo-meta">Placeholder Photo • Project</div>
+          </div>
+        </div>
+        <div class="photo-card-body">
+          <p>Great for tracking projects and visual progress over time.</p>
+        </div>
+      </article>
+
+      <article
+        class="photo-card"
+        data-image="https://picsum.photos/1200/1500?random=14"
+        data-title="Weekend Capture"
+        data-sub="Placeholder Photo • Lifestyle"
+        data-description="A clean tile for casual photos, outdoor shots, event photos, or anything you want to keep inside a modern, organized visual gallery."
+      >
+        <div class="photo-thumb-wrap">
+          <img class="photo-thumb" src="https://picsum.photos/700/900?random=14" alt="Weekend Capture" />
+          <div class="photo-overlay">
+            <h3 class="photo-title">Weekend Capture</h3>
+            <div class="photo-meta">Placeholder Photo • Lifestyle</div>
+          </div>
+        </div>
+        <div class="photo-card-body">
+          <p>Works well for random moments you still want to preserve nicely.</p>
+        </div>
+      </article>
+
+      <article
+        class="photo-card"
+        data-image="https://picsum.photos/1200/1500?random=15"
+        data-title="Creative Inspiration"
+        data-sub="Placeholder Photo • Inspiration"
+        data-description="Use this for mockups, design inspiration, screenshots, wallpapers, or visuals you want to reference later inside Scott’s visual folder."
+      >
+        <div class="photo-thumb-wrap">
+          <img class="photo-thumb" src="https://picsum.photos/700/900?random=15" alt="Creative Inspiration" />
+          <div class="photo-overlay">
+            <h3 class="photo-title">Creative Inspiration</h3>
+            <div class="photo-meta">Placeholder Photo • Inspiration</div>
+          </div>
+        </div>
+        <div class="photo-card-body">
+          <p>A solid home for inspiration shots and cool visual references.</p>
+        </div>
+      </article>
+
+      <article
+        class="photo-card"
+        data-image="https://picsum.photos/1200/1500?random=16"
+        data-title="Another Placeholder"
+        data-sub="Placeholder Photo • Gallery"
+        data-description="You can duplicate these cards as much as you want later. Each one can hold its own image, title, subtitle, and longer text description in the modal."
+      >
+        <div class="photo-thumb-wrap">
+          <img class="photo-thumb" src="https://picsum.photos/700/900?random=16" alt="Another Placeholder" />
+          <div class="photo-overlay">
+            <h3 class="photo-title">Another Placeholder</h3>
+            <div class="photo-meta">Placeholder Photo • Gallery</div>
+          </div>
+        </div>
+        <div class="photo-card-body">
+          <p>Duplicate, swap the image, update the text, and you’re good.</p>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <div class="modal" id="photoModal" aria-hidden="true">
+    <div class="modal-panel">
+      <button class="modal-close" id="modalClose" aria-label="Close photo viewer">×</button>
+
+      <div class="modal-content">
+        <div class="modal-image-wrap">
+          <img class="modal-image" id="modalImage" src="" alt="" />
+        </div>
+
+        <div class="modal-text">
+          <div class="modal-sub" id="modalSub">Placeholder Photo</div>
+          <h3 id="modalTitle">Photo Title</h3>
+          <p id="modalDescription">Photo description will appear here.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function updateClock() {
+      const now = new Date();
+      document.getElementById("clock").textContent = now.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    }
+
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    document.querySelectorAll(".smooth-link").forEach((link) => {
+      link.addEventListener("click", function (e) {
+        const href = this.getAttribute("href");
+
+        if (!href || href === "#" || href.startsWith("javascript:")) return;
+
+        e.preventDefault();
+        document.body.classList.remove("page-restored");
+        document.body.classList.add("page-leaving");
+
+        setTimeout(() => {
+          window.location.href = href;
+        }, 240);
+      });
+    });
+
+    window.addEventListener("pageshow", function (event) {
+      document.body.classList.remove("page-leaving");
+
+      if (event.persisted) {
+        document.body.classList.add("page-restored");
+      } else {
+        document.body.classList.remove("page-restored");
+      }
+    });
+
+    window.addEventListener("popstate", function () {
+      document.body.classList.remove("page-leaving");
+      document.body.classList.add("page-restored");
+    });
+
+    const modal = document.getElementById("photoModal");
+    const modalImage = document.getElementById("modalImage");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalSub = document.getElementById("modalSub");
+    const modalDescription = document.getElementById("modalDescription");
+    const modalClose = document.getElementById("modalClose");
+    const photoCards = document.querySelectorAll(".photo-card");
+
+    function openModal(card) {
+      const image = card.dataset.image || "";
+      const title = card.dataset.title || "";
+      const sub = card.dataset.sub || "";
+      const description = card.dataset.description || "";
+
+      modalImage.src = image;
+      modalImage.alt = title;
+      modalTitle.textContent = title;
+      modalSub.textContent = sub;
+      modalDescription.textContent = description;
+
+      modal.classList.add("open");
+      modal.setAttribute("aria-hidden", "false");
+      document.body.classList.add("modal-open");
+    }
+
+    function closeModal() {
+      modal.classList.remove("open");
+      modal.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("modal-open");
+
+      setTimeout(() => {
+        if (!modal.classList.contains("open")) {
+          modalImage.src = "";
+          modalImage.alt = "";
+        }
+      }, 220);
+    }
+
+    photoCards.forEach((card) => {
+      card.addEventListener("click", () => openModal(card));
+    });
+
+    modalClose.addEventListener("click", closeModal);
+
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && modal.classList.contains("open")) {
+        closeModal();
+      }
+    });
+  </script>
 </body>
 </html>
