@@ -154,6 +154,32 @@
       align-items: center;
     }
 
+    .status-box {
+      width: 100%;
+      margin-bottom: 22px;
+      padding: 16px 18px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--white10);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+      text-align: center;
+    }
+
+    .status-title {
+      font-weight: 700;
+      font-size: 14px;
+      color: var(--white70);
+      margin-bottom: 6px;
+      letter-spacing: 0.08em;
+    }
+
+    .status-content {
+      font-size: 16px;
+      color: var(--white90);
+      font-weight: 600;
+    }
+
     .grid {
       width: 100%;
       display: grid;
@@ -569,6 +595,14 @@
 
     <div class="desktop">
       <div class="desktop-inner">
+
+        <div class="status-box">
+          <div class="status-title">Malgieri Family Status</div>
+          <div class="status-content">
+            All systems running. Family is thriving 💙
+          </div>
+        </div>
+
         <div class="grid">
           <div id="scott" class="icon">
             <div class="badge">💻</div>
