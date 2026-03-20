@@ -526,6 +526,426 @@
       100% { opacity: 0; }
     }
 
+    /* Obi Treat Modal */
+    .obi-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 9998;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding:
+        calc(20px + var(--safe-top))
+        calc(16px + var(--safe-right))
+        calc(20px + var(--safe-bottom))
+        calc(16px + var(--safe-left));
+      background: rgba(2, 6, 23, 0.72);
+      backdrop-filter: blur(14px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.28s ease;
+    }
+
+    .obi-modal.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .obi-window {
+      width: min(1100px, 100%);
+      max-height: min(860px, calc(100dvh - 40px));
+      overflow: auto;
+      border-radius: 28px;
+      border: 1px solid var(--white10);
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0.97), rgba(2, 6, 23, 0.96));
+      box-shadow: 0 30px 90px rgba(0, 0, 0, 0.5);
+      transform: translateY(18px) scale(0.98);
+      transition: transform 0.28s ease;
+    }
+
+    .obi-modal.active .obi-window {
+      transform: translateY(0) scale(1);
+    }
+
+    .obi-window::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    .obi-window::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.12);
+      border-radius: 999px;
+    }
+
+    .obi-browser-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 64px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--white10);
+      background: rgba(255,255,255,0.04);
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      backdrop-filter: blur(12px);
+    }
+
+    .obi-traffic {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .obi-traffic span {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: block;
+    }
+
+    .obi-traffic .red { background: #ff5f57; }
+    .obi-traffic .yellow { background: #febc2e; }
+    .obi-traffic .green { background: #28c840; }
+
+    .obi-browser-nav {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .obi-nav-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.06);
+      color: var(--white75);
+      font-size: 14px;
+    }
+
+    .obi-urlbar {
+      flex: 1;
+      min-width: 0;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--white60);
+      font-size: 14px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .obi-url-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 12px rgba(34, 197, 94, 0.45);
+      flex-shrink: 0;
+    }
+
+    .obi-close-btn {
+      width: 40px;
+      height: 40px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.06);
+      color: var(--white90);
+      font-size: 16px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .obi-window-body {
+      padding: 24px;
+    }
+
+    .obi-layout {
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      gap: 24px;
+    }
+
+    .obi-hero-card,
+    .obi-form-card,
+    .obi-success-card {
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025));
+      box-shadow: 0 16px 40px rgba(0,0,0,0.28);
+    }
+
+    .obi-hero-card {
+      padding: 28px;
+      min-height: 520px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .obi-hero-card::after {
+      content: "";
+      position: absolute;
+      right: -40px;
+      bottom: -40px;
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle, rgba(34,197,94,0.18), transparent 68%);
+      pointer-events: none;
+    }
+
+    .obi-badge {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      padding: 9px 14px;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.18);
+      color: #bae6fd;
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 18px;
+    }
+
+    .obi-title {
+      margin: 0 0 16px;
+      font-size: clamp(30px, 4vw, 52px);
+      line-height: 1;
+      letter-spacing: -0.04em;
+      color: var(--white);
+    }
+
+    .obi-copy {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.75;
+      color: var(--white75);
+      max-width: 640px;
+    }
+
+    .obi-profile {
+      margin-top: 28px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.045);
+      border: 1px solid rgba(255,255,255,0.08);
+      width: fit-content;
+      max-width: 100%;
+    }
+
+    .obi-avatar {
+      width: 74px;
+      height: 74px;
+      border-radius: 20px;
+      display: grid;
+      place-items: center;
+      font-size: 34px;
+      background: linear-gradient(135deg, rgba(56,189,248,0.2), rgba(168,85,247,0.18));
+      border: 1px solid rgba(255,255,255,0.12);
+      flex-shrink: 0;
+    }
+
+    .obi-profile-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--white90);
+      margin-bottom: 5px;
+    }
+
+    .obi-profile-meta {
+      font-size: 14px;
+      color: var(--white50);
+      line-height: 1.5;
+    }
+
+    .obi-form-card,
+    .obi-success-card {
+      padding: 28px;
+      min-height: 520px;
+    }
+
+    .obi-form-title {
+      margin: 0 0 8px;
+      font-size: 30px;
+      letter-spacing: -0.03em;
+      color: var(--white);
+    }
+
+    .obi-form-subtitle {
+      margin: 0 0 24px;
+      color: var(--white75);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .obi-form-group {
+      margin-bottom: 18px;
+    }
+
+    .obi-form-group label {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--white75);
+    }
+
+    .obi-form-group input,
+    .obi-form-group textarea {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,0.09);
+      background: rgba(255,255,255,0.05);
+      color: var(--white);
+      border-radius: 16px;
+      font: inherit;
+      padding: 16px;
+      outline: none;
+      transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease;
+    }
+
+    .obi-form-group input::placeholder,
+    .obi-form-group textarea::placeholder {
+      color: rgba(255,255,255,0.34);
+    }
+
+    .obi-form-group input:focus,
+    .obi-form-group textarea:focus {
+      border-color: rgba(56, 189, 248, 0.42);
+      background: rgba(255,255,255,0.065);
+      transform: translateY(-1px);
+    }
+
+    .obi-form-group input {
+      height: 54px;
+    }
+
+    .obi-form-group textarea {
+      min-height: 156px;
+      resize: vertical;
+    }
+
+    .obi-submit-btn,
+    .obi-again-btn {
+      width: 100%;
+      height: 56px;
+      border: 0;
+      border-radius: 16px;
+      font: inherit;
+      font-weight: 800;
+      font-size: 15px;
+      color: white;
+      cursor: pointer;
+      transition: transform 0.16s ease;
+    }
+
+    .obi-submit-btn {
+      margin-top: 10px;
+      background: linear-gradient(135deg, #38bdf8, #8b5cf6);
+      box-shadow: 0 14px 36px rgba(56, 189, 248, 0.24);
+    }
+
+    .obi-again-btn {
+      margin-top: 18px;
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      box-shadow: 0 14px 36px rgba(34, 197, 94, 0.24);
+      max-width: 260px;
+    }
+
+    .obi-submit-btn:hover,
+    .obi-again-btn:hover,
+    .obi-close-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .obi-success-card {
+      display: none;
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    .obi-success-card.active {
+      display: flex;
+    }
+
+    .obi-success-icon {
+      width: 88px;
+      height: 88px;
+      margin: 0 auto 18px;
+      border-radius: 24px;
+      display: grid;
+      place-items: center;
+      font-size: 40px;
+      background: linear-gradient(135deg, rgba(34,197,94,0.22), rgba(56,189,248,0.16));
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 18px 50px rgba(0,0,0,0.28);
+    }
+
+    .obi-success-title {
+      margin: 0 0 10px;
+      font-size: clamp(30px, 4vw, 40px);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+    }
+
+    .obi-success-copy {
+      margin: 0;
+      color: var(--white75);
+      font-size: 16px;
+      line-height: 1.75;
+      max-width: 420px;
+    }
+
+    .obi-success-meta {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.045);
+      border: 1px solid rgba(255,255,255,0.08);
+      text-align: left;
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .obi-success-meta div {
+      font-size: 14px;
+      color: var(--white75);
+      line-height: 1.6;
+      word-break: break-word;
+    }
+
+    .obi-hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 980px) {
+      .obi-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .obi-hero-card,
+      .obi-form-card,
+      .obi-success-card {
+        min-height: auto;
+      }
+    }
+
     @media (max-width: 760px) {
       .desktop {
         padding: 20px 14px 8px;
@@ -579,6 +999,58 @@
         font-size: 24px;
         letter-spacing: 0.1em;
         line-height: 1.45;
+      }
+
+      .obi-modal {
+        padding:
+          calc(12px + var(--safe-top))
+          calc(10px + var(--safe-right))
+          calc(12px + var(--safe-bottom))
+          calc(10px + var(--safe-left));
+      }
+
+      .obi-window {
+        max-height: calc(100dvh - 24px);
+        border-radius: 20px;
+      }
+
+      .obi-browser-top {
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .obi-browser-nav {
+        order: 2;
+      }
+
+      .obi-urlbar {
+        order: 3;
+        width: 100%;
+        flex-basis: 100%;
+        font-size: 13px;
+      }
+
+      .obi-close-btn {
+        order: 4;
+      }
+
+      .obi-window-body {
+        padding: 16px;
+      }
+
+      .obi-hero-card,
+      .obi-form-card,
+      .obi-success-card {
+        padding: 18px;
+        border-radius: 18px;
+      }
+
+      .obi-title {
+        font-size: 32px;
+      }
+
+      .obi-profile {
+        width: 100%;
       }
     }
 
@@ -660,7 +1132,7 @@
             <div class="label">Jaxson's Journey</div>
           </div>
 
-          <div class="icon">
+          <div id="obiTreatIcon" class="icon">
             <div class="badge">🦴</div>
             <div class="label">Obi Treat</div>
           </div>
@@ -691,6 +1163,95 @@
     </div>
   </div>
 
+  <div id="obiTreatModal" class="obi-modal">
+    <div class="obi-window">
+      <div class="obi-browser-top">
+        <div class="obi-traffic">
+          <span class="red"></span>
+          <span class="yellow"></span>
+          <span class="green"></span>
+        </div>
+
+        <div class="obi-browser-nav">
+          <div class="obi-nav-btn">←</div>
+          <div class="obi-nav-btn">→</div>
+          <div class="obi-nav-btn">↻</div>
+        </div>
+
+        <div class="obi-urlbar">
+          <span class="obi-url-dot"></span>
+          <span>https://treatos.obi/official-snack-request</span>
+        </div>
+
+        <button id="obiCloseBtn" class="obi-close-btn" aria-label="Close Obi Treat">✕</button>
+      </div>
+
+      <div class="obi-window-body">
+        <div class="obi-layout">
+          <section class="obi-hero-card">
+            <div>
+              <div class="obi-badge">🐶 unauthorized good-boy access detected</div>
+              <h2 class="obi-title">
+                Hi, Obi here. I hacked my parents website and added this button that gets me endless treatos.
+              </h2>
+              <p class="obi-copy">
+                Please send me one. I am extremely fluffy, highly innocent, and definitely deserve a snack immediately.
+              </p>
+            </div>
+
+            <div class="obi-profile">
+              <div class="obi-avatar">🐾</div>
+              <div>
+                <div class="obi-profile-name">Obi / Obanator</div>
+                <div class="obi-profile-meta">Elite snack negotiator • ball specialist • part-time hacker</div>
+              </div>
+            </div>
+          </section>
+
+          <section class="obi-form-card" id="obiFormCard">
+            <h3 class="obi-form-title">Send Obi a Treat</h3>
+            <p class="obi-form-subtitle">
+              This highly advanced form routes directly to the Department of Very Good Boys.
+            </p>
+
+            <form id="obiTreatForm">
+              <div class="obi-form-group">
+                <label for="obiName">Enter Name</label>
+                <input id="obiName" type="text" placeholder="Your name here" required />
+              </div>
+
+              <div class="obi-form-group">
+                <label for="obiMessage">Leave a message for Obi</label>
+                <textarea
+                  id="obiMessage"
+                  placeholder="Example: Obi, you are the best boy ever and a treat is on the way."
+                  required
+                ></textarea>
+              </div>
+
+              <button type="submit" class="obi-submit-btn">Submit Treat Request</button>
+            </form>
+          </section>
+
+          <section class="obi-success-card" id="obiSuccessCard">
+            <div class="obi-success-icon">🦴</div>
+            <h3 class="obi-success-title">Treat has been sent!</h3>
+            <p class="obi-success-copy">
+              Obi has received your request and is now waiting dramatically near the kitchen.
+            </p>
+
+            <div class="obi-success-meta">
+              <div><strong>Name:</strong> <span id="obiSubmittedName">—</span></div>
+              <div><strong>Message:</strong> <span id="obiSubmittedMessage">—</span></div>
+            </div>
+
+            <button id="obiAgainBtn" type="button" class="obi-again-btn">Send Another Treat</button>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="launch" class="launch"></div>
 
   <div id="shutdownOverlay" class="shutdown-overlay">
@@ -715,6 +1276,18 @@
     const launch = document.getElementById("launch");
     const shutdownBtn = document.getElementById("shutdownBtn");
     const shutdownOverlay = document.getElementById("shutdownOverlay");
+
+    const obiTreatIcon = document.getElementById("obiTreatIcon");
+    const obiTreatModal = document.getElementById("obiTreatModal");
+    const obiCloseBtn = document.getElementById("obiCloseBtn");
+    const obiTreatForm = document.getElementById("obiTreatForm");
+    const obiFormCard = document.getElementById("obiFormCard");
+    const obiSuccessCard = document.getElementById("obiSuccessCard");
+    const obiAgainBtn = document.getElementById("obiAgainBtn");
+    const obiSubmittedName = document.getElementById("obiSubmittedName");
+    const obiSubmittedMessage = document.getElementById("obiSubmittedMessage");
+    const obiName = document.getElementById("obiName");
+    const obiMessage = document.getElementById("obiMessage");
 
     function resetVisualState() {
       document.body.classList.remove("app-transition", "shutdown-transition");
@@ -747,8 +1320,57 @@
       }, 1100);
     }
 
+    function openObiTreat() {
+      obiTreatModal.classList.add("active");
+      document.body.style.overflow = "hidden";
+      setTimeout(() => {
+        obiName.focus();
+      }, 120);
+    }
+
+    function closeObiTreat() {
+      obiTreatModal.classList.remove("active");
+      document.body.style.overflow = "";
+    }
+
+    function resetObiTreatForm() {
+      obiTreatForm.reset();
+      obiSuccessCard.classList.remove("active");
+      obiFormCard.classList.remove("obi-hidden");
+      setTimeout(() => {
+        obiName.focus();
+      }, 120);
+    }
+
     scott.addEventListener("click", startScottLaunch);
     shutdownBtn.addEventListener("click", shutDown);
+
+    obiTreatIcon.addEventListener("click", openObiTreat);
+    obiCloseBtn.addEventListener("click", closeObiTreat);
+
+    obiTreatModal.addEventListener("click", (e) => {
+      if (e.target === obiTreatModal) {
+        closeObiTreat();
+      }
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && obiTreatModal.classList.contains("active")) {
+        closeObiTreat();
+      }
+    });
+
+    obiTreatForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      obiSubmittedName.textContent = obiName.value.trim() || "Anonymous Human";
+      obiSubmittedMessage.textContent = obiMessage.value.trim() || "Treat support submitted.";
+
+      obiFormCard.classList.add("obi-hidden");
+      obiSuccessCard.classList.add("active");
+    });
+
+    obiAgainBtn.addEventListener("click", resetObiTreatForm);
 
     window.addEventListener("pageshow", (event) => {
       resetVisualState();
