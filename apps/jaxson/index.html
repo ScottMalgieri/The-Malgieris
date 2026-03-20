@@ -33,9 +33,6 @@
       --white08: rgba(255, 255, 255, 0.08);
       --white05: rgba(255, 255, 255, 0.05);
 
-      --glow-blue: rgba(96, 165, 250, 0.85);
-      --glow-cyan: rgba(103, 232, 249, 0.9);
-
       --safe-top: env(safe-area-inset-top, 0px);
       --safe-bottom: env(safe-area-inset-bottom, 0px);
       --safe-left: env(safe-area-inset-left, 0px);
@@ -73,6 +70,8 @@
       opacity: 0;
       transform: scale(1.01);
       animation: pageIn 0.35s ease forwards;
+      transition: filter 0.5s ease, opacity 0.5s ease, transform 0.5s ease;
+      will-change: transform, filter, opacity;
     }
 
     @keyframes pageIn {
@@ -82,11 +81,63 @@
       }
     }
 
+    body.page-transition .app-shell {
+      transform: scale(0.965);
+      filter: blur(10px) brightness(0.9);
+      opacity: 0.2;
+    }
+
+    .return-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0;
+      transform: scale(1.08);
+      background:
+        radial-gradient(circle at center, rgba(103, 232, 249, 0.28), transparent 14%),
+        radial-gradient(circle at center, rgba(59, 130, 246, 0.2), transparent 24%),
+        linear-gradient(135deg, #020617, #0f172a, #000000);
+      transition: opacity 0.38s ease, transform 0.8s ease;
+      overflow: hidden;
+    }
+
+    .return-overlay.active {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .return-overlay::after {
+      content: "RETURNING TO DESKTOP";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) scale(0.78);
+      width: min(92vw, 760px);
+      text-align: center;
+      font-family: "Orbitron", Arial, sans-serif;
+      font-size: clamp(22px, 4vw, 36px);
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      line-height: 1.4;
+      color: var(--white);
+      opacity: 0;
+      text-shadow:
+        0 0 12px rgba(103, 232, 249, 0.95),
+        0 0 30px rgba(59, 130, 246, 0.75);
+      transition: opacity 0.24s ease 0.06s, transform 0.55s cubic-bezier(.2,.8,.2,1) 0.06s;
+    }
+
+    .return-overlay.active::after {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
     .topbar {
-      height: calc(56px + var(--safe-top));
+      height: calc(72px + var(--safe-top));
       padding-top: var(--safe-top);
-      padding-left: calc(16px + var(--safe-left));
-      padding-right: calc(16px + var(--safe-right));
+      padding-left: calc(18px + var(--safe-left));
+      padding-right: calc(18px + var(--safe-right));
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -101,59 +152,70 @@
     .top-left {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 18px;
       min-width: 0;
     }
 
     .status-dot {
-      width: 11px;
-      height: 11px;
+      width: 16px;
+      height: 16px;
       border-radius: 50%;
       background: #4ade80;
-      box-shadow: 0 0 14px #4ade80;
+      box-shadow:
+        0 0 12px rgba(74, 222, 128, 0.9),
+        0 0 28px rgba(74, 222, 128, 0.55);
       flex-shrink: 0;
     }
 
-    .title-stack {
+    .title-row {
       display: flex;
-      flex-direction: column;
+      align-items: baseline;
+      gap: 18px;
       min-width: 0;
-      line-height: 1.1;
+      flex-wrap: nowrap;
     }
 
     .top-title {
       font-weight: 700;
       color: var(--white90);
-      font-size: 15px;
+      font-size: clamp(18px, 2.8vw, 28px);
       white-space: nowrap;
+      line-height: 1;
     }
 
     .top-subtitle {
-      margin-top: 3px;
       color: var(--white50);
-      font-size: 11px;
+      font-size: clamp(14px, 2vw, 18px);
       font-weight: 400;
-      letter-spacing: 0.04em;
       white-space: nowrap;
+      line-height: 1;
     }
 
     .clock-wrap {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 14px;
       white-space: nowrap;
       flex-shrink: 0;
+      color: var(--white50);
+      font-size: clamp(14px, 2vw, 18px);
     }
 
     .online-status {
-      color: #4ade80;
-      font-size: 13px;
-      font-weight: 500;
+      color: var(--white50);
+      font-size: inherit;
+      font-weight: 400;
+    }
+
+    .clock-divider {
+      color: var(--white50);
+      font-size: 18px;
+      line-height: 1;
     }
 
     .clock {
-      color: var(--white60);
-      font-size: 14px;
+      color: var(--white75);
+      font-size: clamp(14px, 2vw, 18px);
       white-space: nowrap;
     }
 
@@ -170,6 +232,43 @@
       display: flex;
       flex-direction: column;
       gap: 20px;
+    }
+
+    .pull-back-wrap {
+      display: flex;
+      justify-content: flex-start;
+      margin-bottom: -6px;
+    }
+
+    .pull-back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 42px;
+      padding: 0 16px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.06);
+      color: var(--white90);
+      font: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 24px rgba(0,0,0,0.22);
+    }
+
+    .pull-back-btn:hover {
+      transform: translateY(-1px);
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.14);
+      box-shadow: 0 14px 28px rgba(0,0,0,0.28);
+    }
+
+    .pull-back-arrow {
+      font-size: 16px;
+      line-height: 1;
     }
 
     .hero-card,
@@ -197,44 +296,6 @@
       height: 220px;
       background: radial-gradient(circle, rgba(96,165,250,0.18), transparent 68%);
       pointer-events: none;
-    }
-
-    .back-wrap {
-      display: flex;
-      justify-content: flex-start;
-      margin-bottom: 16px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .back-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      height: 48px;
-      padding: 0 18px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.06);
-      color: var(--white90);
-      font: inherit;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
-      backdrop-filter: blur(12px);
-      box-shadow: 0 10px 24px rgba(0,0,0,0.22);
-    }
-
-    .back-btn:hover {
-      transform: translateY(-1px);
-      background: rgba(255,255,255,0.1);
-      border-color: rgba(255,255,255,0.14);
-    }
-
-    .back-arrow {
-      font-size: 18px;
-      line-height: 1;
     }
 
     .countdown-label {
@@ -487,6 +548,28 @@
     }
 
     @media (max-width: 760px) {
+      .topbar {
+        height: calc(64px + var(--safe-top));
+        padding-left: calc(14px + var(--safe-left));
+        padding-right: calc(14px + var(--safe-right));
+      }
+
+      .top-left {
+        gap: 12px;
+      }
+
+      .title-row {
+        gap: 10px;
+      }
+
+      .clock-wrap {
+        gap: 8px;
+      }
+
+      .clock-divider {
+        font-size: 15px;
+      }
+
       .desktop {
         padding: 18px 14px 22px;
       }
@@ -495,11 +578,6 @@
       .panel,
       .folder-panel {
         border-radius: 20px;
-      }
-
-      .hero-card,
-      .panel,
-      .folder-panel {
         padding: 18px;
       }
 
@@ -525,16 +603,16 @@
         height: 108px;
       }
 
-      .clock-wrap {
-        gap: 6px;
+      .pull-back-btn {
+        min-height: 40px;
+        padding: 0 14px;
       }
 
-      .online-status {
-        font-size: 12px;
-      }
-
-      .top-subtitle {
-        font-size: 10px;
+      .return-overlay::after {
+        width: min(84vw, 360px);
+        font-size: 24px;
+        letter-spacing: 0.1em;
+        line-height: 1.45;
       }
     }
 
@@ -542,6 +620,41 @@
       .topbar {
         padding-left: calc(12px + var(--safe-left));
         padding-right: calc(12px + var(--safe-right));
+      }
+
+      .top-left {
+        gap: 10px;
+      }
+
+      .status-dot {
+        width: 14px;
+        height: 14px;
+      }
+
+      .title-row {
+        gap: 8px;
+      }
+
+      .top-title {
+        font-size: 16px;
+      }
+
+      .top-subtitle {
+        font-size: 11px;
+      }
+
+      .clock-wrap {
+        gap: 6px;
+        font-size: 12px;
+      }
+
+      .online-status,
+      .clock {
+        font-size: 12px;
+      }
+
+      .clock-divider {
+        font-size: 13px;
       }
 
       .desktop {
@@ -563,15 +676,9 @@
         font-size: 28px;
       }
 
-      .clock-wrap {
-        flex-direction: column;
-        align-items: flex-end;
-        gap: 2px;
-      }
-
-      .back-btn {
-        width: 100%;
-        justify-content: center;
+      .pull-back-btn {
+        width: auto;
+        max-width: 100%;
       }
     }
   </style>
@@ -581,7 +688,8 @@
     <div class="topbar">
       <div class="top-left">
         <div class="status-dot"></div>
-        <div class="title-stack">
+
+        <div class="title-row">
           <div class="top-title">Jaxson's Journey</div>
           <div class="top-subtitle">Malgieri OS App</div>
         </div>
@@ -589,20 +697,21 @@
 
       <div class="clock-wrap">
         <div class="online-status">Online</div>
+        <div class="clock-divider">•</div>
         <div id="clock" class="clock"></div>
       </div>
     </div>
 
     <div class="desktop">
       <div class="desktop-inner">
-        <section class="hero-card">
-          <div class="back-wrap">
-            <button id="backToDesktopBtn" class="back-btn" type="button">
-              <span class="back-arrow">←</span>
-              <span>Back To Desktop</span>
-            </button>
-          </div>
+        <div class="pull-back-wrap">
+          <button id="backToDesktopBtn" class="pull-back-btn" type="button">
+            <span class="pull-back-arrow">←</span>
+            <span>Back To Desktop</span>
+          </button>
+        </div>
 
+        <section class="hero-card">
           <div class="countdown-label">JAXSON DUE DATE</div>
           <div id="countdownLine" class="countdown-line">00 DAYS : 00 HOURS : 00 MINUTES : 00 SECONDS</div>
         </section>
@@ -667,6 +776,8 @@
     </div>
   </div>
 
+  <div id="returnOverlay" class="return-overlay"></div>
+
   <script>
     function updateClock() {
       const now = new Date();
@@ -702,6 +813,7 @@
 
     const jaxsonFolder = document.getElementById("jaxsonFolder");
     const backToDesktopBtn = document.getElementById("backToDesktopBtn");
+    const returnOverlay = document.getElementById("returnOverlay");
 
     function animateFolderOpen() {
       jaxsonFolder.classList.add("is-opening");
@@ -711,7 +823,17 @@
     }
 
     function goBackToDesktop() {
-      window.location.href = "../../";
+      document.body.classList.add("page-transition");
+      returnOverlay.classList.add("active");
+
+      setTimeout(() => {
+        window.location.href = "../../home.html";
+      }, 1100);
+    }
+
+    function resetVisualState() {
+      document.body.classList.remove("page-transition");
+      returnOverlay.classList.remove("active");
     }
 
     jaxsonFolder.addEventListener("click", animateFolderOpen);
@@ -724,6 +846,13 @@
     });
 
     backToDesktopBtn.addEventListener("click", goBackToDesktop);
+
+    window.addEventListener("pageshow", (event) => {
+      resetVisualState();
+      if (event.persisted) {
+        requestAnimationFrame(resetVisualState);
+      }
+    });
 
     updateClock();
     updateCountdown();
