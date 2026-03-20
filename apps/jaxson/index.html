@@ -842,6 +842,14 @@
       }, 320);
     }
 
+    function openJaxsonPhotos() {
+      animateFolderOpen();
+
+      setTimeout(() => {
+        window.location.href = "./photos/";
+      }, 300);
+    }
+
     function goBackToDesktop() {
       document.body.classList.add("page-transition");
       returnOverlay.classList.add("active");
@@ -856,12 +864,12 @@
       returnOverlay.classList.remove("active");
     }
 
-    jaxsonFolder.addEventListener("click", animateFolderOpen);
+    jaxsonFolder.addEventListener("click", openJaxsonPhotos);
 
     jaxsonFolder.addEventListener("keydown", (e) => {
       if (e.key === "Enter" || e.key === " ") {
         e.preventDefault();
-        animateFolderOpen();
+        openJaxsonPhotos();
       }
     });
 
