@@ -961,6 +961,224 @@
       display: none !important;
     }
 
+    /* Song Of The Week Modal */
+    .song-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 9997;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding:
+        calc(20px + var(--safe-top))
+        calc(16px + var(--safe-right))
+        calc(20px + var(--safe-bottom))
+        calc(16px + var(--safe-left));
+      background: rgba(2, 6, 23, 0.72);
+      backdrop-filter: blur(14px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.28s ease;
+    }
+
+    .song-modal.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .song-window {
+      width: min(980px, 100%);
+      max-height: min(860px, calc(100dvh - 40px));
+      overflow: auto;
+      border-radius: 28px;
+      border: 1px solid var(--white10);
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0.97), rgba(2, 6, 23, 0.96));
+      box-shadow: 0 30px 90px rgba(0, 0, 0, 0.5);
+      transform: translateY(18px) scale(0.98);
+      transition: transform 0.28s ease;
+    }
+
+    .song-modal.active .song-window {
+      transform: translateY(0) scale(1);
+    }
+
+    .song-window::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    .song-window::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.12);
+      border-radius: 999px;
+    }
+
+    .song-browser-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 64px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--white10);
+      background: rgba(255,255,255,0.04);
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      backdrop-filter: blur(12px);
+    }
+
+    .song-traffic {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .song-traffic span {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: block;
+    }
+
+    .song-traffic .red { background: #ff5f57; }
+    .song-traffic .yellow { background: #febc2e; }
+    .song-traffic .green { background: #28c840; }
+
+    .song-browser-nav {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .song-nav-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.06);
+      color: var(--white75);
+      font-size: 14px;
+    }
+
+    .song-urlbar {
+      flex: 1;
+      min-width: 0;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--white60);
+      font-size: 14px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .song-url-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: #38bdf8;
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.45);
+      flex-shrink: 0;
+    }
+
+    .song-close-btn {
+      margin-left: auto;
+      min-width: 72px;
+      height: 40px;
+      padding: 0 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.06);
+      color: var(--white90);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .song-close-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .song-window-body {
+      padding: 24px;
+    }
+
+    .song-card {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 28px;
+      align-items: center;
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025));
+      box-shadow: 0 16px 40px rgba(0,0,0,0.28);
+      padding: 28px;
+    }
+
+    .song-cover-wrap {
+      width: 100%;
+    }
+
+    .song-cover {
+      display: block;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+      background: rgba(255,255,255,0.04);
+    }
+
+    .song-info {
+      min-width: 0;
+    }
+
+    .song-badge {
+      display: inline-flex;
+      align-items: center;
+      width: fit-content;
+      padding: 9px 14px;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.18);
+      color: #bae6fd;
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 18px;
+    }
+
+    .song-title {
+      margin: 0 0 12px;
+      font-size: clamp(30px, 4vw, 52px);
+      line-height: 1;
+      letter-spacing: -0.04em;
+      color: var(--white);
+    }
+
+    .song-artist {
+      margin: 0 0 16px;
+      font-size: clamp(18px, 2vw, 24px);
+      font-weight: 700;
+      color: var(--white75);
+    }
+
+    .song-note {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.75;
+      color: var(--white60);
+      max-width: 520px;
+    }
+
     @media (max-width: 980px) {
       .obi-layout {
         grid-template-columns: 1fr;
@@ -970,6 +1188,15 @@
       .obi-form-card,
       .obi-success-card {
         min-height: auto;
+      }
+
+      .song-card {
+        grid-template-columns: 1fr;
+      }
+
+      .song-cover-wrap {
+        max-width: 340px;
+        margin: 0 auto;
       }
     }
 
@@ -1080,6 +1307,53 @@
       .obi-profile {
         width: 100%;
       }
+
+      .song-modal {
+        padding:
+          calc(12px + var(--safe-top))
+          calc(10px + var(--safe-right))
+          calc(12px + var(--safe-bottom))
+          calc(10px + var(--safe-left));
+      }
+
+      .song-window {
+        max-height: calc(100dvh - 24px);
+        border-radius: 20px;
+      }
+
+      .song-browser-top {
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .song-browser-nav {
+        order: 2;
+      }
+
+      .song-urlbar {
+        order: 3;
+        width: 100%;
+        flex-basis: 100%;
+        font-size: 13px;
+      }
+
+      .song-close-btn {
+        order: 2;
+        margin-left: auto;
+      }
+
+      .song-window-body {
+        padding: 16px;
+      }
+
+      .song-card {
+        padding: 18px;
+        border-radius: 18px;
+      }
+
+      .song-title {
+        font-size: 32px;
+      }
     }
 
     @media (max-width: 420px) {
@@ -1165,7 +1439,7 @@
             <div class="label">Obi Treat</div>
           </div>
 
-          <div class="icon">
+          <div id="songWeekIcon" class="icon">
             <div class="badge">🎵</div>
             <div class="label">Song Of The Week</div>
           </div>
@@ -1297,6 +1571,53 @@
     </div>
   </div>
 
+  <div id="songWeekModal" class="song-modal">
+    <div class="song-window">
+      <div class="song-browser-top">
+        <div class="song-traffic">
+          <span class="red"></span>
+          <span class="yellow"></span>
+          <span class="green"></span>
+        </div>
+
+        <div class="song-browser-nav">
+          <div class="song-nav-btn">←</div>
+          <div class="song-nav-btn">→</div>
+          <div class="song-nav-btn">↻</div>
+        </div>
+
+        <div class="song-urlbar">
+          <span class="song-url-dot"></span>
+          <span>https://themalgieris.com/song-of-the-week</span>
+        </div>
+
+        <button id="songCloseBtn" class="song-close-btn" aria-label="Close Song of the Week">CLOSE</button>
+      </div>
+
+      <div class="song-window-body">
+        <div class="song-card">
+          <div class="song-cover-wrap">
+            <img
+              id="songCover"
+              class="song-cover"
+              src="images/song-of-the-week.jpg"
+              alt="Song of the Week album cover"
+            />
+          </div>
+
+          <div class="song-info">
+            <div class="song-badge">🎵 now playing on malgieri os</div>
+            <h2 id="songTitle" class="song-title">Your Song Title Here</h2>
+            <p id="songArtist" class="song-artist">Artist Name Here</p>
+            <p id="songNote" class="song-note">
+              Scott’s current anthem. Update this each week with whatever song is hitting.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="launch" class="launch"></div>
 
   <div id="shutdownOverlay" class="shutdown-overlay">
@@ -1336,6 +1657,10 @@
     const obiTreatType = document.getElementById("obiTreatType");
     const obiMessage = document.getElementById("obiMessage");
     const obiSubmitBtn = document.getElementById("obiSubmitBtn");
+
+    const songWeekIcon = document.getElementById("songWeekIcon");
+    const songWeekModal = document.getElementById("songWeekModal");
+    const songCloseBtn = document.getElementById("songCloseBtn");
 
     function resetVisualState() {
       document.body.classList.remove("app-transition", "shutdown-transition");
@@ -1378,7 +1703,21 @@
 
     function closeObiTreat() {
       obiTreatModal.classList.remove("active");
-      document.body.style.overflow = "";
+      if (!songWeekModal.classList.contains("active")) {
+        document.body.style.overflow = "";
+      }
+    }
+
+    function openSongWeek() {
+      songWeekModal.classList.add("active");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeSongWeek() {
+      songWeekModal.classList.remove("active");
+      if (!obiTreatModal.classList.contains("active")) {
+        document.body.style.overflow = "";
+      }
     }
 
     function resetObiTreatForm() {
@@ -1400,15 +1739,29 @@
     obiTreatIcon.addEventListener("click", openObiTreat);
     obiCloseBtn.addEventListener("click", closeObiTreat);
 
+    songWeekIcon.addEventListener("click", openSongWeek);
+    songCloseBtn.addEventListener("click", closeSongWeek);
+
     obiTreatModal.addEventListener("click", (e) => {
       if (e.target === obiTreatModal) {
         closeObiTreat();
       }
     });
 
+    songWeekModal.addEventListener("click", (e) => {
+      if (e.target === songWeekModal) {
+        closeSongWeek();
+      }
+    });
+
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && obiTreatModal.classList.contains("active")) {
-        closeObiTreat();
+      if (e.key === "Escape") {
+        if (obiTreatModal.classList.contains("active")) {
+          closeObiTreat();
+        }
+        if (songWeekModal.classList.contains("active")) {
+          closeSongWeek();
+        }
       }
     });
 
