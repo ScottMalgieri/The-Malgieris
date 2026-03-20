@@ -1179,6 +1179,38 @@
       max-width: 520px;
     }
 
+    .song-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .song-control-btn {
+      min-width: 92px;
+      height: 48px;
+      padding: 0 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.06);
+      color: var(--white90);
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.16s ease, background 0.16s ease, opacity 0.16s ease;
+    }
+
+    .song-control-btn:hover {
+      transform: translateY(-1px);
+      background: rgba(255,255,255,0.1);
+    }
+
+    .song-control-btn:disabled {
+      opacity: 0.55;
+      cursor: default;
+      transform: none;
+    }
+
     @media (max-width: 980px) {
       .obi-layout {
         grid-template-columns: 1fr;
@@ -1600,7 +1632,7 @@
             <img
               id="songCover"
               class="song-cover"
-              src="images/song-of-the-week.jpg"
+              src="assets/images/misc/IMG_1268.jpeg"
               alt="Song of the Week album cover"
             />
           </div>
@@ -1612,6 +1644,14 @@
             <p id="songNote" class="song-note">
               Scott’s current anthem. Update this each week with whatever song is hitting.
             </p>
+
+            <div class="song-controls">
+              <button id="songPlayBtn" class="song-control-btn" type="button">Play</button>
+              <button id="songPauseBtn" class="song-control-btn" type="button">Pause</button>
+              <button id="songStopBtn" class="song-control-btn" type="button">Stop</button>
+            </div>
+
+            <audio id="songAudio" src="assets/audio/song-of-the-week.mp3" preload="metadata"></audio>
           </div>
         </div>
       </div>
@@ -1661,6 +1701,10 @@
     const songWeekIcon = document.getElementById("songWeekIcon");
     const songWeekModal = document.getElementById("songWeekModal");
     const songCloseBtn = document.getElementById("songCloseBtn");
+    const songAudio = document.getElementById("songAudio");
+    const songPlayBtn = document.getElementById("songPlayBtn");
+    const songPauseBtn = document.getElementById("songPauseBtn");
+    const songStopBtn = document.getElementById("songStopBtn");
 
     function resetVisualState() {
       document.body.classList.remove("app-transition", "shutdown-transition");
@@ -1693,6 +1737,21 @@
       }, 1100);
     }
 
+    function updateSongButtons() {
+      const isPaused = songAudio.paused;
+      const atStart = songAudio.currentTime === 0;
+
+      songPlayBtn.disabled = !isPaused && !songAudio.ended;
+      songPauseBtn.disabled = isPaused;
+      songStopBtn.disabled = isPaused && atStart;
+    }
+
+    function stopSongPlayback() {
+      songAudio.pause();
+      songAudio.currentTime = 0;
+      updateSongButtons();
+    }
+
     function openObiTreat() {
       obiTreatModal.classList.add("active");
       document.body.style.overflow = "hidden";
@@ -1711,10 +1770,12 @@
     function openSongWeek() {
       songWeekModal.classList.add("active");
       document.body.style.overflow = "hidden";
+      updateSongButtons();
     }
 
     function closeSongWeek() {
       songWeekModal.classList.remove("active");
+      stopSongPlayback();
       if (!obiTreatModal.classList.contains("active")) {
         document.body.style.overflow = "";
       }
@@ -1741,6 +1802,33 @@
 
     songWeekIcon.addEventListener("click", openSongWeek);
     songCloseBtn.addEventListener("click", closeSongWeek);
+
+    songPlayBtn.addEventListener("click", async () => {
+      try {
+        await songAudio.play();
+        updateSongButtons();
+      } catch (error) {
+        alert("Audio couldn't play. Double check the file path in assets/audio.");
+        updateSongButtons();
+      }
+    });
+
+    songPauseBtn.addEventListener("click", () => {
+      songAudio.pause();
+      updateSongButtons();
+    });
+
+    songStopBtn.addEventListener("click", () => {
+      stopSongPlayback();
+    });
+
+    songAudio.addEventListener("play", updateSongButtons);
+    songAudio.addEventListener("pause", updateSongButtons);
+    songAudio.addEventListener("ended", () => {
+      songAudio.currentTime = 0;
+      updateSongButtons();
+    });
+    songAudio.addEventListener("loadedmetadata", updateSongButtons);
 
     obiTreatModal.addEventListener("click", (e) => {
       if (e.target === obiTreatModal) {
@@ -1807,10 +1895,16 @@
 
     window.addEventListener("pageshow", (event) => {
       resetVisualState();
+      updateSongButtons();
       if (event.persisted) {
-        requestAnimationFrame(resetVisualState);
+        requestAnimationFrame(() => {
+          resetVisualState();
+          updateSongButtons();
+        });
       }
     });
+
+    updateSongButtons();
   </script>
 </body>
 </html>
