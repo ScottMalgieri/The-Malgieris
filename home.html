@@ -809,7 +809,8 @@
     }
 
     .obi-form-group input,
-    .obi-form-group textarea {
+    .obi-form-group textarea,
+    .obi-form-group select {
       width: 100%;
       border: 1px solid rgba(255,255,255,0.09);
       background: rgba(255,255,255,0.05);
@@ -827,19 +828,37 @@
     }
 
     .obi-form-group input:focus,
-    .obi-form-group textarea:focus {
+    .obi-form-group textarea:focus,
+    .obi-form-group select:focus {
       border-color: rgba(56, 189, 248, 0.42);
       background: rgba(255,255,255,0.065);
       transform: translateY(-1px);
     }
 
-    .obi-form-group input {
+    .obi-form-group input,
+    .obi-form-group select {
       height: 54px;
     }
 
     .obi-form-group textarea {
       min-height: 156px;
       resize: vertical;
+    }
+
+    .obi-form-group select {
+      appearance: none;
+      -webkit-appearance: none;
+      background:
+        linear-gradient(45deg, transparent 50%, rgba(255,255,255,0.7) 50%),
+        linear-gradient(135deg, rgba(255,255,255,0.7) 50%, transparent 50%),
+        rgba(255,255,255,0.05);
+      background-position:
+        calc(100% - 20px) 22px,
+        calc(100% - 14px) 22px,
+        0 0;
+      background-size: 6px 6px, 6px 6px, 100% 100%;
+      background-repeat: no-repeat;
+      padding-right: 40px;
     }
 
     .obi-submit-btn,
@@ -1234,6 +1253,17 @@
               </div>
 
               <div class="obi-form-group">
+                <label for="obiTreatType">Select type of treat</label>
+                <select id="obiTreatType" name="treat_type" required>
+                  <option value="" disabled selected>Choose a treat...</option>
+                  <option value="Cookie">Cookie</option>
+                  <option value="Cheese">Cheese</option>
+                  <option value="Puff Ball">Puff Ball</option>
+                  <option value="Random">Random</option>
+                </select>
+              </div>
+
+              <div class="obi-form-group">
                 <label for="obiMessage">Leave a message for Obi</label>
                 <textarea
                   id="obiMessage"
@@ -1256,6 +1286,7 @@
 
             <div class="obi-success-meta">
               <div><strong>Name:</strong> <span id="obiSubmittedName">—</span></div>
+              <div><strong>Treat Type:</strong> <span id="obiSubmittedTreatType">—</span></div>
               <div><strong>Message:</strong> <span id="obiSubmittedMessage">—</span></div>
             </div>
 
@@ -1299,8 +1330,10 @@
     const obiSuccessCard = document.getElementById("obiSuccessCard");
     const obiAgainBtn = document.getElementById("obiAgainBtn");
     const obiSubmittedName = document.getElementById("obiSubmittedName");
+    const obiSubmittedTreatType = document.getElementById("obiSubmittedTreatType");
     const obiSubmittedMessage = document.getElementById("obiSubmittedMessage");
     const obiName = document.getElementById("obiName");
+    const obiTreatType = document.getElementById("obiTreatType");
     const obiMessage = document.getElementById("obiMessage");
     const obiSubmitBtn = document.getElementById("obiSubmitBtn");
 
@@ -1398,6 +1431,7 @@
 
         if (result.success) {
           obiSubmittedName.textContent = obiName.value.trim() || "Anonymous Human";
+          obiSubmittedTreatType.textContent = obiTreatType.value || "Random";
           obiSubmittedMessage.textContent = obiMessage.value.trim() || "Treat support submitted.";
 
           obiFormCard.classList.add("obi-hidden");
