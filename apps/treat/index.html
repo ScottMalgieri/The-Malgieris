@@ -1,1 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  />
+  <meta name="theme-color" content="#020617" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <title>Obi Treat</title>
 
+  <style>
+    :root {
+      --bg-1: #020617;
+      --bg-2: #0f172a;
+      --bg-3: #111827;
+      --card: rgba(15, 23, 42, 0.82);
+      --card-2: rgba(255, 255, 255, 0.05);
+      --border: rgba(255, 255, 255, 0.1);
+      --border-strong: rgba(255, 255, 255, 0.16);
+      --text: #ffffff;
+      --text-soft: rgba(255, 255, 255, 0.78);
+      --text-faint: rgba(255, 255, 255, 0.56);
+      --accent: #38bdf8;
+      --accent-2: #22c55e;
+      --accent-3: #8b5cf6;
+      --shadow-lg: 0 24px 80px rgba(0, 0, 0, 0.42);
+      --shadow-md: 0 16px 40px rgba(0, 0, 0, 0.28);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      font-family: Inter, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(56, 189, 248, 0.12), transparent 28%),
+        radial-gradient(circle at top right, rgba(139, 92, 246, 0.12), transparent 26%),
+        linear-gradient(180deg, var(--bg-1), var(--bg-2) 56%, #000000 100%);
+      overflow-x: hidden;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .page-shell {
+      width: 100%;
+      max-width: 1120px;
+    }
+
+    .browser-window {
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0.96), rgba(2, 6, 23, 0.94));
+      box-shadow: var(--shadow-lg);
+      backdrop-filter: blur(20px);
+    }
+
+    .browser-topbar {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      background: rgba(255, 255, 255, 0.04);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      min-height: 64px;
+    }
+
+    .traffic-lights {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .traffic-lights span {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: block;
+    }
+
+    .traffic-lights .red { background: #ff5f57; }
+    .traffic-lights .yellow { background: #febc2e; }
+    .traffic-lights .green { background: #28c840; }
+
+    .browser-nav {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .nav-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      color: var(--text-soft);
+      font-size: 14px;
+      user-select: none;
+    }
+
+    .fake-urlbar {
+      flex: 1;
+      min-width: 0;
+      height: 40px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 14px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--text-faint);
+      font-size: 14px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .url-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--accent-2);
+      box-shadow: 0 0 14px rgba(34, 197, 94, 0.45);
+      flex-shrink: 0;
+    }
+
+    .browser-body {
+      padding: 28px;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .hero-card,
+    .form-card,
+    .success-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+    }
+
+    .hero-card {
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+      min-height: 520px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .hero-card::after {
+      content: "";
+      position: absolute;
+      right: -40px;
+      bottom: -40px;
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle, rgba(34, 197, 94, 0.18), transparent 68%);
+      pointer-events: none;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      width: fit-content;
+      padding: 9px 14px;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.18);
+      color: #bae6fd;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      margin-bottom: 18px;
+    }
+
+    .hero-title {
+      margin: 0 0 16px;
+      font-size: clamp(32px, 5vw, 56px);
+      line-height: 0.98;
+      letter-spacing: -0.045em;
+    }
+
+    .hero-copy {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.75;
+      color: var(--text-soft);
+      max-width: 640px;
+    }
+
+    .hero-bottom {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 30px;
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.045);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      width: fit-content;
+      max-width: 100%;
+    }
+
+    .dog-avatar {
+      width: 74px;
+      height: 74px;
+      border-radius: 20px;
+      display: grid;
+      place-items: center;
+      font-size: 34px;
+      background: linear-gradient(135deg, rgba(56,189,248,0.2), rgba(139,92,246,0.18));
+      border: 1px solid rgba(255,255,255,0.12);
+      flex-shrink: 0;
+    }
+
+    .dog-meta h2 {
+      margin: 0 0 5px;
+      font-size: 18px;
+      letter-spacing: -0.02em;
+    }
+
+    .dog-meta p {
+      margin: 0;
+      color: var(--text-faint);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .form-wrap {
+      display: flex;
+      align-items: stretch;
+    }
+
+    .form-card,
+    .success-card {
+      width: 100%;
+      min-height: 520px;
+      padding: 28px;
+    }
+
+    .card-heading {
+      margin: 0 0 8px;
+      font-size: 30px;
+      letter-spacing: -0.03em;
+    }
+
+    .card-subtext {
+      margin: 0 0 24px;
+      color: var(--text-soft);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-soft);
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      border-radius: 16px;
+      font: inherit;
+      padding: 16px 16px;
+      outline: none;
+      transition: border-color 0.18s ease, background 0.18s ease, transform 0.18s ease;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: rgba(255,255,255,0.34);
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: rgba(56, 189, 248, 0.42);
+      background: rgba(255, 255, 255, 0.065);
+      transform: translateY(-1px);
+    }
+
+    input {
+      height: 54px;
+    }
+
+    textarea {
+      min-height: 156px;
+      resize: vertical;
+    }
+
+    .helper-text {
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--text-faint);
+    }
+
+    .submit-btn,
+    .again-btn {
+      width: 100%;
+      height: 56px;
+      border: 0;
+      border-radius: 16px;
+      font: inherit;
+      font-weight: 800;
+      font-size: 15px;
+      color: white;
+      cursor: pointer;
+      transition: transform 0.16s ease, opacity 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    .submit-btn {
+      background: linear-gradient(135deg, var(--accent), var(--accent-3));
+      box-shadow: 0 14px 36px rgba(56, 189, 248, 0.24);
+      margin-top: 10px;
+    }
+
+    .again-btn {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      box-shadow: 0 14px 36px rgba(34, 197, 94, 0.24);
+      margin-top: 18px;
+      max-width: 260px;
+    }
+
+    .submit-btn:hover,
+    .again-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .submit-btn:active,
+    .again-btn:active {
+      transform: translateY(1px) scale(0.995);
+    }
+
+    .success-card {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .success-card.active {
+      display: flex;
+    }
+
+    .success-inner {
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .success-icon {
+      width: 88px;
+      height: 88px;
+      margin: 0 auto 18px;
+      border-radius: 24px;
+      display: grid;
+      place-items: center;
+      font-size: 40px;
+      background: linear-gradient(135deg, rgba(34,197,94,0.22), rgba(56,189,248,0.16));
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 18px 50px rgba(0,0,0,0.28);
+    }
+
+    .success-title {
+      margin: 0 0 10px;
+      font-size: clamp(30px, 4vw, 40px);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+    }
+
+    .success-copy {
+      margin: 0;
+      color: var(--text-soft);
+      font-size: 16px;
+      line-height: 1.75;
+    }
+
+    .submitted-meta {
+      margin-top: 18px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.045);
+      border: 1px solid rgba(255,255,255,0.08);
+      text-align: left;
+    }
+
+    .submitted-meta div {
+      font-size: 14px;
+      color: var(--text-soft);
+      line-height: 1.6;
+      word-break: break-word;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 980px) {
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-card,
+      .form-card,
+      .success-card {
+        min-height: auto;
+      }
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 12px;
+      }
+
+      .browser-topbar {
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 12px;
+        min-height: unset;
+      }
+
+      .browser-nav {
+        order: 2;
+      }
+
+      .fake-urlbar {
+        order: 3;
+        width: 100%;
+        flex-basis: 100%;
+        font-size: 13px;
+      }
+
+      .browser-body {
+        padding: 16px;
+      }
+
+      .hero-card,
+      .form-card,
+      .success-card {
+        padding: 18px;
+        border-radius: 18px;
+      }
+
+      .hero-bottom {
+        width: 100%;
+        align-items: center;
+      }
+
+      .dog-avatar {
+        width: 64px;
+        height: 64px;
+        border-radius: 18px;
+        font-size: 30px;
+      }
+
+      .card-heading {
+        font-size: 26px;
+      }
+
+      input,
+      textarea,
+      .submit-btn,
+      .again-btn {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <div class="browser-window">
+      <div class="browser-topbar">
+        <div class="traffic-lights">
+          <span class="red"></span>
+          <span class="yellow"></span>
+          <span class="green"></span>
+        </div>
+
+        <div class="browser-nav">
+          <div class="nav-btn">←</div>
+          <div class="nav-btn">→</div>
+          <div class="nav-btn">↻</div>
+        </div>
+
+        <div class="fake-urlbar">
+          <span class="url-dot"></span>
+          <span>https://treatos.obi/mom-and-dad-please-click-submit</span>
+        </div>
+      </div>
+
+      <div class="browser-body">
+        <div class="content-grid">
+          <section class="hero-card">
+            <div>
+              <div class="badge">🐶 unauthorized good-boy access detected</div>
+              <h1 class="hero-title">
+                Hi, Obi here. I hacked my parents website and added this button that gets me endless treatos.
+              </h1>
+              <p class="hero-copy">
+                Please send me one. I am extremely hardworking, very fluffy, and totally innocent.
+                Fill out the official snack request form and I will pretend this was all legal.
+              </p>
+            </div>
+
+            <div class="hero-bottom">
+              <div class="dog-avatar">🐾</div>
+              <div class="dog-meta">
+                <h2>Obi / Obanator</h2>
+                <p>Professional ball chaser • elite snack negotiator • part-time website hacker</p>
+              </div>
+            </div>
+          </section>
+
+          <div class="form-wrap">
+            <section class="form-card" id="formCard">
+              <h2 class="card-heading">Send Obi a Treat</h2>
+              <p class="card-subtext">
+                This highly advanced form routes directly to the Department of Very Good Boys.
+              </p>
+
+              <form id="obiForm">
+                <div class="form-group">
+                  <label for="name">Enter Name</label>
+                  <input
+                    id="name"
+                    name="name"
+                    type="text"
+                    placeholder="Your name here"
+                    required
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="message">Leave a message for Obi</label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    placeholder="Example: Obi, you are the best boy ever and a treat is on the way."
+                    required
+                  ></textarea>
+                  <div class="helper-text">Required. Obi appreciates kind words and snack-based support.</div>
+                </div>
+
+                <button type="submit" class="submit-btn">Submit Treat Request</button>
+              </form>
+            </section>
+
+            <section class="success-card" id="successCard">
+              <div class="success-inner">
+                <div class="success-icon">🦴</div>
+                <h2 class="success-title">Treat has been sent!</h2>
+                <p class="success-copy">
+                  Obi has received your request and is now waiting dramatically near the kitchen.
+                </p>
+
+                <div class="submitted-meta">
+                  <div><strong>Name:</strong> <span id="submittedName">—</span></div>
+                  <div><strong>Message:</strong> <span id="submittedMessage">—</span></div>
+                </div>
+
+                <button type="button" class="again-btn" id="againBtn">Send Another Treat</button>
+              </div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const obiForm = document.getElementById("obiForm");
+    const formCard = document.getElementById("formCard");
+    const successCard = document.getElementById("successCard");
+    const submittedName = document.getElementById("submittedName");
+    const submittedMessage = document.getElementById("submittedMessage");
+    const againBtn = document.getElementById("againBtn");
+
+    obiForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const nameValue = document.getElementById("name").value.trim();
+      const messageValue = document.getElementById("message").value.trim();
+
+      submittedName.textContent = nameValue || "Anonymous Human";
+      submittedMessage.textContent = messageValue || "Treat support submitted.";
+
+      formCard.classList.add("hidden");
+      successCard.classList.add("active");
+    });
+
+    againBtn.addEventListener("click", function () {
+      obiForm.reset();
+      successCard.classList.remove("active");
+      formCard.classList.remove("hidden");
+      document.getElementById("name").focus();
+    });
+  </script>
+</body>
+</html>
