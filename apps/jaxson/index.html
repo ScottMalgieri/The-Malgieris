@@ -1,1 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  />
+  <meta name="theme-color" content="#020617" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap"
+    rel="stylesheet"
+  />
+  <title>Jaxson's Journey</title>
 
+  <style>
+    :root {
+      --bg1: #020617;
+      --bg2: #0f172a;
+      --bg3: #000000;
+
+      --white: #ffffff;
+      --white90: rgba(255, 255, 255, 0.9);
+      --white80: rgba(255, 255, 255, 0.8);
+      --white75: rgba(255, 255, 255, 0.75);
+      --white70: rgba(255, 255, 255, 0.7);
+      --white60: rgba(255, 255, 255, 0.6);
+      --white50: rgba(255, 255, 255, 0.5);
+      --white10: rgba(255, 255, 255, 0.1);
+      --white08: rgba(255, 255, 255, 0.08);
+      --white05: rgba(255, 255, 255, 0.05);
+
+      --glow-blue: rgba(96, 165, 250, 0.85);
+      --glow-cyan: rgba(103, 232, 249, 0.9);
+
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-left: env(safe-area-inset-left, 0px);
+      --safe-right: env(safe-area-inset-right, 0px);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      min-height: 100%;
+      overflow-x: hidden;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--white);
+      background:
+        radial-gradient(circle at top right, rgba(59,130,246,0.2), transparent 30%),
+        radial-gradient(circle at bottom left, rgba(14,165,233,0.14), transparent 30%),
+        linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
+    }
+
+    body {
+      min-height: 100dvh;
+      overscroll-behavior: none;
+    }
+
+    .app-shell {
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      transform: scale(1.01);
+      animation: pageIn 0.35s ease forwards;
+    }
+
+    @keyframes pageIn {
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .topbar {
+      height: calc(56px + var(--safe-top));
+      padding-top: var(--safe-top);
+      padding-left: calc(16px + var(--safe-left));
+      padding-right: calc(16px + var(--safe-right));
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--white10);
+      background: rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(14px);
+      position: sticky;
+      top: 0;
+      z-index: 30;
+    }
+
+    .top-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .status-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: #60a5fa;
+      box-shadow: 0 0 14px #60a5fa;
+      flex-shrink: 0;
+    }
+
+    .top-title {
+      font-weight: 700;
+      color: var(--white90);
+      font-size: 15px;
+      white-space: nowrap;
+    }
+
+    .clock {
+      color: var(--white60);
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .desktop {
+      flex: 1;
+      padding: 24px 18px 28px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .desktop-inner {
+      width: 100%;
+      max-width: 940px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .hero-card,
+    .panel,
+    .folder-panel {
+      border-radius: 26px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--white10);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 22px 60px rgba(0, 0, 0, 0.34);
+    }
+
+    .hero-card {
+      padding: 24px 22px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-card::before {
+      content: "";
+      position: absolute;
+      inset: auto -80px -80px auto;
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle, rgba(96,165,250,0.18), transparent 68%);
+      pointer-events: none;
+    }
+
+    .section-kicker {
+      font-family: "Orbitron", Arial, sans-serif;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      color: var(--white70);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+
+    .countdown-label {
+      font-family: "Orbitron", Arial, sans-serif;
+      font-size: clamp(20px, 3vw, 30px);
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      color: var(--white90);
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      text-shadow:
+        0 0 10px rgba(255,255,255,0.16),
+        0 0 22px rgba(96,165,250,0.14);
+    }
+
+    .countdown-line {
+      display: inline-block;
+      width: 100%;
+      max-width: 100%;
+      padding: 16px 18px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--white08);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+      font-family: "Orbitron", Arial, sans-serif;
+      font-size: clamp(15px, 2.2vw, 24px);
+      font-weight: 900;
+      line-height: 1.4;
+      letter-spacing: 0.05em;
+      color: var(--white);
+      text-shadow:
+        0 0 10px rgba(103, 232, 249, 0.75),
+        0 0 18px rgba(59,130,246,0.4);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .panel {
+      padding: 22px;
+    }
+
+    .panel-title {
+      font-family: "Orbitron", Arial, sans-serif;
+      font-size: clamp(18px, 2.4vw, 24px);
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      color: var(--white90);
+      text-transform: uppercase;
+      margin: 0 0 18px;
+      text-shadow:
+        0 0 10px rgba(255,255,255,0.12),
+        0 0 20px rgba(96,165,250,0.12);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .stat-card {
+      min-height: 138px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--white08);
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--white60);
+      font-weight: 700;
+    }
+
+    .stat-value {
+      font-family: "Orbitron", Arial, sans-serif;
+      font-size: clamp(22px, 3vw, 34px);
+      font-weight: 900;
+      line-height: 1.1;
+      color: var(--white);
+      text-shadow:
+        0 0 10px rgba(255,255,255,0.12),
+        0 0 18px rgba(96,165,250,0.18);
+    }
+
+    .stat-sub {
+      color: var(--white50);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .ultrasound-wrap {
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid var(--white08);
+      background: rgba(255,255,255,0.035);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+    }
+
+    .ultrasound-photo {
+      display: block;
+      width: 100%;
+      max-height: 620px;
+      object-fit: cover;
+      background: #0b1120;
+    }
+
+    .folder-panel {
+      padding: 22px;
+    }
+
+    .folder-launch {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 250px;
+      border-radius: 24px;
+      background: rgba(255,255,255,0.035);
+      border: 1px solid var(--white08);
+      cursor: pointer;
+      transition: transform 0.22s ease, background 0.22s ease, border-color 0.22s ease;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .folder-launch:hover {
+      transform: translateY(-2px);
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(255,255,255,0.16);
+    }
+
+    .folder-launch:active .folder-icon-wrap,
+    .folder-launch.is-opening .folder-icon-wrap {
+      transform: scale(1.03);
+    }
+
+    .folder-launch:active .folder-back,
+    .folder-launch.is-opening .folder-back {
+      transform: rotateX(24deg) translateY(-10px);
+    }
+
+    .folder-launch:active .folder-front,
+    .folder-launch.is-opening .folder-front {
+      transform: translateY(6px);
+    }
+
+    .folder-icon-wrap {
+      position: relative;
+      width: 180px;
+      height: 128px;
+      transition: transform 0.22s ease;
+      transform-style: preserve-3d;
+      margin-bottom: 18px;
+    }
+
+    .folder-tab {
+      position: absolute;
+      left: 18px;
+      top: 8px;
+      width: 78px;
+      height: 26px;
+      border-radius: 10px 10px 0 0;
+      background: linear-gradient(180deg, #f8df9d, #e0bb63);
+      box-shadow: 0 5px 12px rgba(0,0,0,0.18);
+      z-index: 1;
+    }
+
+    .folder-back {
+      position: absolute;
+      inset: 20px 10px 18px 10px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, #f6d985, #dfb95c);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.24),
+        0 12px 24px rgba(0,0,0,0.18);
+      transform-origin: bottom center;
+      transition: transform 0.28s ease;
+      z-index: 2;
+    }
+
+    .folder-front {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 82px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, #f7d779, #d8ae4e);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.24),
+        0 14px 26px rgba(0,0,0,0.24);
+      transition: transform 0.28s ease;
+      z-index: 3;
+    }
+
+    .folder-shine {
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      top: 16px;
+      height: 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.18);
+      filter: blur(1px);
+    }
+
+    .folder-label {
+      font-family: "Orbitron", Arial, sans-serif;
+      font-size: clamp(18px, 2.4vw, 24px);
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      color: var(--white90);
+      text-transform: uppercase;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .folder-subtitle {
+      color: var(--white60);
+      font-size: 15px;
+      line-height: 1.6;
+      text-align: center;
+      max-width: 540px;
+    }
+
+    .bottom-note {
+      text-align: center;
+      color: var(--white50);
+      font-size: 13px;
+      padding-top: 2px;
+      letter-spacing: 0.04em;
+    }
+
+    @media (max-width: 820px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 760px) {
+      .desktop {
+        padding: 18px 14px 22px;
+      }
+
+      .hero-card,
+      .panel,
+      .folder-panel {
+        border-radius: 20px;
+      }
+
+      .hero-card,
+      .panel,
+      .folder-panel {
+        padding: 18px;
+      }
+
+      .countdown-line {
+        padding: 14px 14px;
+        border-radius: 18px;
+        font-size: clamp(14px, 3.2vw, 20px);
+        letter-spacing: 0.04em;
+      }
+
+      .stat-card {
+        min-height: 124px;
+        border-radius: 18px;
+      }
+
+      .folder-launch {
+        min-height: 220px;
+        border-radius: 20px;
+      }
+
+      .folder-icon-wrap {
+        width: 150px;
+        height: 108px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .topbar {
+        padding-left: calc(12px + var(--safe-left));
+        padding-right: calc(12px + var(--safe-right));
+      }
+
+      .desktop {
+        padding: 16px 12px 20px;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .countdown-line {
+        white-space: normal;
+        text-overflow: clip;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      .stat-value {
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <div class="topbar">
+      <div class="top-left">
+        <div class="status-dot"></div>
+        <div class="top-title">Jaxson's Journey</div>
+      </div>
+      <div id="clock" class="clock"></div>
+    </div>
+
+    <div class="desktop">
+      <div class="desktop-inner">
+        <section class="hero-card">
+          <div class="section-kicker">Malgieri OS // Incoming</div>
+          <div class="countdown-label">JAXSON DUE DATE:</div>
+          <div id="countdownLine" class="countdown-line">00 DAYS : 00 HOURS : 00 MINUTES : 00 SECONDS</div>
+        </section>
+
+        <section class="panel">
+          <h2 class="panel-title">Current Stats:</h2>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-label">Current Weight</div>
+              <div class="stat-value">5 LB 4 OZ</div>
+              <div class="stat-sub">Latest estimate entered here</div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-label">Current Length</div>
+              <div class="stat-value">Update Me</div>
+              <div class="stat-sub">Add the latest length when you have it</div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-label">Percentile</div>
+              <div class="stat-value">61.2%</div>
+              <div class="stat-sub">Latest growth percentile</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2 class="panel-title">Latest Ultrasound Photo</h2>
+
+          <div class="ultrasound-wrap">
+            <img
+              class="ultrasound-photo"
+              src="assets/images/misc/UPDATE-IMAGE-SOURCE-HERE.jpg"
+              alt="Latest ultrasound photo of Jaxson"
+            />
+          </div>
+        </section>
+
+        <section class="folder-panel">
+          <div id="jaxsonFolder" class="folder-launch" role="button" tabindex="0" aria-label="Daily Pictures of Jaxson folder">
+            <div class="folder-icon-wrap">
+              <div class="folder-tab"></div>
+              <div class="folder-back"></div>
+              <div class="folder-front">
+                <div class="folder-shine"></div>
+              </div>
+            </div>
+
+            <div class="folder-label">Daily Pictures of Jaxson</div>
+            <div class="folder-subtitle">
+              Folder ready to launch. Click behavior can be added next.
+            </div>
+          </div>
+        </section>
+
+        <div class="bottom-note">
+          Jaxson Journey // Malgieri OS
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function updateClock() {
+      const now = new Date();
+      document.getElementById("clock").innerText = now.toLocaleTimeString([], {
+        hour: "numeric",
+        minute: "2-digit"
+      });
+    }
+
+    function updateCountdown() {
+      const dueDate = new Date("2026-05-01T00:00:00");
+      const now = new Date();
+      const diff = dueDate - now;
+      const countdownEl = document.getElementById("countdownLine");
+
+      if (diff <= 0) {
+        countdownEl.textContent = "00 DAYS : 00 HOURS : 00 MINUTES : 00 SECONDS";
+        return;
+      }
+
+      const totalSeconds = Math.floor(diff / 1000);
+      const days = Math.floor(totalSeconds / 86400);
+      const hours = Math.floor((totalSeconds % 86400) / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+
+      countdownEl.textContent =
+        `${String(days).padStart(2, "0")} DAYS : ` +
+        `${String(hours).padStart(2, "0")} HOURS : ` +
+        `${String(minutes).padStart(2, "0")} MINUTES : ` +
+        `${String(seconds).padStart(2, "0")} SECONDS`;
+    }
+
+    const jaxsonFolder = document.getElementById("jaxsonFolder");
+
+    function animateFolderOpen() {
+      jaxsonFolder.classList.add("is-opening");
+      setTimeout(() => {
+        jaxsonFolder.classList.remove("is-opening");
+      }, 320);
+    }
+
+    jaxsonFolder.addEventListener("click", animateFolderOpen);
+
+    jaxsonFolder.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        animateFolderOpen();
+      }
+    });
+
+    updateClock();
+    updateCountdown();
+
+    setInterval(updateClock, 1000);
+    setInterval(updateCountdown, 1000);
+  </script>
+</body>
+</html>
