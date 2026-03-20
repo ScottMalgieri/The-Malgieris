@@ -1,1 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>Jaxson Photos</title>
 
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet"/>
+
+  <style>
+    :root {
+      --bg1: #020617;
+      --bg2: #0f172a;
+      --bg3: #000000;
+
+      --white: #ffffff;
+      --white70: rgba(255,255,255,0.7);
+      --white40: rgba(255,255,255,0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      height: 100dvh;
+      font-family: Arial, sans-serif;
+      color: white;
+      display: flex;
+      flex-direction: column;
+
+      background:
+        radial-gradient(circle at 20% 20%, rgba(59,130,246,0.2), transparent 35%),
+        radial-gradient(circle at 80% 80%, rgba(168,85,247,0.18), transparent 35%),
+        linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
+
+      overflow: hidden;
+    }
+
+    /* BACK BUTTON */
+    .top-bar {
+      padding: 20px;
+      display: flex;
+      justify-content: flex-start;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.05);
+      color: white;
+      text-decoration: none;
+      font-size: 14px;
+      backdrop-filter: blur(12px);
+      transition: 0.2s ease;
+    }
+
+    .back-btn:hover {
+      background: rgba(255,255,255,0.1);
+      transform: translateY(-2px);
+    }
+
+    /* CENTER CONTENT */
+    .center {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .coming-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .coming-title {
+      font-family: "Orbitron", sans-serif;
+      font-size: clamp(42px, 8vw, 110px);
+      font-weight: 900;
+      letter-spacing: 0.12em;
+
+      color: white;
+
+      text-shadow:
+        0 0 10px rgba(255,255,255,0.6),
+        0 0 20px rgba(59,130,246,0.8),
+        0 0 40px rgba(59,130,246,0.6),
+        0 0 80px rgba(168,85,247,0.5);
+
+      animation: pulseGlow 2.5s ease-in-out infinite;
+    }
+
+    .coming-sub {
+      font-size: 16px;
+      color: var(--white70);
+      letter-spacing: 0.08em;
+    }
+
+    /* GLOW ANIMATION */
+    @keyframes pulseGlow {
+      0%, 100% {
+        text-shadow:
+          0 0 10px rgba(255,255,255,0.6),
+          0 0 20px rgba(59,130,246,0.8),
+          0 0 40px rgba(59,130,246,0.6),
+          0 0 80px rgba(168,85,247,0.5);
+      }
+      50% {
+        text-shadow:
+          0 0 6px rgba(255,255,255,0.5),
+          0 0 14px rgba(59,130,246,0.6),
+          0 0 28px rgba(59,130,246,0.5),
+          0 0 60px rgba(168,85,247,0.4);
+      }
+    }
+
+    /* OPTIONAL GRID GLOW EFFECT */
+    .grid-overlay {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none;
+      opacity: 0.4;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="grid-overlay"></div>
+
+  <div class="top-bar">
+    <a href="../index.html" class="back-btn">
+      ← Back To Jaxson’s Journey
+    </a>
+  </div>
+
+  <div class="center">
+    <div class="coming-container">
+      <div class="coming-title">COMING SOON</div>
+      <div class="coming-sub">
+        Jaxson’s daily moments will live here 👶✨
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
