@@ -111,37 +111,63 @@
       overflow: hidden;
     }
 
-    .return-overlay.active {
-      opacity: 1;
-    }
+    .return-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
 
-    .return-overlay::after {
-      content: "RETURNING TO DESKTOP";
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%) scale(0.82);
-      width: min(92vw, 760px);
-      text-align: center;
-      font-family: "Orbitron", Arial, sans-serif;
-      font-size: clamp(22px, 4vw, 36px);
-      font-weight: 900;
-      letter-spacing: 0.14em;
-      line-height: 1.4;
-      color: var(--white);
-      opacity: 0;
-      text-shadow:
-        0 0 12px rgba(103, 232, 249, 0.95),
-        0 0 30px rgba(59, 130, 246, 0.75);
-      transition:
-        opacity 0.24s ease 0.08s,
-        transform 0.45s ease 0.08s;
-    }
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    .return-overlay.active::after {
-      opacity: 1;
-      transform: translate(-50%, -50%) scale(1);
-    }
+  padding:
+    calc(20px + env(safe-area-inset-top))
+    calc(16px + env(safe-area-inset-right))
+    calc(20px + env(safe-area-inset-bottom))
+    calc(16px + env(safe-area-inset-left));
+
+  text-align: center;
+
+  background:
+    radial-gradient(circle at center, rgba(103, 232, 249, 0.28), transparent 14%),
+    radial-gradient(circle at center, rgba(59, 130, 246, 0.20), transparent 24%),
+    linear-gradient(135deg, #020617, #0f172a, #000000);
+
+  transition: opacity 0.38s ease;
+}
+
+.return-overlay.active {
+  opacity: 1;
+}
+
+.return-overlay::after {
+  content: "RETURNING TO DESKTOP";
+
+  font-family: "Orbitron", Arial, sans-serif;
+  font-size: clamp(22px, 5vw, 36px);
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  line-height: 1.4;
+  color: #fff;
+
+  text-shadow:
+    0 0 12px rgba(103, 232, 249, 0.95),
+    0 0 30px rgba(59, 130, 246, 0.75);
+
+  opacity: 0;
+  transform: scale(0.85);
+
+  transition:
+    opacity 0.25s ease 0.1s,
+    transform 0.45s ease 0.1s;
+}
+
+.return-overlay.active::after {
+  opacity: 1;
+  transform: scale(1);
+}
 
     .topbar {
       height: calc(52px + var(--safe-top));
