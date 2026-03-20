@@ -69,21 +69,15 @@
       opacity: 0;
       transform: scale(1.015);
       animation: pageIn 0.55s ease forwards;
-      transition: opacity 0.28s ease, transform 0.28s ease, filter 0.28s ease;
+      transition: filter 0.5s ease, opacity 0.5s ease, transform 0.5s ease;
+      will-change: transform, filter, opacity;
     }
 
-    body.page-leaving {
-      opacity: 0;
-      transform: scale(0.99);
-      filter: blur(4px);
+    body.page-transition {
+      transform: scale(0.965);
+      filter: blur(10px) brightness(0.9);
+      opacity: 0.2;
       pointer-events: none;
-    }
-
-    body.page-restored {
-      animation: none !important;
-      opacity: 1 !important;
-      transform: none !important;
-      filter: none !important;
     }
 
     @keyframes pageIn {
@@ -91,6 +85,52 @@
         opacity: 1;
         transform: scale(1);
       }
+    }
+
+    .return-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0;
+      transform: scale(1.08);
+      background:
+        radial-gradient(circle at center, rgba(103, 232, 249, 0.28), transparent 14%),
+        radial-gradient(circle at center, rgba(59, 130, 246, 0.2), transparent 24%),
+        linear-gradient(135deg, #020617, #0f172a, #000000);
+      transition: opacity 0.38s ease, transform 0.8s ease;
+      overflow: hidden;
+    }
+
+    .return-overlay.active {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .return-overlay::after {
+      content: "RETURNING TO DESKTOP";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) scale(0.78);
+      width: min(92vw, 760px);
+      text-align: center;
+      font-family: "Orbitron", Arial, sans-serif;
+      font-size: clamp(22px, 4vw, 36px);
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      line-height: 1.4;
+      color: var(--white);
+      opacity: 0;
+      text-shadow:
+        0 0 12px rgba(103, 232, 249, 0.95),
+        0 0 30px rgba(59, 130, 246, 0.75);
+      transition: opacity 0.24s ease 0.06s, transform 0.55s cubic-bezier(.2,.8,.2,1) 0.06s;
+    }
+
+    .return-overlay.active::after {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
     }
 
     .topbar {
@@ -470,6 +510,13 @@
       .folder-card p {
         font-size: 14px;
       }
+
+      .return-overlay::after {
+        width: min(84vw, 360px);
+        font-size: 24px;
+        letter-spacing: 0.1em;
+        line-height: 1.45;
+      }
     }
   </style>
 </head>
@@ -581,6 +628,8 @@
     </section>
   </main>
 
+  <div id="returnOverlay" class="return-overlay"></div>
+
   <script>
     function updateClock() {
       const now = new Date();
@@ -593,6 +642,13 @@
     updateClock();
     setInterval(updateClock, 1000);
 
+    const returnOverlay = document.getElementById("returnOverlay");
+
+    function resetVisualState() {
+      document.body.classList.remove("page-transition");
+      returnOverlay.classList.remove("active");
+    }
+
     document.querySelectorAll(".smooth-link").forEach((link) => {
       link.addEventListener("click", function (e) {
         const href = this.getAttribute("href");
@@ -600,28 +656,22 @@
         if (!href || href === "#" || href.startsWith("javascript:")) return;
 
         e.preventDefault();
-        document.body.classList.remove("page-restored");
-        document.body.classList.add("page-leaving");
+
+        document.body.classList.add("page-transition");
+        returnOverlay.classList.add("active");
 
         setTimeout(() => {
           window.location.href = href;
-        }, 240);
+        }, 1100);
       });
     });
 
     window.addEventListener("pageshow", function (event) {
-      document.body.classList.remove("page-leaving");
+      resetVisualState();
 
       if (event.persisted) {
-        document.body.classList.add("page-restored");
-      } else {
-        document.body.classList.remove("page-restored");
+        requestAnimationFrame(resetVisualState);
       }
-    });
-
-    window.addEventListener("popstate", function () {
-      document.body.classList.remove("page-leaving");
-      document.body.classList.add("page-restored");
     });
   </script>
 </body>
