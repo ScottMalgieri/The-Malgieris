@@ -10,6 +10,10 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="mobile-web-app-capable" content="yes" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap"
+    rel="stylesheet"
+  />
   <title>Scott's Space</title>
 
   <style>
@@ -100,9 +104,10 @@
       pointer-events: none;
       opacity: 0;
       background:
-        radial-gradient(circle at center, rgba(103, 232, 249, 0.20), transparent 14%),
-        linear-gradient(135deg, rgba(2, 6, 23, 0.12), rgba(15, 23, 42, 0.08), rgba(0, 0, 0, 0.12));
-      transition: opacity 0.35s ease;
+        radial-gradient(circle at center, rgba(103, 232, 249, 0.28), transparent 14%),
+        radial-gradient(circle at center, rgba(59, 130, 246, 0.20), transparent 24%),
+        linear-gradient(135deg, #020617, #0f172a, #000000);
+      transition: opacity 0.38s ease;
       overflow: hidden;
     }
 
@@ -115,7 +120,7 @@
       position: absolute;
       left: 50%;
       top: 50%;
-      transform: translate(-50%, -50%) scale(0.78);
+      transform: translate(-50%, -50%) scale(0.82);
       width: min(92vw, 760px);
       text-align: center;
       font-family: "Orbitron", Arial, sans-serif;
@@ -128,7 +133,9 @@
       text-shadow:
         0 0 12px rgba(103, 232, 249, 0.95),
         0 0 30px rgba(59, 130, 246, 0.75);
-      transition: opacity 0.24s ease 0.06s, transform 0.55s cubic-bezier(.2,.8,.2,1) 0.06s;
+      transition:
+        opacity 0.24s ease 0.08s,
+        transform 0.45s ease 0.08s;
     }
 
     .return-overlay.active::after {
