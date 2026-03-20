@@ -35,6 +35,7 @@
       --safe-bottom: env(safe-area-inset-bottom, 0px);
       --safe-left: env(safe-area-inset-left, 0px);
       --safe-right: env(safe-area-inset-right, 0px);
+      --launch-text: "LAUNCHING...";
     }
 
     * {
@@ -366,7 +367,6 @@
       display: none;
     }
 
-    /* Scott launch */
     .icon.app-launching {
       z-index: 1000;
       transform: translateY(-6px) scale(1.05);
@@ -418,7 +418,7 @@
     }
 
     .launch::after {
-      content: "LAUNCHING SCOTT'S SPACE";
+      content: var(--launch-text);
       position: absolute;
       left: 50%;
       top: 50%;
@@ -443,7 +443,6 @@
       transform: translate(-50%, -50%) scale(1);
     }
 
-    /* Shutdown overlay */
     .shutdown-overlay {
       position: fixed;
       inset: 0;
@@ -526,7 +525,6 @@
       100% { opacity: 0; }
     }
 
-    /* Obi Treat Modal */
     .obi-modal {
       position: fixed;
       inset: 0;
@@ -961,7 +959,6 @@
       display: none !important;
     }
 
-    /* Song Of The Week Modal */
     .song-modal {
       position: fixed;
       inset: 0;
@@ -1461,7 +1458,7 @@
             <div class="label">Obi's Observatory</div>
           </div>
 
-          <div class="icon">
+          <div id="jaxsonJourneyIcon" class="icon">
             <div class="badge">🍼</div>
             <div class="label">Jaxson's Journey</div>
           </div>
@@ -1679,6 +1676,7 @@
     setInterval(updateClock, 1000);
 
     const scott = document.getElementById("scott");
+    const jaxsonJourneyIcon = document.getElementById("jaxsonJourneyIcon");
     const launch = document.getElementById("launch");
     const shutdownBtn = document.getElementById("shutdownBtn");
     const shutdownOverlay = document.getElementById("shutdownOverlay");
@@ -1709,13 +1707,16 @@
     function resetVisualState() {
       document.body.classList.remove("app-transition", "shutdown-transition");
       launch.classList.remove("active");
+      launch.style.setProperty("--launch-text", '"LAUNCHING..."');
       scott.classList.remove("app-launching");
+      jaxsonJourneyIcon.classList.remove("app-launching");
       shutdownOverlay.classList.remove("active");
     }
 
     function startScottLaunch() {
       document.body.classList.add("app-transition");
       scott.classList.add("app-launching");
+      launch.style.setProperty("--launch-text", '"LAUNCHING SCOTT\'S SPACE"');
 
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
@@ -1723,6 +1724,22 @@
 
           setTimeout(() => {
             window.location.href = "apps/scott/";
+          }, 1200);
+        });
+      });
+    }
+
+    function startJaxsonLaunch() {
+      document.body.classList.add("app-transition");
+      jaxsonJourneyIcon.classList.add("app-launching");
+      launch.style.setProperty("--launch-text", '"LOADING JAXSON\'S JOURNEY"');
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          launch.classList.add("active");
+
+          setTimeout(() => {
+            window.location.href = "apps/jaxson/";
           }, 1200);
         });
       });
@@ -1795,6 +1812,7 @@
     }
 
     scott.addEventListener("click", startScottLaunch);
+    jaxsonJourneyIcon.addEventListener("click", startJaxsonLaunch);
     shutdownBtn.addEventListener("click", shutDown);
 
     obiTreatIcon.addEventListener("click", openObiTreat);
