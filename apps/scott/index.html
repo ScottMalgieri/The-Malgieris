@@ -69,11 +69,24 @@
       opacity: 0;
       transform: scale(1.015);
       animation: pageIn 0.55s ease forwards;
-      transition: filter 0.5s ease, opacity 0.5s ease, transform 0.5s ease;
-      will-change: transform, filter, opacity;
+      transition: opacity 0.28s ease, transform 0.28s ease, filter 0.28s ease;
     }
 
-    body.page-transition {
+    body.page-leaving {
+      opacity: 0;
+      transform: scale(0.99);
+      filter: blur(4px);
+      pointer-events: none;
+    }
+
+    body.page-restored {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+      filter: none !important;
+    }
+
+    body.desktop-returning {
       transform: scale(0.965);
       filter: blur(10px) brightness(0.9);
       opacity: 0.2;
@@ -536,7 +549,7 @@
 
   <main class="page-wrap">
     <section class="hero">
-      <a href="/home.html" class="back-btn smooth-link">← Back To Desktop</a>
+      <a href="/home.html" class="back-btn desktop-link">← Back To Desktop</a>
       <h1>Welcome to Scott’s Space</h1>
       <p>
         This is your personal zone inside Malgieri OS — a place for your projects,
@@ -645,7 +658,7 @@
     const returnOverlay = document.getElementById("returnOverlay");
 
     function resetVisualState() {
-      document.body.classList.remove("page-transition");
+      document.body.classList.remove("page-leaving", "page-restored", "desktop-returning");
       returnOverlay.classList.remove("active");
     }
 
@@ -656,8 +669,24 @@
         if (!href || href === "#" || href.startsWith("javascript:")) return;
 
         e.preventDefault();
+        document.body.classList.remove("page-restored");
+        document.body.classList.add("page-leaving");
 
-        document.body.classList.add("page-transition");
+        setTimeout(() => {
+          window.location.href = href;
+        }, 240);
+      });
+    });
+
+    document.querySelectorAll(".desktop-link").forEach((link) => {
+      link.addEventListener("click", function (e) {
+        const href = this.getAttribute("href");
+
+        if (!href || href === "#" || href.startsWith("javascript:")) return;
+
+        e.preventDefault();
+        document.body.classList.remove("page-restored", "page-leaving");
+        document.body.classList.add("desktop-returning");
         returnOverlay.classList.add("active");
 
         setTimeout(() => {
@@ -670,8 +699,17 @@
       resetVisualState();
 
       if (event.persisted) {
-        requestAnimationFrame(resetVisualState);
+        document.body.classList.add("page-restored");
+        requestAnimationFrame(() => {
+          resetVisualState();
+          document.body.classList.add("page-restored");
+        });
       }
+    });
+
+    window.addEventListener("popstate", function () {
+      resetVisualState();
+      document.body.classList.add("page-restored");
     });
   </script>
 </body>
