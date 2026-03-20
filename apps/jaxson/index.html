@@ -109,9 +109,16 @@
       width: 11px;
       height: 11px;
       border-radius: 50%;
-      background: #60a5fa;
-      box-shadow: 0 0 14px #60a5fa;
+      background: #4ade80;
+      box-shadow: 0 0 14px #4ade80;
       flex-shrink: 0;
+    }
+
+    .title-stack {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      line-height: 1.1;
     }
 
     .top-title {
@@ -119,6 +126,29 @@
       color: var(--white90);
       font-size: 15px;
       white-space: nowrap;
+    }
+
+    .top-subtitle {
+      margin-top: 3px;
+      color: var(--white50);
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
+    .clock-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .online-status {
+      color: #4ade80;
+      font-size: 13px;
+      font-weight: 500;
     }
 
     .clock {
@@ -169,14 +199,42 @@
       pointer-events: none;
     }
 
-    .section-kicker {
-      font-family: "Orbitron", Arial, sans-serif;
-      font-size: 13px;
-      font-weight: 800;
-      letter-spacing: 0.18em;
-      color: var(--white70);
-      margin-bottom: 12px;
-      text-transform: uppercase;
+    .back-wrap {
+      display: flex;
+      justify-content: flex-start;
+      margin-bottom: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      height: 48px;
+      padding: 0 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.06);
+      color: var(--white90);
+      font: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 24px rgba(0,0,0,0.22);
+    }
+
+    .back-btn:hover {
+      transform: translateY(-1px);
+      background: rgba(255,255,255,0.1);
+      border-color: rgba(255,255,255,0.14);
+    }
+
+    .back-arrow {
+      font-size: 18px;
+      line-height: 1;
     }
 
     .countdown-label {
@@ -190,6 +248,8 @@
       text-shadow:
         0 0 10px rgba(255,255,255,0.16),
         0 0 22px rgba(96,165,250,0.14);
+      position: relative;
+      z-index: 1;
     }
 
     .countdown-line {
@@ -213,6 +273,8 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      position: relative;
+      z-index: 1;
     }
 
     .panel {
@@ -462,6 +524,18 @@
         width: 150px;
         height: 108px;
       }
+
+      .clock-wrap {
+        gap: 6px;
+      }
+
+      .online-status {
+        font-size: 12px;
+      }
+
+      .top-subtitle {
+        font-size: 10px;
+      }
     }
 
     @media (max-width: 520px) {
@@ -488,6 +562,17 @@
       .stat-value {
         font-size: 28px;
       }
+
+      .clock-wrap {
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 2px;
+      }
+
+      .back-btn {
+        width: 100%;
+        justify-content: center;
+      }
     }
   </style>
 </head>
@@ -496,16 +581,29 @@
     <div class="topbar">
       <div class="top-left">
         <div class="status-dot"></div>
-        <div class="top-title">Jaxson's Journey</div>
+        <div class="title-stack">
+          <div class="top-title">Jaxson's Journey</div>
+          <div class="top-subtitle">Malgieri OS App</div>
+        </div>
       </div>
-      <div id="clock" class="clock"></div>
+
+      <div class="clock-wrap">
+        <div class="online-status">Online</div>
+        <div id="clock" class="clock"></div>
+      </div>
     </div>
 
     <div class="desktop">
       <div class="desktop-inner">
         <section class="hero-card">
-          <div class="section-kicker">Malgieri OS // Incoming</div>
-          <div class="countdown-label">JAXSON DUE DATE:</div>
+          <div class="back-wrap">
+            <button id="backToDesktopBtn" class="back-btn" type="button">
+              <span class="back-arrow">←</span>
+              <span>Back To Desktop</span>
+            </button>
+          </div>
+
+          <div class="countdown-label">JAXSON DUE DATE</div>
           <div id="countdownLine" class="countdown-line">00 DAYS : 00 HOURS : 00 MINUTES : 00 SECONDS</div>
         </section>
 
@@ -603,12 +701,17 @@
     }
 
     const jaxsonFolder = document.getElementById("jaxsonFolder");
+    const backToDesktopBtn = document.getElementById("backToDesktopBtn");
 
     function animateFolderOpen() {
       jaxsonFolder.classList.add("is-opening");
       setTimeout(() => {
         jaxsonFolder.classList.remove("is-opening");
       }, 320);
+    }
+
+    function goBackToDesktop() {
+      window.location.href = "../../";
     }
 
     jaxsonFolder.addEventListener("click", animateFolderOpen);
@@ -619,6 +722,8 @@
         animateFolderOpen();
       }
     });
+
+    backToDesktopBtn.addEventListener("click", goBackToDesktop);
 
     updateClock();
     updateCountdown();
