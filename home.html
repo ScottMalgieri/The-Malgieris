@@ -654,19 +654,19 @@
     }
 
     .obi-close-btn {
-  margin-left: auto;
-  min-width: 72px;
-  height: 40px;
-  padding: 0 14px;
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 12px;
-  background: rgba(255,255,255,0.06);
-  color: var(--white90);
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  flex-shrink: 0;
-}
+      margin-left: auto;
+      min-width: 72px;
+      height: 40px;
+      padding: 0 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.06);
+      color: var(--white90);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
 
     .obi-window-body {
       padding: 24px;
@@ -853,13 +853,18 @@
       font-size: 15px;
       color: white;
       cursor: pointer;
-      transition: transform 0.16s ease;
+      transition: transform 0.16s ease, opacity 0.16s ease;
     }
 
     .obi-submit-btn {
       margin-top: 10px;
       background: linear-gradient(135deg, #38bdf8, #8b5cf6);
       box-shadow: 0 14px 36px rgba(56, 189, 248, 0.24);
+    }
+
+    .obi-submit-btn.is-sending {
+      opacity: 0.8;
+      cursor: wait;
     }
 
     .obi-again-btn {
@@ -1034,7 +1039,8 @@
       }
 
       .obi-close-btn {
-        order: 4;
+        order: 2;
+        margin-left: auto;
       }
 
       .obi-window-body {
@@ -1186,7 +1192,7 @@
           <span>https://treatos.obi/official-snack-request</span>
         </div>
 
-        <button id="obiCloseBtn" class="obi-close-btn" aria-label="Close Obi Treat"> CLOSE </button>
+        <button id="obiCloseBtn" class="obi-close-btn" aria-label="Close Obi Treat">CLOSE</button>
       </div>
 
       <div class="obi-window-body">
@@ -1218,21 +1224,26 @@
             </p>
 
             <form id="obiTreatForm">
+              <input type="hidden" name="access_key" value="6b0b39c2-5abd-4e60-b095-bbe7186f6075" />
+              <input type="hidden" name="subject" value="🐶 Obi Treat Request" />
+              <input type="hidden" name="from_name" value="Malgieri OS - Obi Treat" />
+
               <div class="obi-form-group">
                 <label for="obiName">Enter Name</label>
-                <input id="obiName" type="text" placeholder="Your name here" required />
+                <input id="obiName" name="name" type="text" placeholder="Your name here" required />
               </div>
 
               <div class="obi-form-group">
                 <label for="obiMessage">Leave a message for Obi</label>
                 <textarea
                   id="obiMessage"
+                  name="message"
                   placeholder="Example: Obi, you are the best boy ever and a treat is on the way."
                   required
                 ></textarea>
               </div>
 
-              <button type="submit" class="obi-submit-btn">Submit Treat Request</button>
+              <button id="obiSubmitBtn" type="submit" class="obi-submit-btn">Submit Treat Request</button>
             </form>
           </section>
 
@@ -1291,6 +1302,7 @@
     const obiSubmittedMessage = document.getElementById("obiSubmittedMessage");
     const obiName = document.getElementById("obiName");
     const obiMessage = document.getElementById("obiMessage");
+    const obiSubmitBtn = document.getElementById("obiSubmitBtn");
 
     function resetVisualState() {
       document.body.classList.remove("app-transition", "shutdown-transition");
@@ -1340,6 +1352,10 @@
       obiTreatForm.reset();
       obiSuccessCard.classList.remove("active");
       obiFormCard.classList.remove("obi-hidden");
+      obiSubmitBtn.disabled = false;
+      obiSubmitBtn.classList.remove("is-sending");
+      obiSubmitBtn.textContent = "Submit Treat Request";
+
       setTimeout(() => {
         obiName.focus();
       }, 120);
@@ -1363,14 +1379,41 @@
       }
     });
 
-    obiTreatForm.addEventListener("submit", (e) => {
+    obiTreatForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      obiSubmittedName.textContent = obiName.value.trim() || "Anonymous Human";
-      obiSubmittedMessage.textContent = obiMessage.value.trim() || "Treat support submitted.";
+      obiSubmitBtn.disabled = true;
+      obiSubmitBtn.classList.add("is-sending");
+      obiSubmitBtn.textContent = "Sending Treat Request...";
 
-      obiFormCard.classList.add("obi-hidden");
-      obiSuccessCard.classList.add("active");
+      const formData = new FormData(obiTreatForm);
+
+      try {
+        const response = await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          body: formData
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          obiSubmittedName.textContent = obiName.value.trim() || "Anonymous Human";
+          obiSubmittedMessage.textContent = obiMessage.value.trim() || "Treat support submitted.";
+
+          obiFormCard.classList.add("obi-hidden");
+          obiSuccessCard.classList.add("active");
+        } else {
+          alert("Something went wrong. Obi is sad right now. Please try again.");
+          obiSubmitBtn.disabled = false;
+          obiSubmitBtn.classList.remove("is-sending");
+          obiSubmitBtn.textContent = "Submit Treat Request";
+        }
+      } catch (error) {
+        alert("Treat request failed to send. Please try again.");
+        obiSubmitBtn.disabled = false;
+        obiSubmitBtn.classList.remove("is-sending");
+        obiSubmitBtn.textContent = "Submit Treat Request";
+      }
     });
 
     obiAgainBtn.addEventListener("click", resetObiTreatForm);
